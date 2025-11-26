@@ -1,0 +1,36 @@
+# --- Build artifacts ---
+*.o
+*.a
+*.out
+*.dSYM/
+
+# Executable
+minishell
+
+# Object directory
+obj/
+
+# Libft build artifacts
+libft/*.o
+libft/*.a
+
+# --- LSP / Tooling ---
+compile_commands.json
+.clangd/
+.clangd_cache/
+.cache/
+.vscode/
+
+# --- Neovim ---
+*.swp
+*.swo
+*.swx
+*~
+.session
+.netrwhist
+.undodir/
+.nvimundo/
+
+# --- OS junk ---
+.DS_Store
+Thumbs.db
