@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <readline/readline.h>
 #include <readline/history.h>
+#include "../inc/minishell_macros.h"
 
 int	main(int argc, char **argv)
 {

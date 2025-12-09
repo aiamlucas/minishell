@@ -1,5 +1,5 @@
 CC				= cc
-CFLAGS			= -Wall -Werror -Wextra
+#CFLAGS			= -Wall -Werror -Wextra
 NAME			= minishell
 
 LIBFT_DIR		= libft
@@ -11,7 +11,8 @@ CFLAGS += -g -O0
 $(info Adding debug flags: -g -O0)
 endif
 
-SRC = main.c
+SRC_DIR			= src
+SRC					= $(SRC_DIR)/main.c
 # for new files add them as:
 # SRC += new_file.c
 
@@ -26,7 +27,7 @@ $(NAME): $(OBJ) $(LIBFT)
 	$(CC) $(OBJ) -L$(LIBFT_DIR) -lreadline -lm -o $(NAME)
 	@echo "minishell compiled successfully"
 
-$(OBJ_DIR)/%.o: %.c | $(OBJ_DIR)
+$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c | $(OBJ_DIR)
 	$(CC) $(CFLAGS) -I$(LIBFT_DIR)/includes -c $< -o $@
 
 $(OBJ_DIR):
