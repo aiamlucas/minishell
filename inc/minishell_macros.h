@@ -12,6 +12,7 @@
 
 #ifndef MINISHELL_MACROS_H
 # define MINISHELL_MACROS_H
+# include "libft.h"
 
 /* Metacharacters */
 # define PIPE                "|"
