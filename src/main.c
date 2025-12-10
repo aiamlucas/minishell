@@ -3,6 +3,18 @@
 #include <readline/history.h>
 #include "../inc/minishell_macros.h"
 
+
+static void print_split(char **split)
+{
+	int i = 0;
+
+	while (split[i])
+	{
+		printf("%s\n", split[i]);
+		i++;
+	}
+}
+
 int	main(int argc, char **argv)
 {
 	(void)argc;
@@ -12,9 +24,11 @@ int	main(int argc, char **argv)
 	while (1)
 	{
 		prompt = readline("$[ 🛸 ]>");
-		//printf("%s\n", prompt);
-		//if (ft_strncmp(prompt, "exit"))
-		//	exit(EXIT_SUCCESS);
+		char delimiter = ' ';
+		int i = 0;
+
+		char **splited = ft_split(prompt, delimiter);
+		print_split(splited);
 	}
 	return (0);
 }

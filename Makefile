@@ -24,11 +24,11 @@ $(LIBFT):
 	@$(MAKE) -C $(LIBFT_DIR)
 
 $(NAME): $(OBJ) $(LIBFT)
-	$(CC) $(OBJ) -L$(LIBFT_DIR) -lreadline -lm -o $(NAME)
+	$(CC) $(OBJ) -L$(LIBFT_DIR) -lft -lreadline -lm -o $(NAME)
 	@echo "minishell compiled successfully"
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c | $(OBJ_DIR)
-	$(CC) $(CFLAGS) -I$(LIBFT_DIR)/includes -c $< -o $@
+	$(CC) $(CFLAGS) -Iinc -I$(LIBFT_DIR) -c $< -o $@
 
 $(OBJ_DIR):
 	mkdir -p $(OBJ_DIR)
