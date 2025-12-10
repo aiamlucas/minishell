@@ -20,8 +20,8 @@
 # define RED_IN_HD           "<<"
 # define RED_OUT_TRUN        ">"
 # define RED_OUT_APP         ">>"
-# define S_QUOTE             '"'
-# define D_QUOTE             "'"
+# define S_QUOTE             "'"
+# define D_QUOTE             '"'
 # define EXP                 "$"
 
 #endif
