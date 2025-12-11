@@ -1,9 +1,8 @@
 CC				= cc
-#CFLAGS			= -Wall -Werror -Wextra
+CFLAGS			= -Wall -Werror -Wextra
 NAME			= minishell
-
 LIBFT_DIR		= libft
-LIBFT			= $(LIBFT_DIR) -I$(LIBFT_DIR)/includes
+LIBFT			= $(LIBFT_DIR)/libft.a 
 OBJ_DIR			= obj
 
 ifeq ($(DEBUG),1)
@@ -12,9 +11,10 @@ $(info Adding debug flags: -g -O0)
 endif
 
 SRC_DIR			= src
-SRC					= $(SRC_DIR)/main.c
-# for new files add them as:
-# SRC += new_file.c
+SRC				= main.c
+SRC				+= tokenizer/tokenizer.c 
+SRC				+= tokenizer/token-utils.c 
+
 
 OBJ = $(addprefix $(OBJ_DIR)/, $(notdir $(SRC:.c=.o)))
 
@@ -24,10 +24,13 @@ $(LIBFT):
 	@$(MAKE) -C $(LIBFT_DIR)
 
 $(NAME): $(OBJ) $(LIBFT)
-	$(CC) $(OBJ) -L$(LIBFT_DIR) -lft -lreadline -lm -o $(NAME)
+	$(CC) $(CFLAGS) $(OBJ) -L$(LIBFT_DIR) -lft -lreadline -o $(NAME)
 	@echo "minishell compiled successfully"
 
-$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c | $(OBJ_DIR)
+# so that make can find the source files
+vpath %.c $(SRC_DIR) $(SRC_DIR)/tokenizer $(SRC_DIR)/parser $(SRC_DIR)/builtins $(SRC_DIR)/execution
+
+$(OBJ_DIR)/%.o: %.c | $(OBJ_DIR)
 	$(CC) $(CFLAGS) -Iinc -I$(LIBFT_DIR) -c $< -o $@
 
 $(OBJ_DIR):
