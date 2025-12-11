@@ -1,34 +1,44 @@
 #include <stdio.h>
 #include <readline/readline.h>
 #include <readline/history.h>
-#include "../inc/minishell_macros.h"
+#include "../inc/minishell.h"
 
-
-static void print_split(char **split)
+static void print_tokens(t_token *tokens)
 {
-	int i = 0;
+	t_token	*current = tokens;
 
-	while (split[i])
+	while (current)
 	{
-		printf("%s\n", split[i]);
-		i++;
+		printf("[%s]", current->value);
+		if (current->next)
+			printf("->");
+		current = current->next;
 	}
+	printf("->NULL\n");
 }
 
-int	main(int argc, char **argv)
+int	main(void)
 {
-	(void)argc;
-	(void)argv;
-	char *prompt;
+	char	*prompt;
+	t_token	*tokens;
 
 	while (1)
 	{
 		prompt = readline("$[ 🛸 ]>");
-		char delimiter = ' ';
-		int i = 0;
-
-		char **splited = ft_split(prompt, delimiter);
-		print_split(splited);
+		if (!prompt)
+		{
+			printf("exit\n");
+			break;
+		}
+		if (!*prompt)
+		{
+			free(prompt);
+			continue ;
+		}
+		tokens = lexer(prompt);
+		print_tokens(tokens);
+		token_clear(&tokens);
+		free(prompt);
 	}
 	return (0);
 }
