@@ -12,16 +12,13 @@
 
 #ifndef MINISHELL_MACROS_H
 # define MINISHELL_MACROS_H
-# include "libft.h"
 
 /* Metacharacters */
-# define PIPE                "|"
-# define RED_IN              "<"
-# define RED_IN_HD           "<<"
-# define RED_OUT_TRUN        ">"
-# define RED_OUT_APP         ">>"
-# define S_QUOTE             "'"
-# define D_QUOTE             '"'
-# define EXP                 "$"
+# define PIPE			'|'
+# define RED_IN			'<'
+# define RED_OUT		'>'
+# define S_QUOTE		'\''
+# define D_QUOTE		'\"'
+# define EXP			'$'
 
 #endif
