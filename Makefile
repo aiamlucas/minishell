@@ -2,7 +2,7 @@ CC				= cc
 CFLAGS			= -Wall -Werror -Wextra
 NAME			= minishell
 LIBFT_DIR		= libft
-LIBFT			= $(LIBFT_DIR)/libft.a 
+LIBFT			= $(LIBFT_DIR)/libft.a
 OBJ_DIR			= obj
 
 ifeq ($(DEBUG),1)
@@ -12,8 +12,9 @@ endif
 
 SRC_DIR			= src
 SRC				= main.c
-SRC				+= tokenizer/tokenizer.c 
-SRC				+= tokenizer/token-utils.c 
+SRC				+= readline/readline_loop.c
+SRC				+= tokenizer/tokenizer.c
+SRC				+= tokenizer/token-utils.c
 
 
 OBJ = $(addprefix $(OBJ_DIR)/, $(notdir $(SRC:.c=.o)))
@@ -28,7 +29,7 @@ $(NAME): $(OBJ) $(LIBFT)
 	@echo "minishell compiled successfully"
 
 # so that make can find the source files
-vpath %.c $(SRC_DIR) $(SRC_DIR)/tokenizer $(SRC_DIR)/parser $(SRC_DIR)/builtins $(SRC_DIR)/execution
+vpath %.c $(SRC_DIR) $(SRC_DIR)/tokenizer $(SRC_DIR)/parser $(SRC_DIR)/builtins $(SRC_DIR)/execution $(SRC_DIR)/readline
 
 $(OBJ_DIR)/%.o: %.c | $(OBJ_DIR)
 	$(CC) $(CFLAGS) -Iinc -I$(LIBFT_DIR) -c $< -o $@
