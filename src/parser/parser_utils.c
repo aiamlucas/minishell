@@ -6,7 +6,7 @@
 /*   By: lbueno-m <lbueno-m@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/12 17:52:20 by lbueno-m          #+#    #+#             */
-/*   Updated: 2025/12/14 19:51:02 by lbueno-m         ###   ########.fr       */
+/*   Updated: 2025/12/14 20:09:53 by lbueno-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,8 +70,7 @@ void	command_clear(t_command **lst)
 			free((*lst)->argv);
 		}
 	}
-	// need to put here a function to clear the redirections
-	// redir_clear(&(*lst)->redirections);
+	redir_clear(&(*lst)->redirections);
 	free(*lst);
 	*lst = tmp;
 }
