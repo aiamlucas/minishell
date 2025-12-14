@@ -47,11 +47,28 @@ typedef struct	s_data
 	int			last_exit;
 }	t_data;
 
+// maybe we can later have several header files for each part of the project
+// until there I make a provisory comment for each part of the project
+
+// core
+void	readline_loop();
+
+// lexer 
 t_token	*new_token(char *value, t_token_type type);
 t_token	*token_last(t_token *lst);
 void	token_add_back(t_token **lst, t_token *new);
 void	token_clear(t_token **lst);
 t_token	*lexer(char *line);
-void	readline_loop();
+
+// parser
+
+t_command	*command_new(void);
+t_command	*command_last(t_command *lst);
+void		command_add_back(t_command **lst, t_command *new);
+void		command_clear(t_command **lst);
+t_redir		*redir_new(t_token_type type, char *file);
+t_redir		*redir_last(t_redir *lst);
+void		redir_add_back(t_redir **lst, t_redir *new);
+void		redir_clear(t_redir **lst);
 
 #endif

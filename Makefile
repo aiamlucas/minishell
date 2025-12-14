@@ -15,6 +15,8 @@ SRC				= main.c
 SRC				+= readline/readline_loop.c
 SRC				+= tokenizer/tokenizer.c
 SRC				+= tokenizer/token-utils.c
+SRC				+= parser/parser-utils.c
+SRC				+= parser/redir-utils.c
 
 
 OBJ = $(addprefix $(OBJ_DIR)/, $(notdir $(SRC:.c=.o)))
