@@ -19,52 +19,58 @@ char	*get_word(char *input)
 	char	*word;
 
 	start = input;
-	while (*input && !ft_isspace(*input) && *input != '|' && *input != '<'
-		&& *input != '>' && *input != '"' && *input != '\'')
+	while (*input && !ft_isspace(*input) && *input != C_PIPE
+		&& *input != C_RED_IN && *input != C_RED_OUT)
 		input++;
 	len = input - start;
 	word = ft_substr(start, 0, len);
 	return (word);
 }
 
-char	*get_token_metachar(char *input)
+char	*get_token_operator(char *input)
 {
-	if (*input == PIPE)
-		return ("|");
-	else if (*input == RED_IN)
+	if (*input == C_PIPE)
+		return (STR_PIPE);
+	else if (*input == C_RED_IN)
 	{
-		if (*(input + 1) == RED_IN)
-			return ("<<");
-		return ("<");
+		if (*(input + 1) == C_RED_IN)
+			return (STR_HEREDOC);
+		return (STR_RED_IN);
 	}
-	else if (*input == RED_OUT)
+	else if (*input == C_RED_OUT)
 	{
-		if (*(input + 1) == RED_OUT)
-			return (">>");
-		return (">");
+		if (*(input + 1) == C_RED_OUT)
+			return (STR_RED_APP);
+		return (STR_RED_OUT);
 	}
-	else if (*input == S_QUOTE)
-		return ("'");
-	else if (*input == D_QUOTE)
-		return ("\"");
-	else if (*input == EXP)
-		return ("$");
 	else
 		return (get_word(input));
 }
 
-t_token_type	get_type(char input)
+t_token_type	get_type(char *input)
 {
-	(void)input;
-	return (TOKEN_PIPE);
+	if (*input)
+	{
+		if (!ft_strncmp(input, STR_PIPE, ft_strlen(input)))
+			return TOKEN_PIPE;
+		if (!ft_strncmp(input, STR_RED_IN, ft_strlen(input)))
+			return TOKEN_REDIR_IN;
+		if (!ft_strncmp(input, STR_HEREDOC, ft_strlen(input)))
+			return TOKEN_HEREDOC;
+		if (!ft_strncmp(input, STR_RED_OUT, ft_strlen(input)))
+			return TOKEN_REDIR_OUT;
+		if (!ft_strncmp(input, STR_RED_APP, ft_strlen(input)))
+			return TOKEN_REDIR_APPEND;
+	}
+	return (TOKEN_WORD);
 }
 
 t_token	*lexer(char *input)
 {
 	t_token			*tokens_list;
-	char			*metacharacter;
-	int				len;
+	char			*operator;
 	t_token_type	type;
+	int				len;
 
 	len = 0;
 	tokens_list = NULL;
@@ -74,13 +80,13 @@ t_token	*lexer(char *input)
 			input++;
 		if (!*input)
 			break ;
-		metacharacter = get_token_metachar(input);
-		len = ft_strlen(metacharacter);
+		operator = get_token_operator(input);
+		len = ft_strlen(operator);
+		type = get_type(input);
 		input += len;
-		type = get_type(*input);
-		token_add_back(&tokens_list, new_token(metacharacter, type));
+		token_add_back(&tokens_list, new_token(operator, type));
 		if (type == TOKEN_WORD)
-			free(metacharacter);
+			free(operator);
 	}
 	return (tokens_list);
 }
