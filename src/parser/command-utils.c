@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parser_utils.c                                     :+:      :+:    :+:   */
+/*   command-utils.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lbueno-m <lbueno-m@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/12 17:52:20 by lbueno-m          #+#    #+#             */
-/*   Updated: 2025/12/14 20:09:53 by lbueno-m         ###   ########.fr       */
+/*   Updated: 2025/12/15 00:34:31 by lbueno-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ void	command_clear(t_command **lst)
 	while (*lst)
 	{
 		tmp = (*lst)->next;
-		if ((*lst)-> argv[i])
+		if ((*lst)-> argv)
 		{
 			i = 0;
 			while ((*lst)->argv[i])
@@ -69,8 +69,8 @@ void	command_clear(t_command **lst)
 			}
 			free((*lst)->argv);
 		}
+		redir_clear(&(*lst)->redirections);
+		free(*lst);
+		*lst = tmp;
 	}
-	redir_clear(&(*lst)->redirections);
-	free(*lst);
-	*lst = tmp;
 }
