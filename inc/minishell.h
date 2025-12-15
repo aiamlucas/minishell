@@ -6,6 +6,7 @@
 # include <readline/history.h>
 # include "../libft/libft.h"
 # include "minishell_macros.h"
+# include <stdbool.h>
 
 typedef enum	e_token_type
 {
@@ -70,5 +71,12 @@ t_redir		*redir_new(t_token_type type, char *file);
 t_redir		*redir_last(t_redir *lst);
 void		redir_add_back(t_redir **lst, t_redir *new);
 void		redir_clear(t_redir **lst);
+t_command	*parser(t_token *tokens);
+
+// debug
+void	print_tokens(t_token *tokens);
+void	print_redirections(t_redir *redirections);
+void	print_commands(t_command *commands);
+
 
 #endif

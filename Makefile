@@ -15,9 +15,10 @@ SRC				= main.c
 SRC				+= readline/readline_loop.c
 SRC				+= tokenizer/tokenizer.c
 SRC				+= tokenizer/token-utils.c
-SRC				+= parser/parser-utils.c
+SRC				+= parser/command-utils.c
 SRC				+= parser/redir-utils.c
-
+SRC				+= parser/parser.c
+SRC				+= debug/debug_print.c
 
 OBJ = $(addprefix $(OBJ_DIR)/, $(notdir $(SRC:.c=.o)))
 
@@ -31,7 +32,7 @@ $(NAME): $(OBJ) $(LIBFT)
 	@echo "minishell compiled successfully"
 
 # so that make can find the source files
-vpath %.c $(SRC_DIR) $(SRC_DIR)/tokenizer $(SRC_DIR)/parser $(SRC_DIR)/builtins $(SRC_DIR)/execution $(SRC_DIR)/readline
+vpath %.c $(SRC_DIR) $(SRC_DIR)/tokenizer $(SRC_DIR)/parser $(SRC_DIR)/builtins $(SRC_DIR)/execution $(SRC_DIR)/readline $(SRC_DIR)/debug
 
 $(OBJ_DIR)/%.o: %.c | $(OBJ_DIR)
 	$(CC) $(CFLAGS) -Iinc -I$(LIBFT_DIR) -c $< -o $@
