@@ -6,7 +6,7 @@
 /*   By: lbueno-m <lbueno-m@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/12 17:48:28 by lbueno-m          #+#    #+#             */
-/*   Updated: 2025/12/15 00:20:33 by lbueno-m         ###   ########.fr       */
+/*   Updated: 2025/12/17 12:23:31 by lbueno-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,21 +23,21 @@ static bool	is_redirection(t_token_type type)
 	);
 }
 
-static bool	handle_redirection(t_command **current_command, t_token **current_token)
+static bool	handle_redirection(t_command **current_command, t_token **redir_arg)
 {
 	t_token_type	redir_type;
 	t_redir			*new_redir;	
 
-	redir_type = (*current_token)->type;
-	*current_token = (*current_token)->next;
-	if (!*current_token || (*current_token)->type != TOKEN_WORD)
+	redir_type = (*redir_arg)->type;
+	*redir_arg = (*redir_arg)->next;
+	if (!*redir_arg || (*redir_arg)->type != TOKEN_WORD)
 	{
 		printf("error --> redirection?\n");
 		return (false);
 	}
 	if (!*current_command)
 		*current_command = command_new();
-	new_redir = redir_new(redir_type, (*current_token)->value);
+	new_redir = redir_new(redir_type, (*redir_arg)->value);
 	redir_add_back(&(*current_command)->redirections, new_redir);
 	return (true);
 }
