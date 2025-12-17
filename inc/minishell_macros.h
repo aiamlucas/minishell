@@ -13,7 +13,7 @@
 #ifndef MINISHELL_MACROS_H
 # define MINISHELL_MACROS_H
 
-/* Metacharacters char */
+/* Operators char */
 # define C_PIPE			'|'
 # define C_RED_IN		'<'
 # define C_RED_OUT		'>'
@@ -27,5 +27,8 @@
 # define STR_HEREDOC	"<<"
 # define STR_RED_OUT	">"
 # define STR_RED_APP	">>"
+# define STR_S_QUOTE	"\'"
+# define STR_D_QUOTE	"\""
+# define STR_EXP		"$"
 
 #endif

@@ -12,10 +12,11 @@
 
 #include "../../inc/minishell.h"
 
-static void print_tokens(t_token *tokens)
+static void	print_tokens(t_token *tokens)
 {
-	t_token	*current = tokens;
+	t_token	*current;
 
+	current = tokens;
 	while (current)
 	{
 		printf("[%s]", current->value);
@@ -26,27 +27,29 @@ static void print_tokens(t_token *tokens)
 	printf("->NULL\n");
 }
 
-void	readline_loop()
+void	readline_loop(void)
 {
+	char	*input;
+	t_token	*tokens;
+
 	while (1)
 	{
-		char	*prompt;
-		t_token	*tokens;
-
-		prompt = readline("$[ 🛸 ]>");
-		if (!prompt)
+		input = readline("$[ 🛸 ]>");
+		if (input && ft_strlen(input))
+			add_history(input);
+		if (!input)
 		{
 			printf("exit\n");
-			break;
+			break ;
 		}
-		if (!*prompt)
+		if (!*input)
 		{
-			free(prompt);
+			free(input);
 			continue ;
 		}
-		tokens = lexer(prompt);
+		tokens = lexer(input);
 		print_tokens(tokens);
 		token_clear(&tokens);
-		free(prompt);
+		free(input);
 	}
 }
