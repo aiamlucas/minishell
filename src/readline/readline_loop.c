@@ -6,33 +6,21 @@
 /*   By: ssin <ssin@student.42berlin.de>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/11 19:10:57 by ssin              #+#    #+#             */
-/*   Updated: 2025/12/11 19:10:58 by ssin             ###   ########.fr       */
+/*   Updated: 2025/12/15 00:27:35 by lbueno-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/minishell.h"
 
-static void print_tokens(t_token *tokens)
-{
-	t_token	*current = tokens;
-
-	while (current)
-	{
-		printf("[%s]", current->value);
-		if (current->next)
-			printf("->");
-		current = current->next;
-	}
-	printf("->NULL\n");
-}
-
 void	readline_loop()
 {
+
+	char		*prompt;
+	t_token		*tokens;
+	t_command	*commands;
+
 	while (1)
 	{
-		char	*prompt;
-		t_token	*tokens;
-
 		prompt = readline("$[ 🛸 ]>");
 		if (!prompt)
 		{
@@ -46,7 +34,10 @@ void	readline_loop()
 		}
 		tokens = lexer(prompt);
 		print_tokens(tokens);
+		commands = parser(tokens);
+		print_commands(commands);
 		token_clear(&tokens);
+		command_clear(&commands);
 		free(prompt);
 	}
 }
