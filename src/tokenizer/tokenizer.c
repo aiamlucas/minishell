@@ -37,7 +37,8 @@ char	*get_quoted_word(char *input)
 	input++;
 	while (*input && *input != C_S_QUOTE && *input != C_D_QUOTE)
 		input++;
-	input++;
+	if (*input && (*input == C_S_QUOTE || *input == C_D_QUOTE))
+		input++;
 	len = input - start;
 	word = ft_substr(start, 0, len);
 	return (word);
