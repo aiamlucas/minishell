@@ -6,7 +6,7 @@
 /*   By: lbueno-m <lbueno-m@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/12 17:48:28 by lbueno-m          #+#    #+#             */
-/*   Updated: 2025/12/17 12:23:31 by lbueno-m         ###   ########.fr       */
+/*   Updated: 2025/12/17 16:16:28 by lbueno-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,12 +14,11 @@
 
 static bool	is_redirection(t_token_type type)
 {
-	return
-	(
-		type == TOKEN_REDIR_IN ||
-		type == TOKEN_REDIR_OUT ||
-		type == TOKEN_REDIR_APPEND ||
-		type == TOKEN_HEREDOC
+	return (
+		type == TOKEN_REDIR_IN
+		|| type == TOKEN_REDIR_OUT
+		|| type == TOKEN_REDIR_APPEND
+		|| type == TOKEN_HEREDOC
 	);
 }
 
@@ -64,7 +63,6 @@ t_command	*parser(t_token *tokens)
 	command_list = NULL;
 	current_command = NULL;
 	current_token = tokens;
-
 	while (current_token)
 	{
 		if (current_token->type == TOKEN_WORD)
