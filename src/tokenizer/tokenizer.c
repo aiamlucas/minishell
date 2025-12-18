@@ -27,6 +27,23 @@ char	*get_word(char *input)
 	return (word);
 }
 
+char	*get_quoted_word(char *input)
+{
+	char	*start;
+	int		len;
+	char	*word;
+
+	start = input;
+	input++;
+	while (*input && *input != C_S_QUOTE && *input != C_D_QUOTE)
+		input++;
+	if (*input && (*input == C_S_QUOTE || *input == C_D_QUOTE))
+		input++;
+	len = input - start;
+	word = ft_substr(start, 0, len);
+	return (word);
+}
+
 char	*get_token_operator(char *input)
 {
 	if (*input == C_PIPE)
@@ -43,25 +60,24 @@ char	*get_token_operator(char *input)
 			return (STR_RED_APP);
 		return (STR_RED_OUT);
 	}
+	else if (*input == C_S_QUOTE || *input == C_D_QUOTE)
+		return (get_quoted_word(input));
 	else
 		return (get_word(input));
 }
 
 t_token_type	get_type(char *input)
 {
-	if (*input)
-	{
-		if (!ft_strncmp(input, STR_PIPE, ft_strlen(STR_PIPE)))
-			return TOKEN_PIPE;
-		if (!ft_strncmp(input, STR_RED_IN, ft_strlen(STR_RED_IN)))
-			return TOKEN_REDIR_IN;
-		if (!ft_strncmp(input, STR_HEREDOC, ft_strlen(STR_HEREDOC)))
-			return TOKEN_HEREDOC;
-		if (!ft_strncmp(input, STR_RED_OUT, ft_strlen(STR_RED_OUT)))
-			return TOKEN_REDIR_OUT;
-		if (!ft_strncmp(input, STR_RED_APP, ft_strlen(STR_RED_APP)))
-			return TOKEN_REDIR_APPEND;
-	}
+	if (!ft_strncmp(input, STR_PIPE, ft_strlen(STR_PIPE)))
+		return (TOKEN_PIPE);
+	if (!ft_strncmp(input, STR_RED_IN, ft_strlen(STR_RED_IN)))
+		return (TOKEN_REDIR_IN);
+	if (!ft_strncmp(input, STR_HEREDOC, ft_strlen(STR_HEREDOC)))
+		return (TOKEN_HEREDOC);
+	if (!ft_strncmp(input, STR_RED_OUT, ft_strlen(STR_RED_OUT)))
+		return (TOKEN_REDIR_OUT);
+	if (!ft_strncmp(input, STR_RED_APP, ft_strlen(STR_RED_APP)))
+		return (TOKEN_REDIR_APPEND);
 	return (TOKEN_WORD);
 }
 

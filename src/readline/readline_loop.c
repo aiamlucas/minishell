@@ -6,38 +6,40 @@
 /*   By: ssin <ssin@student.42berlin.de>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/11 19:10:57 by ssin              #+#    #+#             */
-/*   Updated: 2025/12/15 00:27:35 by lbueno-m         ###   ########.fr       */
+/*   Updated: 2025/12/18 12:47:04 by lbueno-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/minishell.h"
 
-void	readline_loop()
-{
 
-	char		*prompt;
-	t_token		*tokens;
+void	readline_loop(void)
+{
+	char	*input;
+	t_token	*tokens;
 	t_command	*commands;
 
 	while (1)
 	{
-		prompt = readline("$[ 🛸 ]>");
-		if (!prompt)
+		input = readline("$[ 🛸 ]>");
+		if (input && ft_strlen(input))
+			add_history(input);
+		if (!input)
 		{
 			printf("exit\n");
-			break;
+			break ;
 		}
-		if (!*prompt)
+		if (!*input)
 		{
-			free(prompt);
+			free(input);
 			continue ;
 		}
-		tokens = lexer(prompt);
+		tokens = lexer(input);
 		print_tokens(tokens);
 		commands = parser(tokens);
 		print_commands(commands);
 		token_clear(&tokens);
 		command_clear(&commands);
-		free(prompt);
+		free(input);
 	}
 }
