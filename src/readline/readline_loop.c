@@ -12,11 +12,10 @@
 
 #include "../../inc/minishell.h"
 
-
-void	readline_loop(void)
+void	readline_loop(char **envp)
 {
-	char	*input;
-	t_token	*tokens;
+	char		*input;
+	t_token		*tokens;
 	t_command	*commands;
 
 	while (1)
@@ -39,6 +38,8 @@ void	readline_loop(void)
 		commands = parser(tokens);
 		print_commands(commands);
 		token_clear(&tokens);
+		create_pipe(5, (char *[]){"./minishell", "infile", *commands->argv,
+			*commands->next->argv, "outfile"}, envp);
 		command_clear(&commands);
 		free(input);
 	}

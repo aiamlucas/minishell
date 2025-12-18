@@ -12,8 +12,10 @@
 
 #include "../inc/minishell.h"
 
-int	main(void)
+int	main(int argc, char **argv, char **envp)
 {
-	readline_loop();
+	(void)argc;
+	(void)argv;
+	readline_loop(envp);
 	return (0);
 }
