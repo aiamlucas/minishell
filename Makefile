@@ -21,6 +21,9 @@ SRC				+= parser/command-utils.c
 SRC				+= parser/redir-utils.c
 SRC				+= parser/parser.c
 SRC				+= debug/debug_print.c
+SRC				+= pipes/pipes.c
+SRC				+= pipes/helpers.c
+SRC				+= pipes/error_handler.c
 
 TEST_DIR		= tests
 TEST_SRC		= test-lexer-main.c
