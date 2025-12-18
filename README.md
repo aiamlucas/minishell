@@ -9,14 +9,12 @@ A minimal UNIX shell implementation written in C
 This project includes a lexer test suite.
 
 Build and run lexer tests:
-
 ``` 
 make test-lexer
 
 ``` 
 
 Run lexer tests with Valgrind:
-
 ``` 
 make test-lexer-valgrind
 ``` 
