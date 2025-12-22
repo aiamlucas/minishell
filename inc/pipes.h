@@ -20,6 +20,8 @@
 # include <sys/wait.h>
 # include "../libft/libft.h"
 
+# define PATH_LEN	5
+
 typedef struct s_args {
 	char	**arg;
 	char	**envp;

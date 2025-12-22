@@ -17,7 +17,7 @@ char	*ft_strcpy(char *dest, const char *src)
 	int	i;
 
 	if (!dest || !src)
-		return (0);
+		return (NULL);
 	i = 0;
 	while (*src)
 	{
@@ -35,7 +35,7 @@ char	*ft_strcat(char *dest, const char *src)
 	int	i;
 
 	if (!dest || !src)
-		return (0);
+		return (NULL);
 	i = ft_strlen(dest);
 	while (*src)
 	{
@@ -77,8 +77,8 @@ char	*get_env_path(char **envp)
 	i = 0;
 	while (envp[i])
 	{
-		if (ft_strncmp(envp[i], "PATH=", 5) == 0)
-			return (envp[i] + 5);
+		if (ft_strncmp(envp[i], "PATH=", PATH_LEN) == 0)
+			return (envp[i] + PATH_LEN);
 		i++;
 	}
 	return (NULL);

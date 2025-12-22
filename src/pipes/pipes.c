@@ -100,17 +100,17 @@ static void	pipes(t_args ept, int pid1, int pid2, int *fd)
 	if (!dir1 || !dir2 || access(dir1, F_OK) != 0 || access(dir2, F_OK) != 0)
 		free_dir(&dir1, &dir2, "Invalid command");
 	pid1 = fork();
-	if (pid1 == 0)
-		child1(fd, ept.arg[0], ept.arg[1], params);
 	if (pid1 == -1)
 		free_dir(&dir1, &dir2, "Failed fork1");
+	if (pid1 == 0)
+		child1(fd, ept.arg[0], ept.arg[1], params);
 	pid2 = fork();
 	free(dir1);
 	params.arg = &dir2;
-	if (pid2 == 0)
-		child2(fd, ept.arg[3], ept.arg[2], params);
 	if (pid2 == -1)
 		free_dir(&dir1, &dir2, "Failed fork2");
+	if (pid2 == 0)
+		child2(fd, ept.arg[3], ept.arg[2], params);
 	free(dir2);
 }
 
@@ -131,7 +131,7 @@ int	create_pipe(int argc, char **argv, char **envp)
 	entrypoint.envp = envp;
 	pid1 = 0;
 	pid2 = 0;
-	pipe(fd);
+	if (pipe(fd) == -1) error_handler("Failed to create a pipe");
 	pipes(entrypoint, pid1, pid2, fd);
 	close(fd[0]);
 	close(fd[1]);
