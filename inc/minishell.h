@@ -6,7 +6,7 @@
 /*   By: ssin <ssin@student.42berlin.de>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/18 17:31:00 by ssin              #+#    #+#             */
-/*   Updated: 2025/12/18 17:34:24 by ssin             ###   ########.fr       */
+/*   Updated: 2025/12/22 16:08:24 by lbueno-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,5 +90,11 @@ t_command	*parser(t_token *tokens);
 void		print_tokens(t_token *tokens);
 void		print_redirections(t_redir *redirections);
 void		print_commands(t_command *commands);
+
+// execution
+
+char	*get_input_file(t_redir *redirections);
+char	*get_output_file(t_redir *redirections);
+
 
 #endif

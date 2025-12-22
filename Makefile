@@ -24,6 +24,7 @@ SRC				+= debug/debug_print.c
 SRC				+= pipes/pipes.c
 SRC				+= pipes/helpers.c
 SRC				+= pipes/error_handler.c
+SRC				+= execution/execute_utils.c
 
 TEST_DIR		= tests
 TEST_SRC		= test-lexer-main.c
