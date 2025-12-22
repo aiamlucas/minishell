@@ -6,7 +6,7 @@
 /*   By: ssin <ssin@student.42berlin.de>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/17 13:20:51 by ssin              #+#    #+#             */
-/*   Updated: 2025/12/17 13:20:52 by ssin             ###   ########.fr       */
+/*   Updated: 2025/12/22 15:28:51 by lbueno-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ char	*ft_strcpy(char *dest, const char *src)
 	int	i;
 
 	if (!dest || !src)
-		return (0);
+		return (NULL);
 	i = 0;
 	while (*src)
 	{
@@ -35,7 +35,7 @@ char	*ft_strcat(char *dest, const char *src)
 	int	i;
 
 	if (!dest || !src)
-		return (0);
+		return (NULL);
 	i = ft_strlen(dest);
 	while (*src)
 	{
