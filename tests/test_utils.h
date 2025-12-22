@@ -6,7 +6,7 @@
 /*   By: lbueno-m <lbueno-m@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/18 15:15:05 by lbueno-m          #+#    #+#             */
-/*   Updated: 2025/12/18 15:15:07 by lbueno-m         ###   ########.fr       */
+/*   Updated: 2025/12/22 19:20:50 by lbueno-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,5 +22,6 @@
 void	print_test_result(const char *test_name, int passed);
 void	print_test_header(const char *category);
 int		count_tokens(t_token *tokens);
+void	run_lexer_tests(void);
 
 #endif

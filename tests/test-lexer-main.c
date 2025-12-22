@@ -6,11 +6,11 @@
 /*   By: lbueno-m <lbueno-m@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/18 15:08:32 by lbueno-m          #+#    #+#             */
-/*   Updated: 2025/12/18 15:22:57 by lbueno-m         ###   ########.fr       */
+/*   Updated: 2025/12/22 19:21:18 by lbueno-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-void	run_lexer_tests(void);
+#include "test_utils.h"
 
 int	main(void)
 {
