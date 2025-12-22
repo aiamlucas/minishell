@@ -67,9 +67,11 @@ $(TEST_LEXER_BIN): $(TEST_OBJ) $(OBJ_DIR)/tokenizer.o \
 	@echo "test-lexer compiled successfully"
 
 test-lexer: $(TEST_LEXER_BIN)
+
+run-test-lexer: test-lexer
 	@./$(TEST_LEXER_BIN)
 
-test-lexer-valgrind: $(TEST_LEXER_BIN)
+run-test-lexer-valgrind: test-lexer
 	@valgrind --leak-check=full --show-leak-kinds=all \
 		--track-origins=yes --suppressions=readline.supp \
 		./$(TEST_LEXER_BIN)
@@ -89,4 +91,4 @@ fclean: clean test-clean
 
 re: fclean all
 
-.PHONY: all clean fclean re test-lexer test-lexer-valgrind test-clean
+.PHONY: all clean fclean re run-test-lexer run-test-lexer-valgrind test-clean
