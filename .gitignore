@@ -3,9 +3,11 @@
 *.a
 *.out
 *.dSYM/
+*.bin
 
 # Executable
 minishell
+test-lexer*
 
 # Object directory
 obj/
@@ -34,3 +36,7 @@ compile_commands.json
 # --- OS junk ---
 .DS_Store
 Thumbs.db
+
+# --- Other ---
+readline.supp
+Dockerfile
