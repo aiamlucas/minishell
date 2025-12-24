@@ -6,31 +6,24 @@
 /*   By: lbueno-m <lbueno-m@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/22 15:51:23 by lbueno-m          #+#    #+#             */
-/*   Updated: 2025/12/22 15:54:48 by lbueno-m         ###   ########.fr       */
+/*   Updated: 2025/12/24 15:32:48 by lbueno-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/minishell.h"
 
-char	*get_input_file(t_redir *redirections)
+// temporary build in
+int	is_bultin(t_command *cmd)
 {
-	while (redirections)
+	if (!cmd || !cmd->argv || !cmd->argv[0])
 	{
-		if (redirections->type == TOKEN_REDIR_IN)
-			return (redirections->file);
-		redirections = redirections->next;
-	}
-	return (NULL);
-}
+		ft_printf("test: guard buildin\n");
+		return (0);
 
-char	*get_output_file(t_redir *redirections)
-{
-	while (redirections)
-	{
-		if (redirections->type == TOKEN_REDIR_OUT
-		|| redirections->type == TOKEN_REDIR_APPEND)
-			return (redirections->file);
-		redirections = redirections->next;
 	}
-	return (NULL);
+	if (ft_strcmp(cmd->argv[0], "pwd") == 0)
+	{
+		ft_printf("test: running pwd builtin\n");
+		return (1);
+	}
 }
