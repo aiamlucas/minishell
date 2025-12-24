@@ -6,7 +6,7 @@
 #    By: lbueno-m <lbueno-m@student.42berlin.de>    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/05/26 17:38:30 by lbueno-m          #+#    #+#              #
-#    Updated: 2025/10/06 16:18:09 by lbueno-m         ###   ########.fr        #
+#    Updated: 2025/12/24 15:29:56 by lbueno-m         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -58,6 +58,7 @@ SRC += ft_striteri.c
 SRC += ft_substr.c
 SRC += ft_realloc.c
 SRC += ft_atol.c
+SRC += ft_strcmp.c
 
 # ft_printf functions
 SRC += ft_printf/src/ft_printf.c
