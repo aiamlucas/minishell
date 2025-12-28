@@ -21,6 +21,9 @@ SRC				+= parser/command-utils.c
 SRC				+= parser/redir-utils.c
 SRC				+= parser/parser.c
 SRC				+= debug/debug_print.c
+SRC				+= pipes/pipes.c
+SRC				+= pipes/helpers.c
+SRC				+= pipes/error_handler.c
 
 TEST_DIR		= tests
 TEST_SRC		= test-lexer-main.c
@@ -42,7 +45,8 @@ $(NAME): $(OBJ) $(LIBFT)
 # so that make can find the source files
 vpath %.c $(SRC_DIR) $(SRC_DIR)/tokenizer $(SRC_DIR)/parser \
           $(SRC_DIR)/builtins $(SRC_DIR)/execution \
-          $(SRC_DIR)/readline $(SRC_DIR)/debug
+          $(SRC_DIR)/readline $(SRC_DIR)/debug \
+          $(SRC_DIR)/pipes
 
 $(OBJ_DIR)/%.o: %.c | $(OBJ_DIR)
 	$(CC) $(CFLAGS) -Iinc -I$(LIBFT_DIR) -c $< -o $@
