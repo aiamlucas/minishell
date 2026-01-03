@@ -6,7 +6,7 @@
 /*   By: lbueno-m <lbueno-m@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/22 15:59:40 by lbueno-m          #+#    #+#             */
-/*   Updated: 2026/01/03 17:51:51 by lbueno-m         ###   ########.fr       */
+/*   Updated: 2026/01/03 19:47:56 by lbueno-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ static int	wait_child(pid_t pid)
 static bool	handle_single_builtin(t_command *cmd)
 {
 	if (!cmd || !cmd->argv || !cmd->argv[0])
-		return (true);
+		return (false);
 	if (is_builtin(cmd))
 		return (true);
 	return (false);
