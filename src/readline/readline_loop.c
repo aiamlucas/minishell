@@ -6,7 +6,7 @@
 /*   By: ssin <ssin@student.42berlin.de>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/11 19:10:57 by ssin              #+#    #+#             */
-/*   Updated: 2025/12/18 12:47:04 by lbueno-m         ###   ########.fr       */
+/*   Updated: 2025/12/26 15:21:21 by lbueno-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,8 +38,7 @@ void	readline_loop(char **envp)
 		commands = parser(tokens);
 		print_commands(commands);
 		token_clear(&tokens);
-		create_pipe(5, (char *[]){"./minishell", "infile", *commands->argv,
-			*commands->next->argv, "outfile"}, envp);
+		execute_command(commands, envp);
 		command_clear(&commands);
 		free(input);
 	}

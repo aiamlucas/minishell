@@ -6,57 +6,67 @@
 /*   By: lbueno-m <lbueno-m@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/22 15:59:40 by lbueno-m          #+#    #+#             */
-/*   Updated: 2025/12/22 19:12:46 by lbueno-m         ###   ########.fr       */
+/*   Updated: 2026/01/03 17:51:51 by lbueno-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/minishell.h"
 
-static int	execute_single_command(t_command *commands, char **envp)
+static int	wait_child(pid_t pid)
 {
-	(void)commands;
-	(void)envp;
-	printf("Single command execution needs to be implemented");
-	return (-1);
+	int	status;
 
-}
-static void	build_pipe_args(char **args, t_command *commands,
-							char *infile, char *outfile)
-{
-	args[0] = "./minishell";
-
-	if (infile)
-		args[1] = infile;
-	else
-		args[1] = "/dev/stdin";
-	args[2] = commands->argv[0];
-	args[3] = commands->next->argv[0];
-	if (outfile)
-		args[4] = outfile;
-	else
-		args[4] = "/dev/stdout";
+	waitpid(pid, &status, 0);
+	if (WIFEXITED(status))
+		return (WEXITSTATUS(status));
+	if (WIFSIGNALED(status))
+		return (128 + WTERMSIG(status));
+	return (1);
 }
 
-static int	execute_two_command_pipe(t_command *commands, char **envp)
+static bool	handle_single_builtin(t_command *cmd)
 {
-	char	*infile;
-	char	*outfile;
-	char	*args[5];
-
-	infile = get_input_file(commands->redirections);
-	outfile = get_output_file(commands->next->redirections);
-	if (!commands->argv[0] || !commands->next->argv[0])
-		return (-1);
-	build_pipe_args(args, commands, infile, outfile);
-	return (create_pipe(5, args, envp));
+	if (!cmd || !cmd->argv || !cmd->argv[0])
+		return (true);
+	if (is_builtin(cmd))
+		return (true);
+	return (false);
 }
 
-static int	execute_multiple_pipes(t_command *commands, char **envp)
+static int	execute_single_process(t_command *cmd, char *path, char **envp)
 {
-	(void)commands;
-	(void)envp;
-	printf("Multiple pipes not implemented yet....");
-	return (-1);
+	pid_t	pid;
+
+	pid = fork();
+	if (pid == -1)
+	{
+		free(path);
+		return (1);
+	}
+	if (pid == 0)
+	{
+		apply_redirections(cmd->redirections);
+		execve(path, cmd->argv, envp);
+		perror("minishell");
+		exit(126);
+	}
+	free(path);
+	return (wait_child(pid));
+}
+
+int	execute_single_command(t_command *cmd, char **envp)
+{
+	char	*path;
+
+	if (handle_single_builtin(cmd))
+		return (0);
+	path = find_dir(cmd->argv[0], envp);
+	if (!path)
+	{
+		ft_printf("minishell: %s: command not found\n", cmd->argv[0]);
+		return (127);
+	}
+	return (execute_single_process(cmd, path, envp));
 }
 
 int	execute_command(t_command *commands, char **envp)
@@ -65,12 +75,6 @@ int	execute_command(t_command *commands, char **envp)
 		return (-1);
 	if (!commands->next)
 		return (execute_single_command(commands, envp));
-	else if (!commands->next->next)
-			return (execute_two_command_pipe(commands,envp));
 	else
-		return (execute_multiple_pipes(commands, envp));
+		return (execute_pipeline(commands, envp));
 }
-
-
-
-

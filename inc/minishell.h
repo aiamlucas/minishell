@@ -6,7 +6,7 @@
 /*   By: ssin <ssin@student.42berlin.de>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/18 17:31:00 by ssin              #+#    #+#             */
-/*   Updated: 2025/12/22 16:08:24 by lbueno-m         ###   ########.fr       */
+/*   Updated: 2026/01/03 19:29:52 by lbueno-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,8 @@
 # include "../libft/libft.h"
 # include "minishell_macros.h"
 # include <stdbool.h>
-# include "pipes.h"
+# include <sys/wait.h>
+# include <fcntl.h>
 
 typedef enum e_token_type
 {
@@ -61,6 +62,7 @@ typedef struct s_data
 	int			last_exit;
 }	t_data;
 
+
 // maybe we can later have several header files for each part of the project
 // until there I make a provisory comment for each part of the project
 
@@ -91,10 +93,19 @@ void		print_tokens(t_token *tokens);
 void		print_redirections(t_redir *redirections);
 void		print_commands(t_command *commands);
 
+// pipeline helpers
+
+int		count_pipeline_commands(t_command *cmd);
+void	free_pipes(int **pipes, int count);
+void	close_pipes(int **pipes, int count);
+int		**create_pipes(int count);
+
 // execution
-
-char	*get_input_file(t_redir *redirections);
-char	*get_output_file(t_redir *redirections);
-
+int		is_builtin(t_command *cmd);
+int		execute_single_command(t_command *cmd, char **envp);
+int		execute_command(t_command *commands, char **envp);
+int		execute_pipeline(t_command *cmds, char **envp);
+char	*find_dir(char *cmd, char **envp);
+void	apply_redirections(t_redir *redirections);
 
 #endif
