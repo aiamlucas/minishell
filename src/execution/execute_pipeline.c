@@ -6,7 +6,7 @@
 /*   By: lbueno-m <lbueno-m@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/26 14:51:10 by lbueno-m          #+#    #+#             */
-/*   Updated: 2026/01/03 19:29:28 by lbueno-m         ###   ########.fr       */
+/*   Updated: 2026/01/03 19:46:23 by lbueno-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ static void	setup_pipes(int **pipes, int i, int total)
 {
 	if (i > 0)
 		dup2(pipes[i - 1][0], STDIN_FILENO);
-	if (i < total -1)
+	if (i < total - 1)
 		dup2(pipes[i][1], STDOUT_FILENO);
 }
 
@@ -58,7 +58,11 @@ int	execute_pipeline(t_command *cmds, char **envp)
 	{
 		pid = fork();
 		if (pid == -1)
+		{
+			close_pipes(pipes, count - 1);
+			free_pipes(pipes, count - 1);
 			return (1);
+		}
 		if (pid == 0)
 			child_process(cmds, pipes, i, count, envp);
 		if (i == count -1)
