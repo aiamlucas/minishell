@@ -6,7 +6,7 @@
 /*   By: lbueno-m <lbueno-m@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/22 15:59:40 by lbueno-m          #+#    #+#             */
-/*   Updated: 2026/01/03 19:47:56 by lbueno-m         ###   ########.fr       */
+/*   Updated: 2026/01/04 21:52:46 by lbueno-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,15 +22,6 @@ static int	wait_child(pid_t pid)
 	if (WIFSIGNALED(status))
 		return (128 + WTERMSIG(status));
 	return (1);
-}
-
-static bool	handle_single_builtin(t_command *cmd)
-{
-	if (!cmd || !cmd->argv || !cmd->argv[0])
-		return (false);
-	if (is_builtin(cmd))
-		return (true);
-	return (false);
 }
 
 static int	execute_single_process(t_command *cmd, char *path, char **envp)
@@ -58,8 +49,10 @@ int	execute_single_command(t_command *cmd, char **envp)
 {
 	char	*path;
 
-	if (handle_single_builtin(cmd))
-		return (0);
+	if (!cmd || !cmd->argv || !cmd->argv[0])
+		return (1);
+	if (is_builtin(cmd))
+		return (execute_builtin(cmd, envp));
 	path = find_dir(cmd->argv[0], envp);
 	if (!path)
 	{

@@ -6,7 +6,7 @@
 /*   By: ssin <ssin@student.42berlin.de>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/18 17:31:00 by ssin              #+#    #+#             */
-/*   Updated: 2026/01/04 19:39:00 by lbueno-m         ###   ########.fr       */
+/*   Updated: 2026/01/04 21:53:38 by lbueno-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@
 # include <stdbool.h>
 # include <sys/wait.h>
 # include <fcntl.h>
+# include <limits.h>
 
 typedef enum e_token_type
 {
@@ -113,10 +114,20 @@ bool		is_builtin(t_command *cmd);
 int		execute_single_command(t_command *cmd, char **envp);
 int		execute_command(t_command *commands, char **envp);
 int		execute_pipeline(t_command *cmds, char **envp);
+int		execute_builtin(t_command *cmd, char **envp);
 char	*find_dir(char *cmd, char **envp);
 void	apply_redirections(t_redir *redirections);
 void	setup_pipes(int **pipes, int i, int total);
 void	child_process(t_child_data *data);
 pid_t	fork_child(t_child_data *data);
+
+// builtins
+int	builtin_cd(char **argv);
+int	builtin_echo(char **argv);
+int	builtin_env(char **envp);
+int	builtin_export(char **argv, char **envp);
+int	builtin_pwd(void);
+int	builtin_unset(char **argv, char **envp);
+int	builtin_exit(char **argv);
 
 #endif

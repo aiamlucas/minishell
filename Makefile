@@ -28,6 +28,13 @@ SRC				+= execution/pipeline_child.c
 SRC				+= execution/path_utils.c
 SRC				+= execution/pipeline_helpers.c
 SRC				+= execution/redirections.c
+SRC				+= builtins/builtin_cd.c
+SRC				+= builtins/builtin_echo.c
+SRC				+= builtins/builtin_env.c
+SRC				+= builtins/builtin_export.c
+SRC				+= builtins/builtin_pwd.c
+SRC				+= builtins/builtin_unset.c
+SRC				+= builtins/builtin_exit.c
 
 TEST_DIR		= tests
 TEST_SRC		= test-lexer-main.c
