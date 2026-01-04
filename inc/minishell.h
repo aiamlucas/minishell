@@ -6,7 +6,7 @@
 /*   By: ssin <ssin@student.42berlin.de>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/18 17:31:00 by ssin              #+#    #+#             */
-/*   Updated: 2026/01/03 19:29:52 by lbueno-m         ###   ########.fr       */
+/*   Updated: 2026/01/04 17:31:49 by lbueno-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,6 +62,14 @@ typedef struct s_data
 	int			last_exit;
 }	t_data;
 
+typedef struct	s_child_data
+{
+	t_command	*cmd;
+	int			**pipes;
+	int			i;
+	int			total;
+	char		**envp;
+}	t_child_data;
 
 // maybe we can later have several header files for each part of the project
 // until there I make a provisory comment for each part of the project
@@ -107,5 +115,8 @@ int		execute_command(t_command *commands, char **envp);
 int		execute_pipeline(t_command *cmds, char **envp);
 char	*find_dir(char *cmd, char **envp);
 void	apply_redirections(t_redir *redirections);
+void	setup_pipes(int **pipes, int i, int total);
+void	child_process(t_child_data *data);
+pid_t	fork_child(t_child_data *data);
 
 #endif

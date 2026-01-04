@@ -24,6 +24,7 @@ SRC				+= debug/debug_print.c
 SRC				+= execution/builtin_utils.c
 SRC				+= execution/execute_command.c
 SRC				+= execution/execute_pipeline.c
+SRC				+= execution/pipeline_child.c
 SRC				+= execution/path_utils.c
 SRC				+= execution/pipeline_helpers.c
 SRC				+= execution/redirections.c
