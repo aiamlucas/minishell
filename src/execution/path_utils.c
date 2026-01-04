@@ -6,7 +6,7 @@
 /*   By: lbueno-m <lbueno-m@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/23 22:38:43 by lbueno-m          #+#    #+#             */
-/*   Updated: 2026/01/03 17:25:44 by lbueno-m         ###   ########.fr       */
+/*   Updated: 2026/01/04 18:07:49 by lbueno-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,6 @@ static char	*free_return(char **cmd, char **env, char *path)
 	}
 	return (path);
 }
-
 
 char	*find_dir(char *cmd, char **envp)
 {
