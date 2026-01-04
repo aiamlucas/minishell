@@ -6,7 +6,7 @@
 /*   By: ssin <ssin@student.42berlin.de>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/18 17:31:00 by ssin              #+#    #+#             */
-/*   Updated: 2026/01/04 17:31:49 by lbueno-m         ###   ########.fr       */
+/*   Updated: 2026/01/04 19:39:00 by lbueno-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,7 +109,7 @@ void	close_pipes(int **pipes, int count);
 int		**create_pipes(int count);
 
 // execution
-int		is_builtin(t_command *cmd);
+bool		is_builtin(t_command *cmd);
 int		execute_single_command(t_command *cmd, char **envp);
 int		execute_command(t_command *commands, char **envp);
 int		execute_pipeline(t_command *cmds, char **envp);
