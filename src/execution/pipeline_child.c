@@ -6,7 +6,7 @@
 /*   By: lbueno-m <lbueno-m@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/04 17:27:12 by lbueno-m          #+#    #+#             */
-/*   Updated: 2026/01/04 17:30:56 by lbueno-m         ###   ########.fr       */
+/*   Updated: 2026/01/05 18:56:53 by lbueno-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@ void	child_process(t_child_data *data)
 	close_pipes(data->pipes, data->total - 1);
 	apply_redirections(data->cmd->redirections);
 	if (is_builtin(data->cmd))
+		exit(execute_builtin(data->cmd, data->envp));
 		exit(0);
 	path = find_dir(data->cmd->argv[0], data->envp);
 	if (!path)
