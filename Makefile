@@ -35,9 +35,6 @@ SRC				+= builtins/builtin_export.c
 SRC				+= builtins/builtin_pwd.c
 SRC				+= builtins/builtin_unset.c
 SRC				+= builtins/builtin_exit.c
-SRC				+= pipes/pipes.c
-SRC				+= pipes/helpers.c
-SRC				+= pipes/error_handler.c
 
 TEST_DIR		= tests
 TEST_SRC		= test-lexer-main.c
