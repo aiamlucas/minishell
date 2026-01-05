@@ -63,7 +63,7 @@ typedef struct s_data
 	int			last_exit;
 }	t_data;
 
-typedef struct	s_child_data
+typedef struct s_child_data
 {
 	t_command	*cmd;
 	int			**pipes;
@@ -104,30 +104,30 @@ void		print_commands(t_command *commands);
 
 // pipeline helpers
 
-int		count_pipeline_commands(t_command *cmd);
-void	free_pipes(int **pipes, int count);
-void	close_pipes(int **pipes, int count);
-int		**create_pipes(int count);
+int			count_pipeline_commands(t_command *cmd);
+void		free_pipes(int **pipes, int count);
+void		close_pipes(int **pipes, int count);
+int			**create_pipes(int count);
 
 // execution
 bool		is_builtin(t_command *cmd);
-int		execute_single_command(t_command *cmd, char **envp);
-int		execute_command(t_command *commands, char **envp);
-int		execute_pipeline(t_command *cmds, char **envp);
-int		execute_builtin(t_command *cmd, char **envp);
-char	*find_dir(char *cmd, char **envp);
-void	apply_redirections(t_redir *redirections);
-void	setup_pipes(int **pipes, int i, int total);
-void	child_process(t_child_data *data);
-pid_t	fork_child(t_child_data *data);
+int			execute_single_command(t_command *cmd, char **envp);
+int			execute_command(t_command *commands, char **envp);
+int			execute_pipeline(t_command *cmds, char **envp);
+int			execute_builtin(t_command *cmd, char **envp);
+char		*find_dir(char *cmd, char **envp);
+void		apply_redirections(t_redir *redirections);
+void		setup_pipes(int **pipes, int i, int total);
+void		child_process(t_child_data *data);
+pid_t		fork_child(t_child_data *data);
 
 // builtins
-int	builtin_cd(char **argv);
-int	builtin_echo(char **argv);
-int	builtin_env(char **envp);
-int	builtin_export(char **argv, char **envp);
-int	builtin_pwd(void);
-int	builtin_unset(char **argv, char **envp);
-int	builtin_exit(char **argv);
+int			builtin_cd(char **argv);
+int			builtin_echo(char **argv);
+int			builtin_env(char **envp);
+int			builtin_export(char **argv, char **envp);
+int			builtin_pwd(void);
+int			builtin_unset(char **argv, char **envp);
+int			builtin_exit(char **argv);
 
 #endif
