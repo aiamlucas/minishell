@@ -6,7 +6,7 @@
 /*   By: ssin <ssin@student.42berlin.de>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/18 17:31:00 by ssin              #+#    #+#             */
-/*   Updated: 2026/01/04 21:53:38 by lbueno-m         ###   ########.fr       */
+/*   Updated: 2026/01/05 19:48:40 by lbueno-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,6 +120,7 @@ void		apply_redirections(t_redir *redirections);
 void		setup_pipes(int **pipes, int i, int total);
 void		child_process(t_child_data *data);
 pid_t		fork_child(t_child_data *data);
+bool		must_run_in_parent(t_command *cmd);
 
 // builtins
 int			builtin_cd(char **argv);

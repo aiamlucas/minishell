@@ -6,7 +6,7 @@
 /*   By: lbueno-m <lbueno-m@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/22 15:59:40 by lbueno-m          #+#    #+#             */
-/*   Updated: 2026/01/04 21:52:46 by lbueno-m         ###   ########.fr       */
+/*   Updated: 2026/01/05 19:49:04 by lbueno-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,27 @@ static int	execute_single_process(t_command *cmd, char *path, char **envp)
 	return (wait_child(pid));
 }
 
+static int	execute_builtin_forked(t_command *cmd, char **envp)
+{
+	pid_t	pid;
+	int		status;
+	
+	pid = fork();
+	if (pid == -1)
+		return (1);
+	if (pid == 0)
+	{
+		apply_redirections(cmd->redirections);
+		exit(execute_builtin(cmd, envp));
+	}
+	waitpid(pid, &status, 0);
+	if (WIFEXITED(status))
+		return (WEXITSTATUS(status));
+	if (WIFSIGNALED(status))
+		return (128 + WTERMSIG(status));
+	return (1);
+}
+
 int	execute_single_command(t_command *cmd, char **envp)
 {
 	char	*path;
@@ -52,7 +73,13 @@ int	execute_single_command(t_command *cmd, char **envp)
 	if (!cmd || !cmd->argv || !cmd->argv[0])
 		return (1);
 	if (is_builtin(cmd))
+	{
+		if (must_run_in_parent(cmd))
+			return (execute_builtin(cmd, envp));
+		if (cmd->redirections)
+			return (execute_builtin_forked(cmd, envp));
 		return (execute_builtin(cmd, envp));
+	}
 	path = find_dir(cmd->argv[0], envp);
 	if (!path)
 	{
