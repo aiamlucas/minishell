@@ -1,28 +1,20 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_lstadd_back.c                                   :+:      :+:    :+:   */
+/*   builtin_exit.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lbueno-m <lbueno-m@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/01/04 18:11:51 by lbueno-m          #+#    #+#             */
-/*   Updated: 2026/01/04 18:11:54 by lbueno-m         ###   ########.fr       */
+/*   Created: 2026/01/04 21:46:37 by lbueno-m          #+#    #+#             */
+/*   Updated: 2026/01/04 21:46:58 by lbueno-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "../../inc/minishell.h"
 
-void	ft_lstadd_back(t_list **lst, t_list *new)
+int	builtin_exit(char **argv)
 {
-	t_list	*last;
-
-	if (!lst || !new)
-		return ;
-	if (*lst == NULL)
-	{
-		*lst = new;
-		return ;
-	}
-	last = ft_lstlast(*lst);
-	last->next = new;
+	(void)argv;
+	ft_printf("exit: not implemented yet\n");
+	return (0);
 }

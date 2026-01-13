@@ -1,28 +1,20 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_lstadd_back.c                                   :+:      :+:    :+:   */
+/*   builtin_cd.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lbueno-m <lbueno-m@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/01/04 18:11:51 by lbueno-m          #+#    #+#             */
-/*   Updated: 2026/01/04 18:11:54 by lbueno-m         ###   ########.fr       */
+/*   Created: 2026/01/04 20:10:10 by lbueno-m          #+#    #+#             */
+/*   Updated: 2026/01/04 20:10:43 by lbueno-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "../../inc/minishell.h"
 
-void	ft_lstadd_back(t_list **lst, t_list *new)
+int	builtin_cd(char **argv)
 {
-	t_list	*last;
-
-	if (!lst || !new)
-		return ;
-	if (*lst == NULL)
-	{
-		*lst = new;
-		return ;
-	}
-	last = ft_lstlast(*lst);
-	last->next = new;
+	(void)argv;
+	ft_printf("cd: not implemented yet\n");
+	return (0);
 }

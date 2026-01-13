@@ -1,28 +1,21 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_lstadd_back.c                                   :+:      :+:    :+:   */
+/*   builtin_unset.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lbueno-m <lbueno-m@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/01/04 18:11:51 by lbueno-m          #+#    #+#             */
-/*   Updated: 2026/01/04 18:11:54 by lbueno-m         ###   ########.fr       */
+/*   Created: 2026/01/04 20:14:37 by lbueno-m          #+#    #+#             */
+/*   Updated: 2026/01/04 21:43:07 by lbueno-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "../../inc/minishell.h"
 
-void	ft_lstadd_back(t_list **lst, t_list *new)
+int	builtin_unset(char **argv, char **envp)
 {
-	t_list	*last;
-
-	if (!lst || !new)
-		return ;
-	if (*lst == NULL)
-	{
-		*lst = new;
-		return ;
-	}
-	last = ft_lstlast(*lst);
-	last->next = new;
+	(void)envp;
+	(void)argv;
+	ft_printf("unset: not implemented yet\n");
+	return (0);
 }
