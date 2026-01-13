@@ -6,7 +6,7 @@
 /*   By: lbueno-m <lbueno-m@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/23 22:38:43 by lbueno-m          #+#    #+#             */
-/*   Updated: 2026/01/04 18:07:49 by lbueno-m         ###   ########.fr       */
+/*   Updated: 2026/01/13 19:01:43 by lbueno-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,24 +41,24 @@ static char	*join_path(char *dir, char *cmd)
 	return (path);
 }
 
-static char	*free_return(char **cmd, char **env, char *path)
+static void	free_split(char **split)
 {
 	int	i;
 
-	if (cmd)
+	if (!split)
+		return ;
+	i = 0;
+	while (split[i])
 	{
-		i = 0;
-		while (cmd[i])
-			free(cmd[i++]);
-		free(cmd);
+		free(split[i]);
+		i++;
 	}
-	if (env)
-	{
-		i = 0;
-		while (env[i])
-			free(env[i++]);
-		free(env);
-	}
+	free(split);
+}
+
+static char	*cleanup_and_return(char **split_env, char *path)
+{
+	free_split(split_env);
 	return (path);
 }
 
@@ -84,8 +84,8 @@ char	*find_dir(char *cmd, char **envp)
 	{
 		full_path = join_path(split_env[i++], cmd);
 		if (access(full_path, F_OK | X_OK) == 0)
-			return (free_return(NULL, split_env, full_path));
+			return (cleanup_and_return(split_env, full_path));
 		free(full_path);
 	}
-	return (free_return(NULL, split_env, NULL));
+	return (cleanup_and_return(split_env, NULL));
 }

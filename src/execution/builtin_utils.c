@@ -6,7 +6,7 @@
 /*   By: lbueno-m <lbueno-m@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/26 14:51:00 by lbueno-m          #+#    #+#             */
-/*   Updated: 2026/01/07 16:28:56 by lbueno-m         ###   ########.fr       */
+/*   Updated: 2026/01/13 19:05:09 by lbueno-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,6 @@ bool	is_builtin(t_command *cmd)
 		return (true);
 	return (false);
 }
-
 
 /*
 ** Builtins that modify the shell state must run in the parent process.

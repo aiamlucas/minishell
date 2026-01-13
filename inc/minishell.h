@@ -6,7 +6,7 @@
 /*   By: ssin <ssin@student.42berlin.de>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/18 17:31:00 by ssin              #+#    #+#             */
-/*   Updated: 2026/01/05 19:48:40 by lbueno-m         ###   ########.fr       */
+/*   Updated: 2026/01/13 19:07:26 by lbueno-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ typedef struct s_child_data
 {
 	t_command	*cmd;
 	int			**pipes;
-	int			i;
+	int			cmd_index;
 	int			total;
 	char		**envp;
 }	t_child_data;
@@ -121,6 +121,7 @@ void		setup_pipes(int **pipes, int i, int total);
 void		child_process(t_child_data *data);
 pid_t		fork_child(t_child_data *data);
 bool		must_run_in_parent(t_command *cmd);
+void		execute_child_command(t_command *cmd, char **envp);
 
 // builtins
 int			builtin_cd(char **argv);
@@ -130,5 +131,10 @@ int			builtin_export(char **argv, char **envp);
 int			builtin_pwd(void);
 int			builtin_unset(char **argv, char **envp);
 int			builtin_exit(char **argv);
+
+// signals
+void		handle_sigint(int sig);
+void		setup_signals(void);
+void		reset_signals(void);
 
 #endif

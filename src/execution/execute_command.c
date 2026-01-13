@@ -6,7 +6,7 @@
 /*   By: lbueno-m <lbueno-m@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/22 15:59:40 by lbueno-m          #+#    #+#             */
-/*   Updated: 2026/01/05 19:49:04 by lbueno-m         ###   ########.fr       */
+/*   Updated: 2026/01/13 19:06:30 by lbueno-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,9 +36,9 @@ static int	execute_single_process(t_command *cmd, char *path, char **envp)
 	}
 	if (pid == 0)
 	{
+		free(path);
 		apply_redirections(cmd->redirections);
-		execve(path, cmd->argv, envp);
-		perror("minishell");
+		execute_child_command(cmd, envp);
 		exit(126);
 	}
 	free(path);
@@ -49,7 +49,7 @@ static int	execute_builtin_forked(t_command *cmd, char **envp)
 {
 	pid_t	pid;
 	int		status;
-	
+
 	pid = fork();
 	if (pid == -1)
 		return (1);

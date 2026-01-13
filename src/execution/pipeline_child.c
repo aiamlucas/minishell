@@ -6,38 +6,26 @@
 /*   By: lbueno-m <lbueno-m@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/04 17:27:12 by lbueno-m          #+#    #+#             */
-/*   Updated: 2026/01/05 19:49:51 by lbueno-m         ###   ########.fr       */
+/*   Updated: 2026/01/13 15:15:43 by lbueno-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/minishell.h"
 
-void	setup_pipes(int **pipes, int i, int total)
+void	setup_pipes(int **pipes, int cmd_index, int total)
 {
-	if (i > 0)
-		dup2(pipes[i - 1][0], STDIN_FILENO);
-	if (i < total - 1)
-		dup2(pipes[i][1], STDOUT_FILENO);
+	if (cmd_index > 0)
+		dup2(pipes[cmd_index - 1][0], STDIN_FILENO);
+	if (cmd_index < total - 1)
+		dup2(pipes[cmd_index][1], STDOUT_FILENO);
 }
 
 void	child_process(t_child_data *data)
 {
-	char	*path;
-
-	setup_pipes(data->pipes, data->i, data->total);
+	setup_pipes(data->pipes, data->cmd_index, data->total);
 	close_pipes(data->pipes, data->total - 1);
 	apply_redirections(data->cmd->redirections);
-	if (is_builtin(data->cmd))
-		exit(execute_builtin(data->cmd, data->envp));
-	path = find_dir(data->cmd->argv[0], data->envp);
-	if (!path)
-	{
-		ft_printf("minishell: %s: command not found\n", data->cmd->argv[0]);
-		exit(127);
-	}
-	execve(path, data->cmd->argv, data->envp);
-	perror("minishell");
-	exit(126);
+	execute_child_command(data->cmd, data->envp);
 }
 
 pid_t	fork_child(t_child_data *data)

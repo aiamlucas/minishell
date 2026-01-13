@@ -28,6 +28,7 @@ SRC				+= execution/pipeline_child.c
 SRC				+= execution/path_utils.c
 SRC				+= execution/pipeline_helpers.c
 SRC				+= execution/redirections.c
+SRC				+= execution/execution_utils.c
 SRC				+= builtins/builtin_cd.c
 SRC				+= builtins/builtin_echo.c
 SRC				+= builtins/builtin_env.c

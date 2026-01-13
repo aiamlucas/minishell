@@ -6,7 +6,7 @@
 /*   By: lbueno-m <lbueno-m@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/26 14:51:10 by lbueno-m          #+#    #+#             */
-/*   Updated: 2026/01/04 17:31:07 by lbueno-m         ###   ########.fr       */
+/*   Updated: 2026/01/13 18:49:46 by lbueno-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,10 +41,10 @@ static void	init_child_data(t_child_data *data, int **pipes,
 	data->envp = envp;
 }
 
-static pid_t	fork_one_child(t_child_data *data, t_command *cmd, int i)
+static pid_t	fork_one_child(t_child_data *data, t_command *cmd, int index)
 {
 	data->cmd = cmd;
-	data->i = i;
+	data->cmd_index = index;
 	return (fork_child(data));
 }
 
@@ -61,13 +61,14 @@ int	execute_pipeline(t_command *cmds, char **envp)
 	if (!pipes)
 		return (1);
 	init_child_data(&data, pipes, count, envp);
-	i = -1;
-	while (cmds && ++i < count)
+	i = 0;
+	while (cmds && i < count)
 	{
 		last_pid = fork_one_child(&data, cmds, i);
 		if (last_pid == -1)
 			return (cleanup_on_error(pipes, count));
 		cmds = cmds->next;
+		i++;
 	}
 	return (wait_all(last_pid, pipes, count));
 }
