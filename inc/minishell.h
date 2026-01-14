@@ -6,7 +6,7 @@
 /*   By: ssin <ssin@student.42berlin.de>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/18 17:31:00 by ssin              #+#    #+#             */
-/*   Updated: 2026/01/13 19:07:26 by lbueno-m         ###   ########.fr       */
+/*   Updated: 2026/01/14 15:25:37 by lbueno-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,8 @@
 # include <sys/wait.h>
 # include <fcntl.h>
 # include <limits.h>
+
+extern volatile	sig_atomic_t	g_signal_received;
 
 typedef enum e_token_type
 {
@@ -133,8 +135,13 @@ int			builtin_unset(char **argv, char **envp);
 int			builtin_exit(char **argv);
 
 // signals
-void		handle_sigint(int sig);
+
 void		setup_signals(void);
 void		reset_signals(void);
+void		handle_sigint(int sig);
+bool		check_signal(void);
+void		reset_signal(void);
+int			get_signal_exit_code(void);
+bool		handle_signal_interrupt(void);
 
 #endif
