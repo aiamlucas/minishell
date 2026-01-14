@@ -6,7 +6,7 @@
 /*   By: lbueno-m <lbueno-m@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 16:45:29 by lbueno-m          #+#    #+#             */
-/*   Updated: 2025/05/26 17:39:35 by lbueno-m         ###   ########.fr       */
+/*   Updated: 2025/12/24 15:29:19 by lbueno-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,7 @@ int		ft_memcmp(const void *s1, const void *s2, size_t n);
 int		ft_strncmp(const char *s1, const char *s2, size_t n);
 double	ft_atof(const char *str);
 int		ft_safe_atoi(const char *str, int *result);
+int		ft_strcmp(const char *s1, const char *s2);
 
 typedef struct s_list
 {

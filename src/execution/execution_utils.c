@@ -1,28 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_lstadd_back.c                                   :+:      :+:    :+:   */
+/*   execution_utils.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lbueno-m <lbueno-m@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/01/04 18:11:51 by lbueno-m          #+#    #+#             */
-/*   Updated: 2026/01/04 18:11:54 by lbueno-m         ###   ########.fr       */
+/*   Created: 2026/01/13 15:03:19 by lbueno-m          #+#    #+#             */
+/*   Updated: 2026/01/13 19:05:44 by lbueno-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "../../inc/minishell.h"
 
-void	ft_lstadd_back(t_list **lst, t_list *new)
+void	execute_child_command(t_command *cmd, char **envp)
 {
-	t_list	*last;
+	char	*path;
 
-	if (!lst || !new)
-		return ;
-	if (*lst == NULL)
+	if (is_builtin(cmd))
+		exit(execute_builtin(cmd, envp));
+	path = find_dir(cmd->argv[0], envp);
+	if (!path)
 	{
-		*lst = new;
-		return ;
+		ft_printf("minishell: %s: command not found\n", cmd->argv[0]);
+		exit(127);
 	}
-	last = ft_lstlast(*lst);
-	last->next = new;
+	execve(path, cmd->argv, envp);
+	perror("minishell");
+	exit(126);
 }

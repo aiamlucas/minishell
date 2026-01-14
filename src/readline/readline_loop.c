@@ -6,7 +6,7 @@
 /*   By: ssin <ssin@student.42berlin.de>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/11 19:10:57 by ssin              #+#    #+#             */
-/*   Updated: 2025/12/18 12:47:04 by lbueno-m         ###   ########.fr       */
+/*   Updated: 2026/01/07 13:34:16 by lbueno-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@ void	readline_loop(char **envp)
 	char		*input;
 	t_token		*tokens;
 	t_command	*commands;
+	int			exit_code;
 
 	while (1)
 	{
@@ -34,13 +35,13 @@ void	readline_loop(char **envp)
 			continue ;
 		}
 		tokens = lexer(input);
-		print_tokens(tokens);
+		// print_tokens(tokens);
 		commands = parser(tokens);
-		print_commands(commands);
+		// print_commands(commands);
 		token_clear(&tokens);
-		create_pipe(5, (char *[]){"./minishell", "infile", *commands->argv,
-			*commands->next->argv, "outfile"}, envp);
+		exit_code = execute_command(commands, envp);
 		command_clear(&commands);
+		printf("\n --- debug exit code: %d\n ---", exit_code);
 		free(input);
 	}
 }

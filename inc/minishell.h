@@ -6,7 +6,7 @@
 /*   By: ssin <ssin@student.42berlin.de>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/18 17:31:00 by ssin              #+#    #+#             */
-/*   Updated: 2025/12/18 17:34:24 by ssin             ###   ########.fr       */
+/*   Updated: 2026/01/13 19:07:26 by lbueno-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,9 @@
 # include "../libft/libft.h"
 # include "minishell_macros.h"
 # include <stdbool.h>
-# include "pipes.h"
+# include <sys/wait.h>
+# include <fcntl.h>
+# include <limits.h>
 
 typedef enum e_token_type
 {
@@ -61,6 +63,15 @@ typedef struct s_data
 	int			last_exit;
 }	t_data;
 
+typedef struct s_child_data
+{
+	t_command	*cmd;
+	int			**pipes;
+	int			cmd_index;
+	int			total;
+	char		**envp;
+}	t_child_data;
+
 // maybe we can later have several header files for each part of the project
 // until there I make a provisory comment for each part of the project
 
@@ -90,5 +101,40 @@ t_command	*parser(t_token *tokens);
 void		print_tokens(t_token *tokens);
 void		print_redirections(t_redir *redirections);
 void		print_commands(t_command *commands);
+
+// pipeline helpers
+
+int			count_pipeline_commands(t_command *cmd);
+void		free_pipes(int **pipes, int count);
+void		close_pipes(int **pipes, int count);
+int			**create_pipes(int count);
+
+// execution
+bool		is_builtin(t_command *cmd);
+int			execute_single_command(t_command *cmd, char **envp);
+int			execute_command(t_command *commands, char **envp);
+int			execute_pipeline(t_command *cmds, char **envp);
+int			execute_builtin(t_command *cmd, char **envp);
+char		*find_dir(char *cmd, char **envp);
+void		apply_redirections(t_redir *redirections);
+void		setup_pipes(int **pipes, int i, int total);
+void		child_process(t_child_data *data);
+pid_t		fork_child(t_child_data *data);
+bool		must_run_in_parent(t_command *cmd);
+void		execute_child_command(t_command *cmd, char **envp);
+
+// builtins
+int			builtin_cd(char **argv);
+int			builtin_echo(char **argv);
+int			builtin_env(char **envp);
+int			builtin_export(char **argv, char **envp);
+int			builtin_pwd(void);
+int			builtin_unset(char **argv, char **envp);
+int			builtin_exit(char **argv);
+
+// signals
+void		handle_sigint(int sig);
+void		setup_signals(void);
+void		reset_signals(void);
 
 #endif

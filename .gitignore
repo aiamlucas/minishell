@@ -39,4 +39,5 @@ Thumbs.db
 
 # --- Other ---
 readline.supp
+# -- Docker file ---
 Dockerfile
