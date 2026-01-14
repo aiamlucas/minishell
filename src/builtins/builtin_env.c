@@ -16,7 +16,7 @@ int	builtin_env(char **envp)
 {
 	while (*envp)
 	{
-		printf("%s\n", *envp);
+		ft_printf("%s\n", *envp);
 		envp++;
 	}
 	return (0);

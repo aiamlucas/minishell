@@ -14,6 +14,11 @@
 
 int	builtin_pwd(void)
 {
-	ft_printf("pwd: not implemented yet\n");
+	char	buf[PATH_MAX];
+
+	if (getcwd(buf, sizeof(buf)) == NULL)
+		return (1);
+	ft_printf(buf);
+	ft_printf("\n");
 	return (0);
 }
