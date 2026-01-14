@@ -6,7 +6,7 @@
 /*   By: lbueno-m <lbueno-m@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/13 19:39:57 by lbueno-m          #+#    #+#             */
-/*   Updated: 2026/01/14 15:34:08 by lbueno-m         ###   ########.fr       */
+/*   Updated: 2026/01/14 17:07:58 by lbueno-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@ bool	check_signal(void)
 void	reset_signal(void)
 {
 	g_signal_received = 0;
+}
  
 
 int		get_signal_exit_code(void)
