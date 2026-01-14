@@ -6,7 +6,7 @@
 /*   By: lbueno-m <lbueno-m@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/08 22:25:08 by lbueno-m          #+#    #+#             */
-/*   Updated: 2026/01/14 15:35:01 by lbueno-m         ###   ########.fr       */
+/*   Updated: 2026/01/14 19:00:39 by lbueno-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,13 +27,15 @@ void	setup_signals(void)
 	struct sigaction	sa_quit;
 
 	g_signal_received = 0;
+	ft_memset(&sa_int, 0, sizeof(struct sigaction));
+	sigemptyset(&sa_int.sa_mask);
 	sa_int.sa_handler = handle_sigint;
 	sa_int.sa_flags = SA_RESTART;
-	sigemptyset(&sa_int.sa_mask);
 	sigaction(SIGINT, &sa_int, NULL);
+	ft_memset(&sa_quit, 0, sizeof(struct sigaction));
+	sigemptyset(&sa_quit.sa_mask);
 	sa_quit.sa_handler = SIG_IGN;
 	sa_quit.sa_flags = 0;
-	sigemptyset(&sa_int.sa_mask);
 	sigaction(SIGQUIT, &sa_quit, NULL);
 }
 
@@ -42,9 +44,10 @@ void	reset_signals(void)
 	struct sigaction	sa;
 
 	g_signal_received = 0;
+	ft_memset(&sa, 0, sizeof(struct sigaction));
+	sigemptyset(&sa.sa_mask);
 	sa.sa_handler = SIG_DFL;
 	sa.sa_flags = 0;
-	sigemptyset(&sa.sa_mask);
 	sigaction(SIGINT, &sa, NULL);
 	sigaction(SIGQUIT, &sa, NULL);
 }
