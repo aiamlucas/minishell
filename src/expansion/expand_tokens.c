@@ -6,7 +6,7 @@
 /*   By: lbueno-m <lbueno-m@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/16 23:33:18 by lbueno-m          #+#    #+#             */
-/*   Updated: 2026/01/20 22:14:02 by lbueno-m         ###   ########.fr       */
+/*   Updated: 2026/01/21 00:25:46 by lbueno-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,13 +37,12 @@ static size_t	expanded_length(const char *str, char **envp, int last_exit)
 			p++;
 			if (*p == '\0')
 			{
-				total_len += 1;
+				total_len++;
 				break ;
 			}
 			if (!(ft_isalnum(*p) || *p == '_'))
 			{
-				total_len += 1;
-				p++;
+				total_len++;
 				continue ;
 			}
 			var_start = p;
@@ -105,7 +104,6 @@ static char	*expand_variable(const char *str, char **envp, int last_exit, size_t
 			if (!(ft_isalnum(*p) || *p == '_'))
 			{
 				ret[total_len++] = '$';
-				p++;
 				continue ;
 			}
 			var_start = p;
