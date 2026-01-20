@@ -6,7 +6,7 @@
 /*   By: ssin <ssin@student.42berlin.de>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/11 19:10:57 by ssin              #+#    #+#             */
-/*   Updated: 2026/01/14 19:06:46 by lbueno-m         ###   ########.fr       */
+/*   Updated: 2026/01/18 18:55:36 by lbueno-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,11 @@ static int	process_input(char *input, char **envp)
 	int			exit_code;
 
 	tokens = lexer(input);
-	// print_tokens(tokens); // for debugging
+	printf("tokens\n");
+	print_tokens(tokens); // for debugging
+	printf("\n after expansion:\n");
+	expand_tokens(tokens, envp, 0);
+	print_tokens(tokens); // for debugging
 	commands = parser(tokens);
 	// print_commands(commands); // for debugging
 	token_clear(&tokens);

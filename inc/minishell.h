@@ -6,7 +6,7 @@
 /*   By: ssin <ssin@student.42berlin.de>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/18 17:31:00 by ssin              #+#    #+#             */
-/*   Updated: 2026/01/14 15:25:37 by lbueno-m         ###   ########.fr       */
+/*   Updated: 2026/01/18 18:52:17 by lbueno-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,6 @@ typedef struct s_token
 	struct s_token	*next;
 }	t_token;
 
-// Redirecion struct to be placed inside the commands list
 typedef struct s_redir
 {
 	t_token_type	type;
@@ -50,10 +49,18 @@ typedef struct s_redir
 	struct s_redir	*next;
 }	t_redir;
 
+typedef enum e_quote_type
+{
+	QUOTE_NONE,
+	QUOTE_SINGLE,
+	QUOTE_DOUBLE,
+}	t_quote_type;
+
 typedef struct s_command
 {
 	char				**argv;
 	t_redir				*redirections;
+	t_quote_type		*quote_type;
 	struct s_command	*next;
 }	t_command;
 
@@ -143,5 +150,8 @@ bool		check_signal(void);
 void		reset_signal(void);
 int			get_signal_exit_code(void);
 bool		handle_signal_interrupt(void);
+
+// expansion
+bool	expand_tokens(t_token *tokens, char **envp, int last_exit);
 
 #endif
