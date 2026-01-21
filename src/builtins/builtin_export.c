@@ -17,7 +17,11 @@ int	is_valid_argv(char *argv)
 	if (!argv)
 		return (0);
 	else
-		return (1);
+	{
+		if (ft_isalpha(argv[0]))
+			return (1);
+		return (0);
+	}
 }
 
 int	print_invalid()
@@ -37,19 +41,16 @@ int	builtin_export(char **argv)
 	arg_valid = is_valid_argv(argv[1]);
 	if (arg_valid)
 	{
-		if (ft_strchr(argv[1], '='))
-		{
-			args = ft_split(argv[1], '=');
-			key = args[0];
-			value = args[1];
-			if (key && value)
-				ft_printf("valid k: %s v: %s\n", key, value);
-			else
-				print_invalid();
-		}
+		value = ft_strchr(argv[1], '=');
+		key = ft_substr(argv[1], 0, value - argv[1]);
+		if (value)
+			value++;
+		if (key)
+			ft_printf("valid k: %s v: %s\n", key, value);
 		else
-		print_invalid();
+			return (print_invalid());
 	}
 	else
-		print_invalid();
+		return (print_invalid());
+	return (0);
 }
