@@ -18,7 +18,7 @@ int	is_valid_argv(char *argv)
 		return (0);
 	else
 	{
-		if (ft_isalpha(argv[0]))
+		if (ft_isalpha(argv[0]) || argv[0] == '_')
 			return (1);
 		return (0);
 	}
@@ -38,14 +38,20 @@ int	builtin_export(char **argv)
 	char	**args;
 
 	args = NULL;
+	key = NULL;
 	arg_valid = is_valid_argv(argv[1]);
 	if (arg_valid)
 	{
 		value = ft_strchr(argv[1], '=');
-		key = ft_substr(argv[1], 0, value - argv[1]);
 		if (value)
+		{
+			key = ft_substr(argv[1], 0, value - argv[1]);
 			value++;
+		}
+		else
+			key = ft_strdup(argv[1]);
 		if (key)
+			// ft_isalpha(key[i]), ft_isdigit(key[i]), key[i] == '_'
 			ft_printf("valid k: %s v: %s\n", key, value);
 		else
 			return (print_invalid());
