@@ -6,25 +6,23 @@
 /*   By: ssin <ssin@student.42berlin.de>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/11 19:10:57 by ssin              #+#    #+#             */
-/*   Updated: 2026/01/14 19:06:46 by lbueno-m         ###   ########.fr       */
+/*   Updated: 2026/01/23 15:48:42 by lbueno-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/minishell.h"
 
-static int	process_input(char *input, char **envp)
+static int	process_input(char *input, t_data *data)
 {
-	t_token		*tokens;
-	t_command	*commands;
 	int			exit_code;
 
-	tokens = lexer(input);
-	// print_tokens(tokens); // for debugging
-	commands = parser(tokens);
-	// print_commands(commands); // for debugging
-	token_clear(&tokens);
-	exit_code = execute_command(commands, envp);
-	command_clear(&commands);
+	data->tokens = lexer(input);
+	// print_tokens(data->tokens); // for debugging
+	data->commands = parser(data->tokens);
+	// print_commands(data->commands); // for debugging
+	token_clear(&data->tokens);
+	exit_code = execute_command(data->commands, data);
+	command_clear(&data->commands);
 	if (check_signal())
 		exit_code = get_signal_exit_code();
 	return (exit_code);
@@ -43,8 +41,10 @@ static void	handle_signal_cleanup(char *input)
 	free(input);
 }
 
-static bool	handle_input_line(char *input, char **envp)
+static bool	handle_input_line(char *input, t_data *data) 
 {
+	int	exit_code;
+
 	if (!input)
 	{
 		printf("exit\n");
@@ -61,12 +61,13 @@ static bool	handle_input_line(char *input, char **envp)
 		return (true);
 	}
 	add_history(input);
-	process_input(input, envp);
+	exit_code = process_input(input, data);
+	data->last_exit = exit_code;
 	free(input);
 	return (true);
 }
 
-void	readline_loop(char **envp)
+void	readline_loop(t_data *data)
 {
 	char		*input;
 
@@ -74,7 +75,7 @@ void	readline_loop(char **envp)
 	{
 		reset_signal();
 		input = readline("$[ 🛸 ]>");
-		if (!handle_input_line(input, envp))
+		if (!handle_input_line(input, data))
 			break ;
 	}
 }
