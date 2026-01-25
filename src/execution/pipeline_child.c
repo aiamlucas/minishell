@@ -6,7 +6,7 @@
 /*   By: lbueno-m <lbueno-m@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/04 17:27:12 by lbueno-m          #+#    #+#             */
-/*   Updated: 2026/01/13 15:15:43 by lbueno-m         ###   ########.fr       */
+/*   Updated: 2026/01/14 15:19:36 by lbueno-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@ void	setup_pipes(int **pipes, int cmd_index, int total)
 
 void	child_process(t_child_data *data)
 {
+	reset_signals();
 	setup_pipes(data->pipes, data->cmd_index, data->total);
 	close_pipes(data->pipes, data->total - 1);
 	apply_redirections(data->cmd->redirections);

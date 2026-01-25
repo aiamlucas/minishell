@@ -6,7 +6,7 @@
 /*   By: lbueno-m <lbueno-m@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/26 14:51:10 by lbueno-m          #+#    #+#             */
-/*   Updated: 2026/01/13 18:49:46 by lbueno-m         ###   ########.fr       */
+/*   Updated: 2026/01/14 17:05:08 by lbueno-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,7 @@ int	execute_pipeline(t_command *cmds, char **envp)
 	pid_t			last_pid;
 	int				i;
 	t_child_data	data;
+	int				exit_code;
 
 	count = count_pipeline_commands(cmds);
 	pipes = create_pipes(count - 1);
@@ -70,5 +71,8 @@ int	execute_pipeline(t_command *cmds, char **envp)
 		cmds = cmds->next;
 		i++;
 	}
-	return (wait_all(last_pid, pipes, count));
+	exit_code = wait_all(last_pid, pipes, count);
+	if (check_signal())
+		return (get_signal_exit_code());
+	return (exit_code);
 }
