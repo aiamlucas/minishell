@@ -6,7 +6,7 @@
 /*   By: ssin <ssin@student.42berlin.de>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/18 17:31:00 by ssin              #+#    #+#             */
-/*   Updated: 2026/01/23 15:47:24 by lbueno-m         ###   ########.fr       */
+/*   Updated: 2026/01/25 16:50:35 by lbueno-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,7 +114,7 @@ int			**create_pipes(int count);
 // execution
 bool		is_builtin(t_command *cmd);
 int			execute_single_command(t_command *cmd, char **envp);
-int			execute_command(t_command *commands, t_data *data);
+int			execute_command(t_data *data);
 int			execute_pipeline(t_command *cmds, char **envp);
 int			execute_builtin(t_command *cmd, char **envp);
 char		*find_dir(char *cmd, char **envp);

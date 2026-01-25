@@ -6,7 +6,7 @@
 /*   By: lbueno-m <lbueno-m@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/22 15:59:40 by lbueno-m          #+#    #+#             */
-/*   Updated: 2026/01/23 15:42:03 by lbueno-m         ###   ########.fr       */
+/*   Updated: 2026/01/25 16:50:18 by lbueno-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,16 +95,16 @@ int	execute_single_command(t_command *cmd, char **envp)
 	return (execute_single_process(cmd, path, envp));
 }
 
-int	execute_command(t_command *commands, t_data *data)
+int	execute_command(t_data *data)
 {
 	int exit_code;
 	
-	if (!commands)
+	if (!data->commands)
 		return (1);
-	if (!commands->next)
-		exit_code = execute_single_command(commands, data->envp);
+	if (!data->commands->next)
+		exit_code = execute_single_command(data->commands, data->envp);
 	else
-		exit_code = execute_pipeline(commands, data->envp);
+		exit_code = execute_pipeline(data->commands, data->envp);
 	if (check_signal())
 		return (get_signal_exit_code());
 	return (exit_code);

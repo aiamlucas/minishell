@@ -6,7 +6,7 @@
 /*   By: ssin <ssin@student.42berlin.de>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/11 19:10:57 by ssin              #+#    #+#             */
-/*   Updated: 2026/01/23 15:48:42 by lbueno-m         ###   ########.fr       */
+/*   Updated: 2026/01/25 16:50:49 by lbueno-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ static int	process_input(char *input, t_data *data)
 	data->commands = parser(data->tokens);
 	// print_commands(data->commands); // for debugging
 	token_clear(&data->tokens);
-	exit_code = execute_command(data->commands, data);
+	exit_code = execute_command(data);
 	command_clear(&data->commands);
 	if (check_signal())
 		exit_code = get_signal_exit_code();
