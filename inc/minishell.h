@@ -12,6 +12,7 @@
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
+# define HOME "HOME"
 
 # include <stdio.h>
 # include <readline/readline.h>
@@ -41,6 +42,13 @@ typedef struct s_token
 	t_token_type	type;
 	struct s_token	*next;
 }	t_token;
+
+typedef struct s_env
+{
+	char			*key;
+	char			*value;
+	struct s_env	*next;
+}	t_env;
 
 // Redirecion struct to be placed inside the commands list
 typedef struct s_redir
@@ -126,10 +134,10 @@ bool		must_run_in_parent(t_command *cmd);
 void		execute_child_command(t_command *cmd, char **envp);
 
 // builtins
-int			builtin_cd(char **argv);
+int			builtin_cd(char **argv, t_env *envp);
 int			builtin_echo(char **argv);
 int			builtin_env(char **envp);
-int			builtin_export(char **argv, char **envp);
+int			builtin_export(char **argv);
 int			builtin_pwd(void);
 int			builtin_unset(char **argv, char **envp);
 int			builtin_exit(char **argv);

@@ -22,12 +22,14 @@ int	builtin_env(char **envp)
 	return (0);
 }
 
-/*int	builtin_unset(char **envp)
-{
-	//unsetenv(envp);
-}
-
-char	*builtin_export(char **envp, char *value)
-{
-	// setenv(const char *envp, const char *value, int overwrite);
-}*/
+//int	builtin_env(t_env *envp)
+//{
+//	handle variables without value
+//	while (envp)
+//	{
+//		if (envp->value)
+//			ft_printf("%s=%s\n", envp->key, envp->value);
+//		envp = envp->next;
+//	}
+//	return (0);
+//}

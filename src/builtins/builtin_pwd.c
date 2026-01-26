@@ -14,11 +14,13 @@
 
 int	builtin_pwd(void)
 {
-	char	buf[PATH_MAX];
-
-	if (getcwd(buf, sizeof(buf)) == NULL)
-		return (1);
-	ft_printf(buf);
-	ft_printf("\n");
+	char *cwd = getcwd(NULL, 0);
+	if (cwd)
+	{
+		printf("%s\n", cwd);
+		free(cwd);
+	}
+	else
+		perror("getcwd");
 	return (0);
 }
