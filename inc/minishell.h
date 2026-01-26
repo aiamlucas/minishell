@@ -6,7 +6,7 @@
 /*   By: ssin <ssin@student.42berlin.de>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/18 17:31:00 by ssin              #+#    #+#             */
-/*   Updated: 2026/01/13 19:07:26 by lbueno-m         ###   ########.fr       */
+/*   Updated: 2026/01/25 16:50:35 by lbueno-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,8 @@
 # include <sys/wait.h>
 # include <fcntl.h>
 # include <limits.h>
+
+extern volatile	sig_atomic_t	g_signal_received;
 
 typedef enum e_token_type
 {
@@ -76,7 +78,7 @@ typedef struct s_child_data
 // until there I make a provisory comment for each part of the project
 
 // core
-void		readline_loop(char **envp);
+void		readline_loop(t_data *data);
 
 // lexer
 t_token		*new_token(char *value, t_token_type type);
@@ -112,7 +114,7 @@ int			**create_pipes(int count);
 // execution
 bool		is_builtin(t_command *cmd);
 int			execute_single_command(t_command *cmd, char **envp);
-int			execute_command(t_command *commands, char **envp);
+int			execute_command(t_data *data);
 int			execute_pipeline(t_command *cmds, char **envp);
 int			execute_builtin(t_command *cmd, char **envp);
 char		*find_dir(char *cmd, char **envp);
@@ -133,8 +135,13 @@ int			builtin_unset(char **argv, char **envp);
 int			builtin_exit(char **argv);
 
 // signals
-void		handle_sigint(int sig);
+
 void		setup_signals(void);
 void		reset_signals(void);
+void		handle_sigint(int sig);
+bool		check_signal(void);
+void		reset_signal(void);
+int			get_signal_exit_code(void);
+bool		handle_signal_interrupt(void);
 
 #endif
