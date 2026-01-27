@@ -42,6 +42,13 @@ typedef struct s_token
 	struct s_token	*next;
 }	t_token;
 
+typedef struct s_env
+{
+	char			*key;
+	char			*value;
+	struct s_env	*next;
+}	t_env;
+
 // Redirecion struct to be placed inside the commands list
 typedef struct s_redir
 {
@@ -60,6 +67,7 @@ typedef struct s_command
 typedef struct s_data
 {
 	char		**envp;
+	t_env		*internal_env;
 	t_token		*tokens;
 	t_command	*commands;
 	int			last_exit;
@@ -103,7 +111,7 @@ t_command	*parser(t_token *tokens);
 void		print_tokens(t_token *tokens);
 void		print_redirections(t_redir *redirections);
 void		print_commands(t_command *commands);
-void		print_env_list(t_list *list);
+void		print_env_list(t_env *list);
 
 // pipeline helpers
 
@@ -114,25 +122,25 @@ int			**create_pipes(int count);
 
 // execution
 bool		is_builtin(t_command *cmd);
-int			execute_single_command(t_command *cmd, char **envp);
+int			execute_single_command(t_command *cmd, char **envp, t_env *internal_env);
 int			execute_command(t_data *data);
 int			execute_pipeline(t_command *cmds, char **envp);
-int			execute_builtin(t_command *cmd, char **envp);
-char		*find_dir(char *cmd, char **envp);
+int			execute_builtin(t_command *cmd, t_env *internal_env);
+char		*find_dir(char *cmd, t_env *internal_env);
 void		apply_redirections(t_redir *redirections);
 void		setup_pipes(int **pipes, int i, int total);
 void		child_process(t_child_data *data);
 pid_t		fork_child(t_child_data *data);
 bool		must_run_in_parent(t_command *cmd);
-void		execute_child_command(t_command *cmd, char **envp);
+void		execute_child_command(t_command *cmd, char **envp, t_env *internal_env);
 
 // builtins
 int			builtin_cd(char **argv);
 int			builtin_echo(char **argv);
-int			builtin_env(char **envp);
-int			builtin_export(char **argv, char **envp);
+int			builtin_env(t_env *internal_env);
+int			builtin_export(char **argv, t_env *internal_env);
 int			builtin_pwd(void);
-int			builtin_unset(char **argv, char **envp);
+int			builtin_unset(char **argv, t_env *internal_env);
 int			builtin_exit(char **argv);
 
 // signals

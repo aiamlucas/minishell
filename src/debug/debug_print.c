@@ -92,11 +92,11 @@ void	print_commands(t_command *commands)
 	printf("\n");
 }
 
-void	print_env_list(t_list *list)
+void	print_env_list(t_env *list)
 {
 	while (list)
 	{
-		printf("%s\n", (char *)list->content);
+		printf("%s\n", (char *)list->value);
 		list = list->next;
 	}
 }

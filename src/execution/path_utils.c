@@ -12,16 +12,16 @@
 
 #include "../../inc/minishell.h"
 
-static char	*get_env_path(char **envp)
+static char	*get_env_path(t_env *envp)
 {
-	int	i;
+	t_env	*current;
 
-	i = 0;
-	while (envp && envp[i])
+	current = envp;
+	while (current)
 	{
-		if (ft_strncmp(envp[i], "PATH=", 5) == 0)
-			return (envp[i] + 5);
-		i++;
+		if (ft_strcmp(current->key, "PATH") == 0)
+			return (current->value);
+		current = current->next;
 	}
 	return (NULL);
 }
@@ -62,7 +62,7 @@ static char	*cleanup_and_return(char **split_env, char *path)
 	return (path);
 }
 
-char	*find_dir(char *cmd, char **envp)
+char	*find_dir(char *cmd, t_env *envp)
 {
 	int		i;
 	char	*full_path;
