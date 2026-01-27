@@ -50,7 +50,7 @@ TEST_OBJ = $(addprefix $(TEST_DIR)/, $(TEST_SRC:.c=.o))
 all: $(LIBFT) $(NAME)
 
 $(LIBFT):
-	@$(MAKE) -C $(LIBFT_DIR)
+	@$(MAKE) bonus -C $(LIBFT_DIR)
 
 $(NAME): $(OBJ) $(LIBFT)
 	$(CC) $(CFLAGS) $(OBJ) -L$(LIBFT_DIR) -lft -lreadline -o $(NAME)

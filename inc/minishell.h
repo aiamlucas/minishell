@@ -103,6 +103,7 @@ t_command	*parser(t_token *tokens);
 void		print_tokens(t_token *tokens);
 void		print_redirections(t_redir *redirections);
 void		print_commands(t_command *commands);
+void		print_env_list(t_list *list);
 
 // pipeline helpers
 
