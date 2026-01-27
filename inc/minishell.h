@@ -106,6 +106,7 @@ t_redir		*redir_last(t_redir *lst);
 void		redir_add_back(t_redir **lst, t_redir *new);
 void		redir_clear(t_redir **lst);
 t_command	*parser(t_token *tokens);
+void		create_env_list(t_env **list, char **envp);
 
 // debug
 void		print_tokens(t_token *tokens);
@@ -122,7 +123,8 @@ int			**create_pipes(int count);
 
 // execution
 bool		is_builtin(t_command *cmd);
-int			execute_single_command(t_command *cmd, char **envp, t_env *internal_env);
+int			execute_single_command(t_command *cmd, char **envp,
+				t_env *internal_env);
 int			execute_command(t_data *data);
 int			execute_pipeline(t_command *cmds, char **envp);
 int			execute_builtin(t_command *cmd, t_env *internal_env);
@@ -132,7 +134,8 @@ void		setup_pipes(int **pipes, int i, int total);
 void		child_process(t_child_data *data);
 pid_t		fork_child(t_child_data *data);
 bool		must_run_in_parent(t_command *cmd);
-void		execute_child_command(t_command *cmd, char **envp, t_env *internal_env);
+void		execute_child_command(t_command *cmd, char **envp,
+				t_env *internal_env);
 
 // builtins
 int			builtin_cd(char **argv);

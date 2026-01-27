@@ -19,6 +19,7 @@ SRC				+= tokenizer/tokenizer.c
 SRC				+= tokenizer/token-utils.c
 SRC				+= parser/command-utils.c
 SRC				+= parser/redir-utils.c
+SRC				+= parser/env-utils.c
 SRC				+= parser/parser.c
 SRC				+= debug/debug_print.c
 SRC				+= execution/builtin_utils.c
