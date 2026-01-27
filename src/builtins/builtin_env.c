@@ -12,7 +12,7 @@
 
 #include "../../inc/minishell.h"
 
-int	builtin_env(char **envp)
+int	builtin_env(t_env *envp)
 {
 	while (*envp)
 	{

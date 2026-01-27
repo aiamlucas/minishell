@@ -12,13 +12,13 @@
 
 #include "../../inc/minishell.h"
 
-void	execute_child_command(t_command *cmd, char **envp)
+void	execute_child_command(t_command *cmd, char **envp, t_env *internal_env)
 {
 	char	*path;
 
 	if (is_builtin(cmd))
-		exit(execute_builtin(cmd, envp));
-	path = find_dir(cmd->argv[0], envp);
+		exit(execute_builtin(cmd, internal_env));
+	path = find_dir(cmd->argv[0], internal_env);
 	if (!path)
 	{
 		ft_printf("minishell: %s: command not found\n", cmd->argv[0]);

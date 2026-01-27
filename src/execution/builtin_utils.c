@@ -56,7 +56,7 @@ bool	must_run_in_parent(t_command *cmd)
 	return (false);
 }
 
-int	execute_builtin(t_command *cmd, char **envp)
+int	execute_builtin(t_command *cmd, t_env *envp)
 {
 	if (ft_strcmp(cmd->argv[0], "pwd") == 0)
 		return (builtin_pwd());
