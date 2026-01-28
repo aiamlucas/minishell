@@ -12,34 +12,70 @@
 
 #include "../../inc/minishell.h"
 
-int	is_valid_argv(char *argv)
+int	is_valid_argv(char **argv)
 {
-	if (!argv)
+	if (!*argv)
 		return (0);
 	else
 	{
-		if (ft_isalpha(argv[0]) || argv[0] == '_')
+		if (argv[1] && (ft_isalpha(argv[1][0]) || argv[1][0] == '_'))
 			return (1);
 		return (0);
 	}
 }
 
-int	print_invalid()
+// this function should go in handle_errors.c (?)
+int	print_invalid(char *msg)
 {
-	ft_printf("export: invalid arg\n");
+	ft_printf("%s", msg);
 	return (1);
 }
 
-int	builtin_export(char **argv)
+void	create_env(char *key, char *value, t_env *internal_env)
 {
-	int		arg_valid;
+	// ft_isalpha(key[i]), ft_isdigit(key[i]), key[i] == '_' // check key requirements
+		// invalid key error
+	// node = new_env_node(key, value);
+	// list_add_back(internal_env, node);
+}
+
+void	update_env(char *key, char *value, t_env *internal_env)
+{
+	t_env	*tmp;
+
+	tmp = internal_env;
+	while (tmp)
+	{
+		if (ft_strcmp(tmp->key, key))
+			tmp->value=value;
+		tmp = tmp->next;
+	}
+	ft_printf("valid k: %s v: %s\n", key, value);
+}
+
+int	key_exists(char *key, t_env *internal_env)
+{
+	t_env	*tmp;
+
+	tmp = internal_env;
+	while (tmp)
+	{
+		if (ft_strcmp(tmp->key, key))
+			return (1);
+		tmp = tmp->next;
+	}
+	return (0);
+}
+
+int	builtin_export(char **argv, t_env *internal_env)
+{
 	char	*key;
 	char	*value;
-	char	**args;
+	int		arg_valid;
 
-	args = NULL;
 	key = NULL;
-	arg_valid = is_valid_argv(argv[1]);
+	value = NULL;
+	arg_valid = is_valid_argv(argv);
 	if (arg_valid)
 	{
 		value = ft_strchr(argv[1], '=');
@@ -49,14 +85,20 @@ int	builtin_export(char **argv)
 			value++;
 		}
 		else
+		{
 			key = ft_strdup(argv[1]);
-		if (key)
-			// ft_isalpha(key[i]), ft_isdigit(key[i]), key[i] == '_'
-			ft_printf("valid k: %s v: %s\n", key, value);
+			//	handle variables without value
+		}
+		if (key_exists(key))
+		{
+			// if (ft_strcmp(argv[0], "OLDPWD") && argv[1])
+				// update OLDPWD and PWD
+			update_env(key, value, internal_env);
+		}
 		else
-			return (print_invalid());
+			create_env(key, value, internal_env);
 	}
 	else
-		return (print_invalid());
+		return (print_invalid("export: invalid argument\n"));
 	return (0);
 }

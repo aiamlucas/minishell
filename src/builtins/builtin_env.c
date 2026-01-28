@@ -14,22 +14,6 @@
 
 int	builtin_env(t_env *envp)
 {
-	while (*envp)
-	{
-		ft_printf("%s\n", *envp);
-		envp++;
-	}
+	print_env_list(envp);
 	return (0);
 }
-
-//int	builtin_env(t_env *envp)
-//{
-//	handle variables without value
-//	while (envp)
-//	{
-//		if (envp->value)
-//			ft_printf("%s=%s\n", envp->key, envp->value);
-//		envp = envp->next;
-//	}
-//	return (0);
-//}
