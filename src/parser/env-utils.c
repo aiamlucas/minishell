@@ -53,6 +53,7 @@ t_env	*new_node(void *content)
 	node->key = split[0];
 	node->value = split[1];
 	node->next = NULL;
+	free(split);
 	return (node);
 }
 
@@ -63,7 +64,8 @@ void	create_env_list(t_env **list, char **envp)
 	while (*envp)
 	{
 		node = new_node(*envp);
-		list_add_back(list, node);
+		if (node)
+			list_add_back(list, node);
 		envp++;
 	}
 }
