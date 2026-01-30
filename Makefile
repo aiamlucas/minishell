@@ -19,6 +19,7 @@ SRC				+= tokenizer/tokenizer.c
 SRC				+= tokenizer/token-utils.c
 SRC				+= parser/command-utils.c
 SRC				+= parser/redir-utils.c
+SRC				+= parser/env-utils.c
 SRC				+= parser/parser.c
 SRC				+= debug/debug_print.c
 SRC				+= execution/builtin_utils.c
@@ -51,7 +52,7 @@ TEST_OBJ = $(addprefix $(TEST_DIR)/, $(TEST_SRC:.c=.o))
 all: $(LIBFT) $(NAME)
 
 $(LIBFT):
-	@$(MAKE) -C $(LIBFT_DIR)
+	@$(MAKE) bonus -C $(LIBFT_DIR)
 
 $(NAME): $(OBJ) $(LIBFT)
 	$(CC) $(CFLAGS) $(OBJ) -L$(LIBFT_DIR) -lft -lreadline -o $(NAME)

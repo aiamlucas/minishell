@@ -26,7 +26,7 @@ void	child_process(t_child_data *data)
 	setup_pipes(data->pipes, data->cmd_index, data->total);
 	close_pipes(data->pipes, data->total - 1);
 	apply_redirections(data->cmd->redirections);
-	execute_child_command(data->cmd, data->envp);
+	execute_child_command(data->cmd, data->envp, NULL);
 }
 
 pid_t	fork_child(t_child_data *data)

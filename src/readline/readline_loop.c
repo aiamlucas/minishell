@@ -45,7 +45,7 @@ static void	handle_signal_cleanup(char *input)
 	free(input);
 }
 
-static bool	handle_input_line(char *input, t_data *data) 
+static bool	handle_input_line(char *input, t_data *data)
 {
 	int	exit_code;
 

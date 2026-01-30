@@ -79,9 +79,10 @@ SRC += ft_printf/src/helpers/ft_putunsigned_len.c
 
 OBJ = $(SRC:.c=.o)
 
-# BONUS 
+# BONUS
 BONUS_SRC = ft_lstnew.c
 BONUS_SRC += ft_lstadd_front.c
+BONUS_SRC += ft_lstadd_back.c
 BONUS_SRC += ft_lstsize.c
 BONUS_SRC += ft_lstlast.c
 BONUS_OBJ = $(BONUS_SRC:.c=.o)
@@ -100,7 +101,7 @@ bonus: $(OBJ) $(BONUS_OBJ)
 	$(CC) $(CFLAGS) -Ift_printf -c $< -o $@
 
 clean:
-	rm -f $(OBJ) $(BONUS_OBJ) 
+	rm -f $(OBJ) $(BONUS_OBJ)
 
 fclean: clean
 	rm -f $(NAME)
