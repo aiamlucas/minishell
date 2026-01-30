@@ -12,7 +12,7 @@
 
 #include "../../inc/minishell.h"
 
-int	builtin_unset(char **argv, char **envp)
+int	builtin_unset(char **argv, t_env *envp)
 {
 	(void)envp;
 	(void)argv;
