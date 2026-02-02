@@ -6,61 +6,73 @@
 /*   By: lbueno-m <lbueno-m@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/16 23:33:18 by lbueno-m          #+#    #+#             */
-/*   Updated: 2026/01/21 00:25:46 by lbueno-m         ###   ########.fr       */
+/*   Updated: 2026/02/02 14:27:24 by lbueno-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/minishell.h"
-#include <stddef.h>
-
 
 static size_t	expanded_length(const char *str, char **envp, int last_exit)
 {
 	size_t			total_len;
 	size_t			var_len;
-	const char		*p;
+	const char		*ptr;
 	const char		*var_start;
-	char			**ep;
+	char			**env_ptr;
+	char			*exit_str;
 
-	(void)last_exit;
-	p = str;
+	ptr = str;
 	total_len = 0;
-	while (*p)
+	while (*ptr)
 	{
-		if (*p != '$')
+		if (*ptr != '$')
 		{
 			total_len++;
-			p++;
+			ptr++;
 		}
 		else
 		{
-			p++;
-			if (*p == '\0')
+			ptr++;
+			if (*ptr == '\0') // Case: $ end of a string
 			{
 				total_len++;
 				break ;
 			}
-			if (!(ft_isalnum(*p) || *p == '_'))
+			if (*ptr == '?')
+			{
+				exit_str = ft_itoa(last_exit);
+				if (exit_str)
+				{
+					total_len += ft_strlen(exit_str);
+					free(exit_str);
+				}
+				ptr++;
+				continue ;
+			}
+			// Case: $ followd by non-variable char
+			if (!(ft_isalpha(*ptr) || *ptr == '_'))
 			{
 				total_len++;
 				continue ;
 			}
-			var_start = p;
+			// Case $VAR -> find variable length
+			var_start = ptr;
 			var_len = 0;
-			while (*p && (ft_isalnum(*p) || *p == '_'))
+			while (*ptr && (ft_isalnum(*ptr) || *ptr == '_'))
 			{
-				p++;
+				ptr++;
 				var_len++;
 			}
-			ep = envp;
-			while (*ep)
+			// Search for variable in enviroment
+			env_ptr = envp;
+			while (*env_ptr)
 			{
-				if (ft_strncmp(*ep, var_start, var_len) == 0 && (*ep)[var_len] == '=')
+				if (ft_strncmp(*env_ptr, var_start, var_len) == 0 && (*env_ptr)[var_len] == '=')
 				{
-					total_len += ft_strlen(*ep + var_len + 1);
+					total_len += ft_strlen(*env_ptr + var_len + 1);
 					break;
 				}
-				ep++;
+				env_ptr++;
 			}
 		}
 	}
@@ -69,69 +81,87 @@ static size_t	expanded_length(const char *str, char **envp, int last_exit)
 
 static char	*expand_variable(const char *str, char **envp, int last_exit, size_t len)
 {
-	const char	*p;
+	const char	*ptr;
 	const char	*var_start;
 	const char	*value;
-	char		**ep;
+	char		**env_ptr;
 	size_t		total_len;
 	size_t		var_len;
-	char		*ret;
+	size_t		i;
+	char		*result;
+	char		*exit_str;
 
-	(void)last_exit;
-
-	p = str;
+	ptr = str;
 	total_len = 0;
-	ret = malloc(len + 1);
-	if (!ret)
+	result = malloc(len + 1);
+	if (!result)
 		return (NULL);
-	while (*p)
+	while (*ptr)
 	{
-		if (*p != '$')
+		if (*ptr != '$')
 		{
-			ret[total_len] = *p;
+			result[total_len] = *ptr;
 			total_len++;
-			p++;
+			ptr++;
 		}
 		else
 		{
-			p++;
-			if (*p == '\0')
+			ptr++;
+			// Case: $ at end of string
+			if (*ptr == '\0')
 			{
-				ret[total_len++] = '$';
-				ret[total_len] = '\0';
-				return (ret);
+				result[total_len++] = '$';
+				result[total_len] = '\0';
+				return (result);
 			}
-			if (!(ft_isalnum(*p) || *p == '_'))
+			if (*ptr == '?')
 			{
-				ret[total_len++] = '$';
+				exit_str = ft_itoa(last_exit);
+				if (exit_str)
+				{
+					i = 0;
+					while(exit_str[i])
+						result[total_len++] = exit_str[i++];
+					free(exit_str);
+				}
+				ptr++;
 				continue ;
 			}
-			var_start = p;
-			var_len = 0;
-			while (*p && (ft_isalnum(*p) || *p == '_'))
+			// Case: $ followed by non-variable char
+			if (!(ft_isalpha(*ptr) || *ptr == '_'))
 			{
-				p++;
+				result[total_len++] = '$';
+				continue ;
+
+			}
+			// Case: $VAR -> expand variable
+			var_start = ptr;
+			var_len = 0;
+			while (*ptr && (ft_isalnum(*ptr) || *ptr == '_'))
+			{
+				ptr++;
 				var_len++;
 			}
-			ep = envp;
-			while (*ep)
+			// Search for variable in enviroment and copy value
+			env_ptr = envp;
+			while (*env_ptr)
 			{
-				if (ft_strncmp(*ep, var_start, var_len) == 0 && (*ep)[var_len] == '=')
+				if (ft_strncmp(*env_ptr, var_start, var_len) == 0 && (*env_ptr)[var_len] == '=')
 				{
-					value = *ep + var_len + 1;
+					value = *env_ptr + var_len + 1;
 					while (*value)
 					{
-						ret[total_len++] = *value;
+						result[total_len++] = *value;
 						value++;
 					}
 					break;
 				}
-				ep++;
+				env_ptr++;
 			}
 		}
 	}
-	ret[total_len] = '\0';
-	return (ret);
+	result[total_len] = '\0';
+	return (result);
 }
 
 bool	expand_tokens(t_token *tokens, char **envp, int last_exit)
