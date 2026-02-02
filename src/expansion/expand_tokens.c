@@ -6,7 +6,7 @@
 /*   By: lbueno-m <lbueno-m@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/16 23:33:18 by lbueno-m          #+#    #+#             */
-/*   Updated: 2026/02/02 14:27:24 by lbueno-m         ###   ########.fr       */
+/*   Updated: 2026/02/02 14:46:52 by lbueno-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@ static size_t	expanded_length(const char *str, char **envp, int last_exit)
 				if (ft_strncmp(*env_ptr, var_start, var_len) == 0 && (*env_ptr)[var_len] == '=')
 				{
 					total_len += ft_strlen(*env_ptr + var_len + 1);
-					break;
+					break ;
 				}
 				env_ptr++;
 			}
@@ -120,7 +120,7 @@ static char	*expand_variable(const char *str, char **envp, int last_exit, size_t
 				if (exit_str)
 				{
 					i = 0;
-					while(exit_str[i])
+					while (exit_str[i])
 						result[total_len++] = exit_str[i++];
 					free(exit_str);
 				}
@@ -132,7 +132,6 @@ static char	*expand_variable(const char *str, char **envp, int last_exit, size_t
 			{
 				result[total_len++] = '$';
 				continue ;
-
 			}
 			// Case: $VAR -> expand variable
 			var_start = ptr;
@@ -154,7 +153,7 @@ static char	*expand_variable(const char *str, char **envp, int last_exit, size_t
 						result[total_len++] = *value;
 						value++;
 					}
-					break;
+					break ;
 				}
 				env_ptr++;
 			}
@@ -175,11 +174,10 @@ bool	expand_tokens(t_token *tokens, char **envp, int last_exit)
 	{
 		if (current->type == TOKEN_WORD)
 		{
-
 			expanded_len = expanded_length(current->value, envp, last_exit);
 			expanded = expand_variable(current->value, envp, last_exit, expanded_len);
 			if (!expanded)
-				return false;
+				return (false);
 			free(current->value);
 			current->value = expanded;
 		}
