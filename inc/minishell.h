@@ -6,13 +6,15 @@
 /*   By: ssin <ssin@student.42berlin.de>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/18 17:31:00 by ssin              #+#    #+#             */
-/*   Updated: 2026/01/25 16:50:35 by lbueno-m         ###   ########.fr       */
+/*   Updated: 2026/02/02 18:47:28 by ssin             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
 # define HOME "HOME"
+# define PWD "PWD"
+# define OLDPWD "OLDPWD"
 
 # include <stdio.h>
 # include <readline/readline.h>
@@ -23,6 +25,7 @@
 # include <sys/wait.h>
 # include <fcntl.h>
 # include <limits.h>
+# include <signal.h>
 
 extern volatile	sig_atomic_t	g_signal_received;
 
@@ -108,6 +111,8 @@ void		redir_add_back(t_redir **lst, t_redir *new);
 void		redir_clear(t_redir **lst);
 t_command	*parser(t_token *tokens);
 void		create_env_list(t_env **list, char **envp);
+t_env	  *new_env_node(void *content);
+void	list_add_back(t_env **lst, t_env *new);
 
 // debug
 void		print_tokens(t_token *tokens);
@@ -146,6 +151,7 @@ int			builtin_export(char **argv, t_env *internal_env);
 int			builtin_pwd(void);
 int			builtin_unset(char **argv, t_env *internal_env);
 int			builtin_exit(char **argv);
+int	    update_env(char *key, char *value, t_env *internal_env);
 
 // signals
 
