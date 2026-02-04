@@ -6,7 +6,7 @@
 /*   By: ssin <ssin@student.42berlin.de>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/11 19:10:57 by ssin              #+#    #+#             */
-/*   Updated: 2026/02/03 19:16:50 by lbueno-m         ###   ########.fr       */
+/*   Updated: 2026/02/04 14:53:36 by lbueno-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,38 +32,49 @@ static int	process_input(char *input, t_data *data)
 	return (exit_code);
 }
 
-static bool	skip_input(char *input)
-{
-	if (!*input || !ft_strlen(input))
-		return (true);
-	return (false);
-}
-
 static void	handle_signal_cleanup(char *input)
 {
 	reset_signal();
 	free(input);
 }
 
-static bool	handle_input_line(char *input, t_data *data)
+static int	check_input_validation(char *input, t_data *data)
 {
-	int	exit_code;
-
 	if (!input)
-	{
-		printf("exit\n");
-		return (false);
-	}
+		return (-1);
 	if (check_signal())
 	{
 		handle_signal_cleanup(input);
-		return (true);
+		return (1);
 	}
-	if (skip_input(input))
+	if (is_empty_input(input))
 	{
 		free(input);
-		return (true);
+		return (1);
 	}
+	if (has_unclosed_quotes(input))
+	{
+		ft_printf("minishell: syntax error: unclosed quote\n");
+		free(input);
+		data->last_exit = 2;
+		return (1);
+	}
+	return (0);
+}
+
+static bool	handle_input_line(char *input, t_data *data)
+{
+	int	validation;
+	int	exit_code;
+
+	validation = check_input_validation(input, data);
+	if (validation == -1)
+	{
+		ft_printf("exit\n");
+		return (false);
+	}
+	if (validation == 1)
+		return (true);
 	add_history(input);
 	exit_code = process_input(input, data);
 	data->last_exit = exit_code;

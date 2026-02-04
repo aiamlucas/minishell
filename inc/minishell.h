@@ -6,7 +6,7 @@
 /*   By: ssin <ssin@student.42berlin.de>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/18 17:31:00 by ssin              #+#    #+#             */
-/*   Updated: 2026/02/04 10:57:56 by lbueno-m         ###   ########.fr       */
+/*   Updated: 2026/02/04 12:50:26 by lbueno-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,6 +95,9 @@ typedef struct s_child_data
 
 // core
 void		readline_loop(t_data *data);
+int			validate_input(char *input);
+bool		is_empty_input(char *input);
+bool		has_unclosed_quotes(char *input);
 
 // lexer
 t_token		*new_token(char *value, t_token_type type);

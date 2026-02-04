@@ -15,6 +15,7 @@ endif
 SRC_DIR			= src
 SRC				= main.c
 SRC				+= readline/readline_loop.c
+SRC				+= readline/validate_input.c
 SRC				+= tokenizer/tokenizer.c
 SRC				+= tokenizer/token-utils.c
 SRC				+= parser/command-utils.c
