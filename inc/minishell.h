@@ -120,7 +120,6 @@ void		print_commands(t_command *commands);
 void		print_env_list(t_env *list);
 
 // pipeline helpers
-
 int			count_pipeline_commands(t_command *cmd);
 void		free_pipes(int **pipes, int count);
 void		close_pipes(int **pipes, int count);
@@ -129,10 +128,10 @@ int			**create_pipes(int count);
 // execution
 bool		is_builtin(t_command *cmd);
 int			execute_single_command(t_command *cmd, char **envp,
-				t_env *internal_env);
+				t_env **internal_env);
 int			execute_command(t_data *data);
 int			execute_pipeline(t_command *cmds, char **envp);
-int			execute_builtin(t_command *cmd, t_env *internal_env);
+int			execute_builtin(t_command *cmd, t_env **internal_env);
 char		*find_dir(char *cmd, t_env *internal_env);
 void		apply_redirections(t_redir *redirections);
 void		setup_pipes(int **pipes, int i, int total);
@@ -148,12 +147,11 @@ int			builtin_echo(char **argv);
 int			builtin_env(t_env *internal_env);
 int			builtin_export(char **argv, t_env *internal_env);
 int			builtin_pwd(void);
-int			builtin_unset(char **argv, t_env *internal_env);
+int			builtin_unset(char **argv, t_env **internal_env);
 int			builtin_exit(char **argv);
 int			update_env(char *key, char *value, t_env *internal_env);
 
 // signals
-
 void		setup_signals(void);
 void		reset_signals(void);
 void		handle_sigint(int sig);

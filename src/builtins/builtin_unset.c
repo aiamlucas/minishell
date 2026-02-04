@@ -36,21 +36,18 @@ int	is_valid_key(char *name)
 	return (1);
 }
 
-int	builtin_unset(char **argv, t_env *internal_envp)
+int	builtin_unset(char **argv, t_env **internal_envp)
 {
-	(void)argv;
-	(void)internal_envp;
 	int		index;
 	int		printed_error;
 	t_env	*tmp;
 	t_env	*head;
 	t_env	*previous;
-	t_env	*current;
+	t_env	*node_to_remove;
 
 	index = 1;
 	printed_error = 0;
-	head = internal_envp;
-	tmp = internal_envp;
+	head = *internal_envp;
 	previous = NULL;
 	// check if the node is the head of internal_envp
 	// this way just removing the head and pointing to the second node will work
@@ -61,6 +58,7 @@ int	builtin_unset(char **argv, t_env *internal_envp)
 	}
 	while (argv[index])
 	{
+		tmp = head;
 		if (!is_valid_key(argv[index]) && !printed_error)
 		{
 			ft_printf("unset: %s: invalid parameter name\n", argv[index]);
@@ -70,17 +68,21 @@ int	builtin_unset(char **argv, t_env *internal_envp)
 		{
 			if (!ft_strcmp(tmp->key, argv[index]))
 			{
-				current = tmp;
+				node_to_remove = tmp;
+				if (tmp == head)
+				{
+					*internal_envp = (*internal_envp)->next;
+					return (0);
+				}
 				tmp = tmp->next;
 				previous->next = tmp;
-				// free_list(current);
+				// free_list(node_to_remove);
 				break ;
 			}
 			previous = tmp;
 			tmp = tmp->next;
 		}
 		index++;
-		tmp = head;
 	}
 	return (0);
 }
