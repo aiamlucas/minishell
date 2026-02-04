@@ -6,19 +6,19 @@
 /*   By: lbueno-m <lbueno-m@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/16 23:33:18 by lbueno-m          #+#    #+#             */
-/*   Updated: 2026/02/02 14:46:52 by lbueno-m         ###   ########.fr       */
+/*   Updated: 2026/02/04 10:57:10 by lbueno-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/minishell.h"
 
-static size_t	expanded_length(const char *str, char **envp, int last_exit)
+static size_t	expanded_length(const char *str, t_env *internal_env, int last_exit)
 {
 	size_t			total_len;
 	size_t			var_len;
 	const char		*ptr;
 	const char		*var_start;
-	char			**env_ptr;
+	t_env			*env_node;
 	char			*exit_str;
 
 	ptr = str;
@@ -63,28 +63,27 @@ static size_t	expanded_length(const char *str, char **envp, int last_exit)
 				ptr++;
 				var_len++;
 			}
-			// Search for variable in enviroment
-			env_ptr = envp;
-			while (*env_ptr)
+			env_node = internal_env;
+			while (env_node)
 			{
-				if (ft_strncmp(*env_ptr, var_start, var_len) == 0 && (*env_ptr)[var_len] == '=')
+				if (ft_strncmp(env_node->key, var_start, var_len) == 0 && env_node->key[var_len] == '\0')
 				{
-					total_len += ft_strlen(*env_ptr + var_len + 1);
+					total_len += ft_strlen(env_node->value);
 					break ;
 				}
-				env_ptr++;
+				env_node = env_node->next;
 			}
 		}
 	}
 	return (total_len);
 }
 
-static char	*expand_variable(const char *str, char **envp, int last_exit, size_t len)
+static char	*expand_variable(const char *str, t_env *internal_env, int last_exit, size_t len)
 {
 	const char	*ptr;
 	const char	*var_start;
 	const char	*value;
-	char		**env_ptr;
+	t_env		*env_node;
 	size_t		total_len;
 	size_t		var_len;
 	size_t		i;
@@ -142,12 +141,12 @@ static char	*expand_variable(const char *str, char **envp, int last_exit, size_t
 				var_len++;
 			}
 			// Search for variable in enviroment and copy value
-			env_ptr = envp;
-			while (*env_ptr)
+			env_node = internal_env;
+			while (env_node)
 			{
-				if (ft_strncmp(*env_ptr, var_start, var_len) == 0 && (*env_ptr)[var_len] == '=')
+				if (ft_strncmp(env_node->key, var_start, var_len) == 0 && (env_node->key)[var_len] == '\0')
 				{
-					value = *env_ptr + var_len + 1;
+					value = env_node->value;
 					while (*value)
 					{
 						result[total_len++] = *value;
@@ -155,7 +154,7 @@ static char	*expand_variable(const char *str, char **envp, int last_exit, size_t
 					}
 					break ;
 				}
-				env_ptr++;
+				env_node = env_node->next;
 			}
 		}
 	}
@@ -163,7 +162,7 @@ static char	*expand_variable(const char *str, char **envp, int last_exit, size_t
 	return (result);
 }
 
-bool	expand_tokens(t_token *tokens, char **envp, int last_exit)
+bool	expand_tokens(t_token *tokens, t_env *internal_env, int last_exit)
 {
 	t_token		*current;
 	char		*expanded;
@@ -174,8 +173,8 @@ bool	expand_tokens(t_token *tokens, char **envp, int last_exit)
 	{
 		if (current->type == TOKEN_WORD)
 		{
-			expanded_len = expanded_length(current->value, envp, last_exit);
-			expanded = expand_variable(current->value, envp, last_exit, expanded_len);
+			expanded_len = expanded_length(current->value, internal_env, last_exit);
+			expanded = expand_variable(current->value, internal_env, last_exit, expanded_len);
 			if (!expanded)
 				return (false);
 			free(current->value);

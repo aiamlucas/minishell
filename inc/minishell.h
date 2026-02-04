@@ -6,7 +6,7 @@
 /*   By: ssin <ssin@student.42berlin.de>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/18 17:31:00 by ssin              #+#    #+#             */
-/*   Updated: 2026/01/25 16:50:35 by lbueno-m         ###   ########.fr       */
+/*   Updated: 2026/02/04 10:57:56 by lbueno-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -155,7 +155,6 @@ int			builtin_unset(char **argv, t_env *internal_env);
 int			builtin_exit(char **argv);
 
 // signals
-
 void		setup_signals(void);
 void		reset_signals(void);
 void		handle_sigint(int sig);
@@ -165,6 +164,6 @@ int			get_signal_exit_code(void);
 bool		handle_signal_interrupt(void);
 
 // expansion
-bool	expand_tokens(t_token *tokens, char **envp, int last_exit);
+bool	expand_tokens(t_token *tokens, t_env *internal_env, int last_exit);
 
 #endif
