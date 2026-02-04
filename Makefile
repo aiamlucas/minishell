@@ -37,6 +37,7 @@ SRC				+= builtins/builtin_export.c
 SRC				+= builtins/builtin_pwd.c
 SRC				+= builtins/builtin_unset.c
 SRC				+= builtins/builtin_exit.c
+SRC				+= builtins/helpers.c
 SRC				+= signals/signal_handler.c
 SRC				+= signals/signals_utils.c
 
