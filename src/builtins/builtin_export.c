@@ -12,35 +12,29 @@
 
 #include "../../inc/minishell.h"
 
-static int	is_valid_key(char **argv)
+int	is_valid_key(char *name)
 {
-	char	*name;
 	size_t	i;
 
-	if (!*argv || !argv[1])
+	if (!*name || ft_strlen(name) == 0)
 		return (0);
-	name = argv[1];
-	
+
 	i = 0;
-	while (name[i] && name[i] != '=')
-		i++;
-	
-	if (i == 0)
-		return (0);
-		
+
 	if (!(ft_isalpha(name[0]) || name[0] == '_'))
 		return (0);
-		
-	i = 1;
+
 	while (i < ft_strlen(name) && name[i] != '=')
 	{
 		if (!(ft_isalnum(name[i]) || name[i] == '_'))
+		{
+			ft_printf("export: not valid in this context: %s\n", name);
 			return (0);
+		}
 		i++;
 	}
 	return (1);
 }
-
 // this function should go in handle_errors.c (?)
 int	print_invalid(char *msg)
 {
@@ -106,36 +100,42 @@ int	builtin_export(char **argv, t_env *internal_env)
 	char	*value;
 	char	*equals_pos;
 	int		arg_valid;
+	int		index;
 
 	key = NULL;
 	value = NULL;
-	arg_valid = is_valid_key(argv);
-	if (arg_valid)
+	index = 1;
+	while (argv[index])
 	{
-		equals_pos = ft_strchr(argv[1], '=');
-		if (equals_pos)
+		arg_valid = is_valid_key(argv[index]);
+		if (arg_valid)
 		{
-			key = ft_substr(argv[1], 0, equals_pos - argv[1]);
-			value = equals_pos + 1;
+			equals_pos = ft_strchr(argv[index], '=');
+			if (equals_pos)
+			{
+				key = ft_substr(argv[index], 0, equals_pos - argv[index]);
+				value = equals_pos + 1;
+			}
+			else
+			{
+				key = ft_strdup(argv[index]);
+				value = NULL;
+			}
+			if (key_already_exists(key, internal_env))
+			{
+				if (equals_pos)
+					update_env(key, value, internal_env);
+			}
+			else
+			{
+				if (equals_pos)
+					create_env(key, value, internal_env);
+			}
+			free(key);
 		}
 		else
-		{
-			key = ft_strdup(argv[1]);
-			value = NULL;
-		}
-		if (key_already_exists(key, internal_env))
-		{
-			if (equals_pos)
-				update_env(key, value, internal_env);
-		}
-		else
-		{
-			if (equals_pos)
-				create_env(key, value, internal_env);
-		}
-		free(key);
+			ft_printf("export: invalid argument\n");
+		index++;
 	}
-	else
-		return (print_invalid("export: invalid argument\n"));
 	return (0);
 }

@@ -100,7 +100,6 @@ void		token_clear(t_token **lst);
 t_token		*lexer(char *line);
 
 // parser
-
 t_command	*command_new(void);
 t_command	*command_last(t_command *lst);
 void		command_add_back(t_command **lst, t_command *new);
@@ -111,8 +110,8 @@ void		redir_add_back(t_redir **lst, t_redir *new);
 void		redir_clear(t_redir **lst);
 t_command	*parser(t_token *tokens);
 void		create_env_list(t_env **list, char **envp);
-t_env	  *new_env_node(void *content);
-void	list_add_back(t_env **lst, t_env *new);
+t_env		*new_env_node(void *content);
+void		list_add_back(t_env **lst, t_env *new);
 
 // debug
 void		print_tokens(t_token *tokens);
@@ -151,7 +150,7 @@ int			builtin_export(char **argv, t_env *internal_env);
 int			builtin_pwd(void);
 int			builtin_unset(char **argv, t_env *internal_env);
 int			builtin_exit(char **argv);
-int	    update_env(char *key, char *value, t_env *internal_env);
+int			update_env(char *key, char *value, t_env *internal_env);
 
 // signals
 
