@@ -71,44 +71,45 @@ static int	key_already_exists(char *key, t_env *internal_env)
 	return (0);
 }
 
+static void	clear_data(char **key, char **value)
+{
+	if (*key)
+		free(*key);
+	*key = NULL;
+	*value = NULL;
+}
+
+static void	get_key_value(char **argv, char **key, char **value, int index)
+{
+	char	*equals_pos;
+
+	equals_pos = ft_strchr(argv[index], '=');
+	if (equals_pos)
+	{
+		*key = ft_substr(argv[index], 0, equals_pos - argv[index]);
+		*value = equals_pos + 1;
+	}
+}
+
 int	builtin_export(char **argv, t_env *internal_env)
 {
 	char	*key;
 	char	*value;
-	char	*equals_pos;
 	int		arg_valid;
 	int		index;
 
-	key = NULL;
-	value = NULL;
 	index = 1;
 	while (argv[index])
 	{
 		arg_valid = is_valid_key(argv[index]);
 		if (arg_valid)
 		{
-			equals_pos = ft_strchr(argv[index], '=');
-			if (equals_pos)
-			{
-				key = ft_substr(argv[index], 0, equals_pos - argv[index]);
-				value = equals_pos + 1;
-			}
+			get_key_value(argv, &key, &value, index);
+			if (key && key_already_exists(key, internal_env))
+				update_env(key, value, internal_env);
 			else
-			{
-				key = ft_strdup(argv[index]);
-				value = NULL;
-			}
-			if (key_already_exists(key, internal_env))
-			{
-				if (equals_pos)
-					update_env(key, value, internal_env);
-			}
-			else
-			{
-				if (equals_pos)
-					create_env(key, value, internal_env);
-			}
-			free(key);
+				create_env(key, value, internal_env);
+			clear_data(&key, &value);
 		}
 		else
 			ft_printf("export: invalid argument\n");
