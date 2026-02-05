@@ -6,7 +6,7 @@
 /*   By: ssin <ssin@student.42berlin.de>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/18 17:31:00 by ssin              #+#    #+#             */
-/*   Updated: 2026/01/25 16:50:35 by lbueno-m         ###   ########.fr       */
+/*   Updated: 2026/02/04 10:57:56 by lbueno-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,10 +57,18 @@ typedef struct s_redir
 	struct s_redir	*next;
 }	t_redir;
 
+typedef enum e_quote_type
+{
+	QUOTE_NONE,
+	QUOTE_SINGLE,
+	QUOTE_DOUBLE,
+}	t_quote_type;
+
 typedef struct s_command
 {
 	char				**argv;
 	t_redir				*redirections;
+	t_quote_type		*quote_type;
 	struct s_command	*next;
 }	t_command;
 
@@ -147,7 +155,6 @@ int			builtin_unset(char **argv, t_env *internal_env);
 int			builtin_exit(char **argv);
 
 // signals
-
 void		setup_signals(void);
 void		reset_signals(void);
 void		handle_sigint(int sig);
@@ -155,5 +162,8 @@ bool		check_signal(void);
 void		reset_signal(void);
 int			get_signal_exit_code(void);
 bool		handle_signal_interrupt(void);
+
+// expansion
+bool	expand_tokens(t_token *tokens, t_env *internal_env, int last_exit);
 
 #endif
