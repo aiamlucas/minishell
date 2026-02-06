@@ -150,7 +150,9 @@ int			builtin_pwd(void);
 int			builtin_unset(char **argv, t_env **internal_env);
 int			builtin_exit(char **argv);
 int			update_env(char *key, char *value, t_env *internal_env);
+int			print_invalid(char *msg);
 int			is_valid_key(char *name);
+int			update_env(char *key, char *value, t_env *internal_env);
 
 // signals
 void		setup_signals(void);

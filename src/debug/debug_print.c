@@ -96,7 +96,10 @@ void	print_env_list(t_env *list)
 {
 	while (list)
 	{
-		printf("%s=%s\n", (char *)list->key, (char *)list->value);
+		if (list->value)
+			printf("%s=%s\n", list->key, list->value);
+		else
+			printf("%s=\n", list->key);
 		list = list->next;
 	}
 }

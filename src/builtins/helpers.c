@@ -12,6 +12,12 @@
 
 #include "../../inc/minishell.h"
 
+int	print_invalid(char *msg)
+{
+	ft_printf("%s", msg);
+	return (1);
+}
+
 int	is_valid_key(char *name)
 {
 	size_t	i;
@@ -34,4 +40,29 @@ int	is_valid_key(char *name)
 		i++;
 	}
 	return (1);
+}
+
+int	update_env(char *key, char *value, t_env *internal_env)
+{
+	t_env	*tmp;
+	char	*cp_value;
+
+	if (value)
+		cp_value = ft_strdup(value);
+	else
+		cp_value = ft_strdup("");
+	tmp = internal_env;
+	while (tmp)
+	{
+		if (!ft_strcmp(tmp->key, key))
+		{
+			free(tmp->value);
+			tmp->value = cp_value;
+			return (1);
+		}
+		tmp = tmp->next;
+	}
+	if (cp_value)
+		free(cp_value);
+	return (0);
 }

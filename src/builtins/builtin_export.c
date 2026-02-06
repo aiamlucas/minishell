@@ -12,13 +12,6 @@
 
 #include "../../inc/minishell.h"
 
-// this function should go in handle_errors.c (?)
-int	print_invalid(char *msg)
-{
-	ft_printf("%s", msg);
-	return (1);
-}
-
 static void	create_env(char *key, char *value, t_env *internal_env)
 {
 	char	*content;
@@ -29,32 +22,6 @@ static void	create_env(char *key, char *value, t_env *internal_env)
 	node = new_env_node(content);
 	list_add_back(&internal_env, node);
 	free(content);
-}
-
-int	update_env(char *key, char *value, t_env *internal_env)
-{
-	t_env	*tmp;
-	char	*cp_value;
-
-	if (value)
-		cp_value = ft_strdup(value);
-	else
-		cp_value = NULL;
-	tmp = internal_env;
-	while (tmp)
-	{
-		if (!ft_strcmp(tmp->key, key))
-		{
-			free(tmp->value);
-			tmp->value = cp_value;
-			return (1);
-		}
-		tmp = tmp->next;
-	}
-	ft_printf("valid k: %s v: %s\n", key, value);
-	if (cp_value)
-		free(cp_value);
-	return (0);
 }
 
 static int	key_already_exists(char *key, t_env *internal_env)
