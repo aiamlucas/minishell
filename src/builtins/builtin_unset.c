@@ -6,27 +6,50 @@
 /*   By: lbueno-m <lbueno-m@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/04 20:14:37 by lbueno-m          #+#    #+#             */
-/*   Updated: 2026/01/04 21:43:07 by lbueno-m         ###   ########.fr       */
+/*   Updated: 2026/02/09 15:44:36 by ssin             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/minishell.h"
 
-int	builtin_unset(char **argv, t_env **internal_envp)
+int	search_internal_env(t_env *head, char *argv, t_env **env)
+{
+	t_env	*node_to_remove;
+	t_env	*previous;
+	t_env	*tmp;
+
+	tmp = head;
+	previous = NULL;
+	while (tmp)
+	{
+		if (!ft_strcmp(tmp->key, argv))
+		{
+			node_to_remove = tmp;
+			if (tmp == head)
+			{
+				*env = (*env)->next;
+				return (0);
+			}
+			tmp = tmp->next;
+			previous->next = tmp;
+			free(node_to_remove);
+			break ;
+		}
+		previous = tmp;
+		tmp = tmp->next;
+	}
+	return (1);
+}
+
+int	builtin_unset(char **argv, t_env **internal_env)
 {
 	int		index;
 	int		printed_error;
-	t_env	*tmp;
 	t_env	*head;
-	t_env	*previous;
-	t_env	*node_to_remove;
 
 	index = 1;
 	printed_error = 0;
-	head = *internal_envp;
-	previous = NULL;
-	// check if the node is the head of internal_envp
-	// this way just removing the head and pointing to the second node will work
+	head = *internal_env;
 	if (!argv[index])
 	{
 		ft_printf("unset: not enough arguments\n");
@@ -34,30 +57,13 @@ int	builtin_unset(char **argv, t_env **internal_envp)
 	}
 	while (argv[index])
 	{
-		tmp = head;
 		if (!is_valid_key(argv[index]) && !printed_error)
 		{
 			ft_printf("unset: %s: invalid parameter name\n", argv[index]);
 			printed_error = 1;
 		}
-		while (tmp)
-		{
-			if (!ft_strcmp(tmp->key, argv[index]))
-			{
-				node_to_remove = tmp;
-				if (tmp == head)
-				{
-					*internal_envp = (*internal_envp)->next;
-					return (0);
-				}
-				tmp = tmp->next;
-				previous->next = tmp;
-				// free_list(node_to_remove);
-				break ;
-			}
-			previous = tmp;
-			tmp = tmp->next;
-		}
+		if (!search_internal_env(head, argv[index], internal_env))
+			return (0);
 		index++;
 	}
 	return (0);
