@@ -68,16 +68,16 @@ char	*get_token_operator(char *input)
 
 t_token_type	get_type(char *input)
 {
-	if (!ft_strncmp(input, STR_PIPE, ft_strlen(STR_PIPE)))
+	if (ft_strncmp(input, STR_PIPE, ft_strlen(STR_PIPE)) == 0)
 		return (TOKEN_PIPE);
-	if (!ft_strncmp(input, STR_RED_IN, ft_strlen(STR_RED_IN)))
-		return (TOKEN_REDIR_IN);
-	if (!ft_strncmp(input, STR_HEREDOC, ft_strlen(STR_HEREDOC)))
+	if (ft_strncmp(input, STR_HEREDOC, ft_strlen(STR_HEREDOC)) == 0)
 		return (TOKEN_HEREDOC);
-	if (!ft_strncmp(input, STR_RED_OUT, ft_strlen(STR_RED_OUT)))
-		return (TOKEN_REDIR_OUT);
-	if (!ft_strncmp(input, STR_RED_APP, ft_strlen(STR_RED_APP)))
+	if (ft_strncmp(input, STR_RED_IN, ft_strlen(STR_RED_IN)) == 0)
+		return (TOKEN_REDIR_IN);
+	if (ft_strncmp(input, STR_RED_APP, ft_strlen(STR_RED_APP)) == 0)
 		return (TOKEN_REDIR_APPEND);
+	if (ft_strncmp(input, STR_RED_OUT, ft_strlen(STR_RED_OUT)) == 0)
+		return (TOKEN_REDIR_OUT);
 	return (TOKEN_WORD);
 }
 
