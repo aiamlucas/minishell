@@ -6,7 +6,7 @@
 /*   By: ssin <ssin@student.42berlin.de>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/12 18:08:03 by ssin              #+#    #+#             */
-/*   Updated: 2025/12/12 18:08:05 by ssin             ###   ########.fr       */
+/*   Updated: 2026/02/05 17:59:57 by lbueno-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,15 +29,17 @@ char	*get_word(char *input)
 
 char	*get_quoted_word(char *input)
 {
+	char	quote_type;
 	char	*start;
 	int		len;
 	char	*word;
 
 	start = input;
+	quote_type = *input;
 	input++;
-	while (*input && *input != C_S_QUOTE && *input != C_D_QUOTE)
+	while (*input && *input != quote_type)
 		input++;
-	if (*input && (*input == C_S_QUOTE || *input == C_D_QUOTE))
+	if (*input == quote_type)
 		input++;
 	len = input - start;
 	word = ft_substr(start, 0, len);

@@ -41,6 +41,7 @@ SRC				+= builtins/builtin_exit.c
 SRC				+= signals/signal_handler.c
 SRC				+= signals/signals_utils.c
 SRC				+= expansion/expand_tokens.c
+SRC				+= expansion/quote_removal.c
 
 TEST_DIR		= tests
 TEST_SRC		= test-lexer-main.c

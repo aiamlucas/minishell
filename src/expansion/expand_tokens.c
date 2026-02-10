@@ -6,7 +6,7 @@
 /*   By: lbueno-m <lbueno-m@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/16 23:33:18 by lbueno-m          #+#    #+#             */
-/*   Updated: 2026/02/04 10:57:10 by lbueno-m         ###   ########.fr       */
+/*   Updated: 2026/02/10 12:03:23 by lbueno-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,11 +20,27 @@ static size_t	expanded_length(const char *str, t_env *internal_env, int last_exi
 	const char		*var_start;
 	t_env			*env_node;
 	char			*exit_str;
+	char			quote;
 
 	ptr = str;
 	total_len = 0;
+	quote = '\0';
 	while (*ptr)
 	{
+		if ((*ptr == '\'' || *ptr == '\"') && !quote) // Tracking the quote
+		{
+			quote = *ptr;
+			total_len++;
+			ptr++;
+			continue ;
+		}
+		if (*ptr == quote)
+		{
+			quote = '\0';
+			total_len++;
+			ptr++;
+			continue ;
+		}
 		if (*ptr != '$')
 		{
 			total_len++;
@@ -37,6 +53,11 @@ static size_t	expanded_length(const char *str, t_env *internal_env, int last_exi
 			{
 				total_len++;
 				break ;
+			}
+			if (quote == '\'') // don't expand inside single quotes
+			{
+				total_len++;
+				continue ;
 			}
 			if (*ptr == '?')
 			{
@@ -89,14 +110,28 @@ static char	*expand_variable(const char *str, t_env *internal_env, int last_exit
 	size_t		i;
 	char		*result;
 	char		*exit_str;
+	char		quote;
 
 	ptr = str;
+	quote = '\0';
 	total_len = 0;
 	result = malloc(len + 1);
 	if (!result)
 		return (NULL);
 	while (*ptr)
 	{
+		if ((*ptr =='\'' || *ptr == '\"') && !quote) // tracking quote
+		{
+			quote = *ptr;
+			result[total_len++] = *ptr++;
+			continue ;
+		}
+		if (*ptr == quote)
+		{
+			quote = '\0';
+			result[total_len++] = *ptr++;
+			continue ;
+		}
 		if (*ptr != '$')
 		{
 			result[total_len] = *ptr;
@@ -112,6 +147,11 @@ static char	*expand_variable(const char *str, t_env *internal_env, int last_exit
 				result[total_len++] = '$';
 				result[total_len] = '\0';
 				return (result);
+			}
+			if (quote == '\'')
+			{
+				result[total_len++] = '$';
+				continue ;
 			}
 			if (*ptr == '?')
 			{
