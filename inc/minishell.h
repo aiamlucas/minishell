@@ -6,7 +6,7 @@
 /*   By: ssin <ssin@student.42berlin.de>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/18 17:31:00 by ssin              #+#    #+#             */
-/*   Updated: 2026/02/04 10:57:56 by lbueno-m         ###   ########.fr       */
+/*   Updated: 2026/02/11 11:08:28 by ssin             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,12 +16,15 @@
 # include <stdio.h>
 # include <readline/readline.h>
 # include <readline/history.h>
-# include "../libft/libft.h"
-# include "minishell_macros.h"
 # include <stdbool.h>
 # include <sys/wait.h>
+# include <sys/types.h>
 # include <fcntl.h>
 # include <limits.h>
+# include <signal.h>
+
+# include "../libft/libft.h"
+# include "minishell_macros.h"
 
 extern volatile	sig_atomic_t	g_signal_received;
 
@@ -49,11 +52,10 @@ typedef struct s_env
 	struct s_env	*next;
 }	t_env;
 
-// Redirecion struct to be placed inside the commands list
 typedef struct s_redir
 {
 	t_token_type	type;
-	char			*file;
+	char			*target;
 	struct s_redir	*next;
 }	t_redir;
 
@@ -104,7 +106,6 @@ void		token_clear(t_token **lst);
 t_token		*lexer(char *line);
 
 // parser
-
 t_command	*command_new(void);
 t_command	*command_last(t_command *lst);
 void		command_add_back(t_command **lst, t_command *new);
@@ -123,7 +124,6 @@ void		print_commands(t_command *commands);
 void		print_env_list(t_env *list);
 
 // pipeline helpers
-
 int			count_pipeline_commands(t_command *cmd);
 void		free_pipes(int **pipes, int count);
 void		close_pipes(int **pipes, int count);
@@ -165,5 +165,9 @@ bool		handle_signal_interrupt(void);
 
 // expansion
 bool	expand_tokens(t_token *tokens, t_env *internal_env, int last_exit);
+
+// heredoc
+int	    handle_heredoc(t_redir redirections);
+int	    read_heredoc(t_redir redirections, int *fd);
 
 #endif

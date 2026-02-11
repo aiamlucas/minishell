@@ -6,7 +6,7 @@
 /*   By: lbueno-m <lbueno-m@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/14 19:52:02 by lbueno-m          #+#    #+#             */
-/*   Updated: 2025/12/14 20:03:44 by lbueno-m         ###   ########.fr       */
+/*   Updated: 2026/02/11 10:58:53 by ssin             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,8 @@ t_redir	*redir_new(t_token_type type, char *file)
 	node = malloc(sizeof(t_redir));
 	if (!node)
 		return (NULL);
-	node->file = ft_strdup(file);
-	if (!node->file)
+	node->target = ft_strdup(file);
+	if (!node->target)
 	{
 		free(node);
 		return (NULL);
@@ -63,7 +63,7 @@ void	redir_clear(t_redir **lst)
 	while (*lst)
 	{
 		tmp = (*lst)->next;
-		free((*lst)->file);
+		free((*lst)->target);
 		free(*lst);
 		*lst = tmp;
 	}
