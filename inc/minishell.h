@@ -6,7 +6,7 @@
 /*   By: ssin <ssin@student.42berlin.de>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/18 17:31:00 by ssin              #+#    #+#             */
-/*   Updated: 2026/02/11 11:08:28 by ssin             ###   ########.fr       */
+/*   Updated: 2026/02/11 16:23:00 by ssin             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@
 # include <fcntl.h>
 # include <limits.h>
 # include <signal.h>
+# include <termios.h>
 
 # include "../libft/libft.h"
 # include "minishell_macros.h"
@@ -76,11 +77,12 @@ typedef struct s_command
 
 typedef struct s_data
 {
-	char		**envp;
-	t_env		*internal_env;
-	t_token		*tokens;
-	t_command	*commands;
-	int			last_exit;
+	char			**envp;
+	t_env			*internal_env;
+	t_token			*tokens;
+	t_command		*commands;
+	int				last_exit;
+	struct termios	*t_settings;
 }	t_data;
 
 typedef struct s_child_data
@@ -167,7 +169,7 @@ bool		handle_signal_interrupt(void);
 bool	expand_tokens(t_token *tokens, t_env *internal_env, int last_exit);
 
 // heredoc
-int	    handle_heredoc(t_redir redirections);
-int	    read_heredoc(t_redir redirections, int *fd);
+int	    handle_heredoc(t_data *data);
+int		read_heredoc(t_redir *redirections, int *fd, struct termios *t_settings);
 
 #endif
