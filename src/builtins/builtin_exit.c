@@ -14,6 +14,12 @@
 
 static bool	is_numeric(char *str)
 {
+	if (!*str)
+		return (false);
+	if (*str == '-' || *str == '+') 
+		str++;
+	if (!*str)
+		return (false);
 	while (*str)
 	{
 		if (!ft_isdigit(*str))

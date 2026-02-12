@@ -65,7 +65,7 @@ int	execute_builtin(t_command *cmd, t_env **internal_envp)
 	if (ft_strcmp(cmd->argv[0], "cd") == 0)
 		return (builtin_cd(cmd->argv, *internal_envp));
 	if (ft_strcmp(cmd->argv[0], "export") == 0)
-		return (builtin_export(cmd->argv, *internal_envp));
+		return (builtin_export(cmd->argv, internal_envp));
 	if (ft_strcmp(cmd->argv[0], "env") == 0)
 		return (builtin_env(*internal_envp));
 	if (ft_strcmp(cmd->argv[0], "unset") == 0)

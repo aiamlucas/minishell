@@ -19,7 +19,7 @@ int	builtin_pwd(void)
 	cwd = getcwd(NULL, 0);
 	if (cwd)
 	{
-		printf("%s\n", cwd);
+		ft_printf("%s\n", cwd);
 		free(cwd);
 	}
 	else

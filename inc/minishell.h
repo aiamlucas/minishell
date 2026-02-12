@@ -153,7 +153,7 @@ void		execute_child_command(t_command *cmd, char **envp,
 int			builtin_cd(char **argv, t_env *envp);
 int			builtin_echo(char **argv);
 int			builtin_env(t_env *internal_env);
-int			builtin_export(char **argv, t_env *internal_env);
+int			builtin_export(char **argv, t_env **internal_env);
 int			builtin_pwd(void);
 int			builtin_unset(char **argv, t_env **internal_env);
 int			builtin_exit(char **argv);

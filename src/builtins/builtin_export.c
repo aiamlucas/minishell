@@ -12,15 +12,17 @@
 
 #include "../../inc/minishell.h"
 
-static void	create_env(char *key, char *value, t_env *internal_env)
+static void	create_env(char *key, char *value, t_env **internal_env)
 {
 	char	*content;
+	char	*tmp;
 	t_env	*node;
 
-	content = ft_strjoin(key, "=");
-	content = ft_strjoin(content, value);
+	tmp = ft_strjoin(key, "=");
+	content = ft_strjoin(tmp, value);
 	node = new_env_node(content);
-	list_add_back(&internal_env, node);
+	list_add_back(internal_env, node);
+	free(tmp);
 	free(content);
 }
 
@@ -58,7 +60,7 @@ static void	get_key_value(char **argv, char **key, char **value, int index)
 	}
 }
 
-int	builtin_export(char **argv, t_env *internal_env)
+int	builtin_export(char **argv, t_env **internal_env)
 {
 	char	*key;
 	char	*value;
@@ -72,8 +74,8 @@ int	builtin_export(char **argv, t_env *internal_env)
 		if (arg_valid)
 		{
 			get_key_value(argv, &key, &value, index);
-			if (key && key_already_exists(key, internal_env))
-				update_env(key, value, internal_env);
+			if (key && key_already_exists(key, *internal_env))
+				update_env(key, value, *internal_env);
 			else
 				create_env(key, value, internal_env);
 			clear_data(&key, &value);

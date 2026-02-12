@@ -45,6 +45,7 @@ static void	pwd_env_manager(char *key, char *value, t_env *internal_envp)
 int	builtin_cd(char **argv, t_env *internal_envp)
 {
 	char	*dir;
+	char    cwd[PATH_MAX];
 
 	pwd_env_manager(OLDPWD, NULL, internal_envp);
 	if (argv[1] && argv[2])
@@ -58,6 +59,8 @@ int	builtin_cd(char **argv, t_env *internal_envp)
 	}
 	if (chdir(dir) != 0)
 		return (error_cd("cd: no such file or directory"));
-	pwd_env_manager(PWD, dir, internal_envp);
+	if (getcwd(cwd, PATH_MAX) == NULL)
+		return (error_cd("cd: error retrieving current directory\n"));
+	pwd_env_manager(PWD, cwd, internal_envp);
 	return (0);
 }
