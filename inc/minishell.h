@@ -150,7 +150,7 @@ void		execute_child_command(t_command *cmd, char **envp,
 				t_env *internal_env);
 
 // builtins
-int			builtin_cd(char **argv, t_env *envp);
+int			builtin_cd(char **argv, t_env **internal_env);
 int			builtin_echo(char **argv);
 int			builtin_env(t_env *internal_env);
 int			builtin_export(char **argv, t_env **internal_env);
@@ -158,9 +158,12 @@ int			builtin_pwd(void);
 int			builtin_unset(char **argv, t_env **internal_env);
 int			builtin_exit(char **argv);
 int			update_env(char *key, char *value, t_env *internal_env);
-int			print_invalid(char *msg);
+void		set_env(int key_exists, char *key, char *value, t_env **internal_env);
+int			error_msg(char *msg);
+int			check_key(char *key, t_env *internal_env);
 int			is_valid_key(char *name);
 int			update_env(char *key, char *value, t_env *internal_env);
+void		free_env_node(t_env *node);
 
 // signals
 void		setup_signals(void);

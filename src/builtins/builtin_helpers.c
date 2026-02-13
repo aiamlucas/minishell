@@ -12,17 +12,31 @@
 
 #include "../../inc/minishell.h"
 
-int	print_invalid(char *msg)
+int	error_msg(char *msg)
 {
-	ft_printf("%s", msg);
+	ft_printf("%s\n", msg);
 	return (1);
+}
+
+int	check_key(char *key, t_env *internal_env)
+{
+	t_env	*tmp;
+
+	tmp = internal_env;
+	while (tmp)
+	{
+		if (!ft_strcmp(tmp->key, key))
+			return (1);
+		tmp = tmp->next;
+	}
+	return (0);
 }
 
 int	is_valid_key(char *name)
 {
 	size_t	i;
 
-	if (!*name || ft_strlen(name) == 0)
+	if (!*name)
 		return (0);
 	i = 0;
 	if (!(ft_isalpha(name[0]) || name[0] == '_'))
@@ -62,4 +76,13 @@ int	update_env(char *key, char *value, t_env *internal_env)
 	if (cp_value)
 		free(cp_value);
 	return (0);
+}
+
+void	free_env_node(t_env *node)
+{
+	if (!node)
+		return ;
+	free(node->key);
+	free(node->value);
+	free(node);
 }

@@ -12,11 +12,18 @@
 
 #include "../../inc/minishell.h"
 
-int	search_internal_env(t_env *head, char *argv, t_env **env)
+int	clean_node(t_env **internal_env, t_env *node_to_remove)
 {
-	t_env	*node_to_remove;
-	t_env	*previous;
+	*internal_env = (*internal_env)->next;
+	free_env_node(node_to_remove);
+	return (0);
+}
+
+int	search_internal_env(t_env *head, char *argv, t_env **internal_env)
+{
 	t_env	*tmp;
+	t_env	*previous;
+	t_env	*node_to_remove;
 
 	tmp = head;
 	previous = NULL;
@@ -26,13 +33,10 @@ int	search_internal_env(t_env *head, char *argv, t_env **env)
 		{
 			node_to_remove = tmp;
 			if (tmp == head)
-			{
-				*env = (*env)->next;
-				return (0);
-			}
+				return (clean_node(internal_env, node_to_remove));
 			tmp = tmp->next;
 			previous->next = tmp;
-			free(node_to_remove);
+			free_env_node(node_to_remove);
 			break ;
 		}
 		previous = tmp;
@@ -44,11 +48,11 @@ int	search_internal_env(t_env *head, char *argv, t_env **env)
 int	builtin_unset(char **argv, t_env **internal_env)
 {
 	int		index;
-	int		printed_error;
+	int		exit_code;
 	t_env	*head;
 
 	index = 1;
-	printed_error = 0;
+	exit_code = 0;
 	head = *internal_env;
 	if (!argv[index])
 	{
@@ -57,14 +61,14 @@ int	builtin_unset(char **argv, t_env **internal_env)
 	}
 	while (argv[index])
 	{
-		if (!is_valid_key(argv[index]) && !printed_error)
+		if (!is_valid_key(argv[index]) && !exit_code)
 		{
 			ft_printf("unset: %s: invalid parameter name\n", argv[index]);
-			printed_error = 1;
+			exit_code = 1;
 		}
 		if (!search_internal_env(head, argv[index], internal_env))
-			return (0);
+			exit_code = 1;
 		index++;
 	}
-	return (0);
+	return (exit_code);
 }

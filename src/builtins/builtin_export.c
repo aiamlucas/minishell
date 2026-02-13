@@ -6,7 +6,7 @@
 /*   By: lbueno-m <lbueno-m@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/04 20:13:17 by lbueno-m          #+#    #+#             */
-/*   Updated: 2026/02/02 19:09:48 by ssin             ###   ########.fr       */
+/*   Updated: 2026/02/13 10:32:22 by ssin             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,18 +26,12 @@ static void	create_env(char *key, char *value, t_env **internal_env)
 	free(content);
 }
 
-static int	key_already_exists(char *key, t_env *internal_env)
+void	set_env(int key_exists, char *key, char *value, t_env **internal_env)
 {
-	t_env	*tmp;
-
-	tmp = internal_env;
-	while (tmp)
-	{
-		if (!ft_strcmp(tmp->key, key))
-			return (1);
-		tmp = tmp->next;
-	}
-	return (0);
+	if (key_exists)
+		update_env(key, value, *internal_env);
+	else
+		create_env(key, value, internal_env);
 }
 
 static void	clear_data(char **key, char **value)
@@ -60,29 +54,49 @@ static void	get_key_value(char **argv, char **key, char **value, int index)
 	}
 }
 
-int	builtin_export(char **argv, t_env **internal_env)
+int	print_env(t_env *internal_env)
+{
+	t_env	*tmp;
+
+	tmp = internal_env;
+	while (tmp)
+	{
+		if (tmp->value)
+			ft_printf("declare -x %s=\"%s\"\n", tmp->key, tmp->value);
+		else
+			ft_printf("declare -x %s=\"\"\n", tmp->key);
+		tmp = tmp->next;
+	}
+	return (0);
+}
+
+int	builtin_export(char **argv, t_env **intrnl_env)
 {
 	char	*key;
 	char	*value;
-	int		arg_valid;
 	int		index;
+	int		exit_code;
 
-	index = 1;
-	while (argv[index])
+	key = NULL;
+	value = NULL;
+	index = 0;
+	exit_code = 0;
+	if (!argv[1])
+		return (print_env(*intrnl_env));
+	while (argv[++index])
 	{
-		arg_valid = is_valid_key(argv[index]);
-		if (arg_valid)
+		if (is_valid_key(argv[index]))
 		{
 			get_key_value(argv, &key, &value, index);
-			if (key && key_already_exists(key, *internal_env))
-				update_env(key, value, *internal_env);
-			else
-				create_env(key, value, internal_env);
+			if (key)
+				set_env(check_key(key, *intrnl_env), key, value, intrnl_env);
 			clear_data(&key, &value);
 		}
 		else
+		{
 			ft_printf("export: invalid argument\n");
-		index++;
+			exit_code = 1;
+		}
 	}
-	return (0);
+	return (exit_code);
 }

@@ -23,6 +23,9 @@ int	builtin_pwd(void)
 		free(cwd);
 	}
 	else
+	{
 		perror("getcwd");
+		return (1);
+	}
 	return (0);
 }

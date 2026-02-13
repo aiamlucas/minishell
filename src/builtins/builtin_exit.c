@@ -16,7 +16,7 @@ static bool	is_numeric(char *str)
 {
 	if (!*str)
 		return (false);
-	if (*str == '-' || *str == '+') 
+	if (*str == '-' || *str == '+')
 		str++;
 	if (!*str)
 		return (false);
