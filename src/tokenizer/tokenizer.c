@@ -6,42 +6,45 @@
 /*   By: ssin <ssin@student.42berlin.de>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/12 18:08:03 by ssin              #+#    #+#             */
-/*   Updated: 2026/02/05 17:59:57 by lbueno-m         ###   ########.fr       */
+/*   Updated: 2026/02/15 18:30:47 by lbueno-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/minishell.h"
+#include "minishell_macros.h"
+
+static char	*skip_quoted_section(char *input, char quote_char)
+{
+	input++;
+	while (*input && *input != quote_char)
+		input++;
+	if (*input == quote_char)
+		input++;
+	return (input);
+}
 
 char	*get_word(char *input)
 {
 	char	*start;
+	char	*current;
 	int		len;
 	char	*word;
 
 	start = input;
-	while (*input && !ft_isspace(*input) && *input != C_PIPE
-		&& *input != C_RED_IN && *input != C_RED_OUT)
-		input++;
-	len = input - start;
-	word = ft_substr(start, 0, len);
-	return (word);
-}
-
-char	*get_quoted_word(char *input)
-{
-	char	quote_type;
-	char	*start;
-	int		len;
-	char	*word;
-
-	start = input;
-	quote_type = *input;
-	input++;
-	while (*input && *input != quote_type)
-		input++;
-	if (*input == quote_type)
-		input++;
-	len = input - start;
+	current = input;
+	while (*current && !ft_isspace(*current)
+		&& *current != C_PIPE
+		&& *current != C_RED_IN
+		&& *current != C_RED_OUT)
+	{
+		if (*current == C_S_QUOTE)
+			current = skip_quoted_section(current, C_S_QUOTE);
+		else if (*current == C_D_QUOTE)
+			current = skip_quoted_section(current, C_D_QUOTE);
+		else
+			current++;
+	}
+	len = current - start;
 	word = ft_substr(start, 0, len);
 	return (word);
 }
@@ -62,8 +65,6 @@ char	*get_token_operator(char *input)
 			return (STR_RED_APP);
 		return (STR_RED_OUT);
 	}
-	else if (*input == C_S_QUOTE || *input == C_D_QUOTE)
-		return (get_quoted_word(input));
 	else
 		return (get_word(input));
 }
