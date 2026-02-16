@@ -17,6 +17,7 @@ static int	create_heredoc(t_data *data, int *fd)
 	int				status;
 	pid_t			pid;
 
+	status = 0;
 	pid = fork();
 	if (pid == -1)
 	{

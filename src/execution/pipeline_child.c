@@ -12,21 +12,31 @@
 
 #include "../../inc/minishell.h"
 
-void	setup_pipes(int **pipes, int cmd_index, int total)
+void	setup_pipes(t_child_data *data)
 {
-	if (cmd_index > 0)
-		dup2(pipes[cmd_index - 1][0], STDIN_FILENO);
-	if (cmd_index < total - 1)
-		dup2(pipes[cmd_index][1], STDOUT_FILENO);
+	if (data->cmd_index > 0)
+	{
+		if (data->heredoc_fd > 0)
+			dup2(data->heredoc_fd, STDIN_FILENO);
+		else
+			dup2(data->pipes[data->cmd_index - 1][0], STDIN_FILENO);
+	}
+	if (data->cmd_index < data->total - 1)
+	{
+		if (data->heredoc_fd > 0)
+			dup2(data->heredoc_fd, STDOUT_FILENO);
+		else
+			dup2(data->pipes[data->cmd_index][1], STDOUT_FILENO);
+	}
 }
 
 void	child_process(t_child_data *data)
 {
 	reset_signals();
-	setup_pipes(data->pipes, data->cmd_index, data->total);
+	setup_pipes(data);
 	close_pipes(data->pipes, data->total - 1);
 	apply_redirections(data->cmd->redirections);
-	execute_child_command(data->cmd, data->envp, NULL);
+	execute_child_command(data->cmd, data->envp, NULL, data->heredoc_fd);
 }
 
 pid_t	fork_child(t_child_data *data)

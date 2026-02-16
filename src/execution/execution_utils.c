@@ -12,12 +12,12 @@
 
 #include "../../inc/minishell.h"
 
-void	execute_child_command(t_command *cmd, char **envp, t_env *internal_env)
+void	execute_child_command(t_command *cmd, char **envp, t_env *internal_env, int heredoc_fd)
 {
 	char	*path;
 
 	if (is_builtin(cmd))
-		exit(execute_builtin(cmd, internal_env));
+		exit(execute_builtin(cmd, internal_env, heredoc_fd));
 	path = find_dir(cmd->argv[0], internal_env);
 	if (!path)
 	{

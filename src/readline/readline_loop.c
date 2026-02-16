@@ -12,11 +12,37 @@
 
 #include "../../inc/minishell.h"
 
+int	set_fd(int *fd)
+{
+	fd[0] = 0;
+	fd[1] = 0;
+
+	if (pipe(fd) == -1)
+	{
+		ft_printf("heredoc error pipe\n");
+		return (0);
+	}
+	return (1);
+}
+
+static int	pre_execution(int *fd, t_data *data)
+{
+	char		buffer[1024];
+
+	ssize_t bytes_read = read(fd[0], buffer, sizeof(buffer) - 1);
+	if (bytes_read > 0) {
+		buffer[bytes_read] = '\0';
+		printf("Read: %s\n", buffer);
+		return (execute_command(data, fd[0]));
+	}
+	else
+		return (execute_command(data, 0));
+}
+
 static int	process_input(char *input, t_data *data)
 {
 	int			fd[2];
 	int			exit_code;
-	char		buffer[1024];
 
 	data->tokens = lexer(input);
 	//printf("tokens\n");
@@ -27,16 +53,12 @@ static int	process_input(char *input, t_data *data)
 	data->commands = parser(data->tokens);
 	// print_commands(data->commands); // for debugging
 	token_clear(&data->tokens);
-	if (pipe(fd) == -1)
-		ft_printf("heredoc error pipe\n");
-		// return or exit
+	if (!set_fd(fd))
+		return (1);
 	handle_heredoc(data, fd);
-	ssize_t bytes_read = read(fd[0], buffer, sizeof(buffer) - 1);
-	if (bytes_read > 0) {
-		buffer[bytes_read] = '\0';
-		printf("Read: %s\n", buffer);
-	}
-	exit_code = execute_command(data);
+	close(fd[1]);
+	exit_code = pre_execution(fd, data);
+	close(fd[0]);
 	command_clear(&data->commands);
 	if (check_signal())
 		exit_code = get_signal_exit_code();

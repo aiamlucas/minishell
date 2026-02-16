@@ -12,9 +12,10 @@
 
 #include "../../inc/minishell.h"
 
-int	builtin_echo(char **argv)
+int	builtin_echo(char **argv, int heredoc_fd)
 {
 	(void)argv;
+	(void)heredoc_fd;
 	ft_printf("echo: not implemented yet\n");
 	return (0);
 }
