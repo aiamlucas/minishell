@@ -14,7 +14,9 @@
 
 static int	process_input(char *input, t_data *data)
 {
+	int			fd[2];
 	int			exit_code;
+	char		buffer[1024];
 
 	data->tokens = lexer(input);
 	//printf("tokens\n");
@@ -25,7 +27,15 @@ static int	process_input(char *input, t_data *data)
 	data->commands = parser(data->tokens);
 	// print_commands(data->commands); // for debugging
 	token_clear(&data->tokens);
-	handle_heredoc(data);
+	if (pipe(fd) == -1)
+		ft_printf("heredoc error pipe\n");
+		// return or exit
+	handle_heredoc(data, fd);
+	ssize_t bytes_read = read(fd[0], buffer, sizeof(buffer) - 1);
+	if (bytes_read > 0) {
+		buffer[bytes_read] = '\0';
+		printf("Read: %s\n", buffer);
+	}
 	exit_code = execute_command(data);
 	command_clear(&data->commands);
 	if (check_signal())

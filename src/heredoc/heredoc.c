@@ -6,29 +6,55 @@
 /*   By: ssin <ssin@student.42berlin.de>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/10 21:29:05 by ssin              #+#    #+#             */
-/*   Updated: 2026/02/11 11:12:40 by ssin             ###   ########.fr       */
+/*   Updated: 2026/02/16 12:54:53 by ssin             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/minishell.h"
 
-static int	create_heredoc(t_redir redirections)
+static int	create_heredoc(t_data *data, int *fd)
 {
-	int		fd[2];
-	pid_t	pid;
+	int				status;
+	pid_t			pid;
 
-	if (pipe(fd) == -1)
-		ft_printf("error pipe\n");
 	pid = fork();
 	if (pid == -1)
-		ft_printf("error pid\n");
+	{
+		ft_printf("heredoc error pid\n");
+		return (1);
+	}
 	if (pid == 0)
-		read_heredoc(redirections, fd);
-	wait(pid);
+	{
+		signal(SIGINT, SIG_DFL);
+    	signal(SIGQUIT, SIG_IGN);
+		read_heredoc(data->commands->redirections, fd, data->t_settings);
+	}
+	else
+	{
+		close(fd[1]);
+		waitpid(pid, &status, 0);
+		//close(fd[0]);
+	}
+	// review exit codes
+	if (WIFEXITED(status))
+		return (WEXITSTATUS(status));
+	if (WIFSIGNALED(status))
+		return (128 + WTERMSIG(status));
+	return (1);
 }
 
-int	handle_heredoc(t_redir redirections)
+int	handle_heredoc(t_data *data, int *fd)
 {
-	create_heredoc(redirections);
+	// Add tests
+	if (data->commands->redirections->type != TOKEN_HEREDOC)
+		return (0);
+	if (!data->commands->redirections->next)
+		create_heredoc(data, fd);
+	else
+		while (data->commands->redirections)
+		{
+			create_heredoc(data, fd);
+			data->commands->redirections = data->commands->redirections->next;
+		}
 	return (0);
 }

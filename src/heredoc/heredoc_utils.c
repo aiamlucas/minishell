@@ -12,3 +12,12 @@
 
 #include "../../inc/minishell.h"
 
+void	rl_prep_terminal()
+{
+	
+}
+
+void	rl_deprep_terminal()
+{
+	
+}
