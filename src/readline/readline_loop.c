@@ -6,11 +6,66 @@
 /*   By: ssin <ssin@student.42berlin.de>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/11 19:10:57 by ssin              #+#    #+#             */
-/*   Updated: 2026/02/09 19:13:27 by lbueno-m         ###   ########.fr       */
+/*   Updated: 2026/02/16 18:41:09 by lbueno-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/minishell.h"
+
+static char	*join_with_newline(char *line, char *temp)
+{
+	char	*with_newline;
+	char	*joined;
+
+	with_newline = ft_strjoin(line, "\n");
+	if (!with_newline)
+		return (NULL);
+	joined = ft_strjoin(with_newline, temp);
+	free(with_newline);
+	return (joined);
+}
+
+static char	*read_continuation_line(char *current_line)
+{
+	char	*temp;
+	char	*result;
+
+	temp = readline("> ");
+	if (!temp)
+		return (NULL);
+	if (check_signal())
+	{
+		free(temp);
+		return (NULL);
+	}
+	result = join_with_newline(current_line, temp);
+	free(temp);
+	return (result);
+}
+
+static char	*readline_with_continuation(const char *input)
+{
+	char	*line;
+	char	*new_line;
+
+	line = readline(input);
+	if (!line)
+		return (NULL);
+	while (has_unclosed_quotes(line))
+	{
+		if (check_signal())
+		{
+			free(line);
+			return (NULL);
+		}
+		new_line = read_continuation_line(line);
+		free(line);
+		if (!new_line)
+			return (NULL);
+		line = new_line;
+	}
+	return (line);
+}
 
 static int	process_input(char *input, t_data *data)
 {
@@ -35,31 +90,20 @@ static int	process_input(char *input, t_data *data)
 	return (exit_code);
 }
 
-static void	handle_signal_cleanup(char *input)
+static int	check_input_validation(char *input)
 {
-	reset_signal();
-	free(input);
-}
-
-static int	check_input_validation(char *input, t_data *data)
-{
-	if (!input)
-		return (-1);
 	if (check_signal())
 	{
-		handle_signal_cleanup(input);
+		if (input)
+			free(input);
+		reset_signal();
 		return (1);
 	}
+	if (!input)
+		return (-1);
 	if (is_empty_input(input))
 	{
 		free(input);
-		return (1);
-	}
-	if (has_unclosed_quotes(input))
-	{
-		ft_printf("minishell: syntax error: unclosed quote\n");
-		free(input);
-		data->last_exit = 2;
 		return (1);
 	}
 	return (0);
@@ -70,7 +114,7 @@ static bool	handle_input_line(char *input, t_data *data)
 	int	validation;
 	int	exit_code;
 
-	validation = check_input_validation(input, data);
+	validation = check_input_validation(input);
 	if (validation == -1)
 	{
 		ft_printf("exit\n");
@@ -92,7 +136,7 @@ void	readline_loop(t_data *data)
 	while (1)
 	{
 		reset_signal();
-		input = readline("$[ 🛸 ]>");
+		input = readline_with_continuation("$[ 🛸 ]>");
 		if (!handle_input_line(input, data))
 			break ;
 	}
