@@ -6,7 +6,7 @@
 /*   By: ssin <ssin@student.42berlin.de>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/10 21:29:38 by ssin              #+#    #+#             */
-/*   Updated: 2026/02/16 12:55:59 by ssin             ###   ########.fr       */
+/*   Updated: 2026/02/17 08:33:33 by ssin             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,8 @@
 
 int	read_heredoc(t_redir *redirections, int *fd, struct termios *t_settings)
 {
-	char			*input_line;
-	
+	char	*input_line;
+
 	close(fd[0]);
 	while (1)
 	{
