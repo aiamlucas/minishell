@@ -12,6 +12,29 @@
 
 #include "../../inc/minishell.h"
 
+void	check_flag(char *argv, int *i, int *newline)
+{
+	int	j;
+
+	j = 2;
+	while (argv)
+	{
+		if (argv[0] == '-' && argv[1] == 'n')
+		{
+			j = 2;
+			while (argv[j] == 'n')
+				j++;
+			if (argv[j] == '\0')
+			{
+				newline = 0;
+				i++;
+				continue ;
+			}
+		}
+		break ;
+	}
+}
+
 int	builtin_echo(char **argv)
 {
 	int	i;
@@ -19,11 +42,7 @@ int	builtin_echo(char **argv)
 
 	i = 1;
 	newline = 1;
-	while (argv[i] && ft_strchr(argv[i], '-') != 0)
-	{
-		newline = 0;
-		i++;
-	}
+	check_flag(argv[i], &i, &newline);
 	while (argv[i])
 	{
 		ft_printf("%s", argv[i]);
