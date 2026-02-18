@@ -38,6 +38,7 @@ SRC				+= builtins/builtin_export.c
 SRC				+= builtins/builtin_pwd.c
 SRC				+= builtins/builtin_unset.c
 SRC				+= builtins/builtin_exit.c
+SRC				+= builtins/builtin_helpers.c
 SRC				+= signals/signal_handler.c
 SRC				+= signals/signals_utils.c
 SRC				+= expansion/expand_tokens.c
@@ -64,7 +65,7 @@ $(NAME): $(OBJ) $(LIBFT)
 vpath %.c $(SRC_DIR) $(SRC_DIR)/tokenizer $(SRC_DIR)/parser \
           $(SRC_DIR)/builtins $(SRC_DIR)/execution \
           $(SRC_DIR)/readline $(SRC_DIR)/debug $(SRC_DIR)/signals \
-		  $(SRC_DIR)/expansion
+		  $(SRC_DIR)/expansion $(SRC_DIR)/builtins
 
 $(OBJ_DIR)/%.o: %.c | $(OBJ_DIR)
 	$(CC) $(CFLAGS) -Iinc -I$(LIBFT_DIR) -c $< -o $@

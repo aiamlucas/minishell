@@ -14,6 +14,18 @@
 
 int	builtin_pwd(void)
 {
-	ft_printf("pwd: not implemented yet\n");
+	char	*cwd;
+
+	cwd = getcwd(NULL, 0);
+	if (cwd)
+	{
+		ft_printf("%s\n", cwd);
+		free(cwd);
+	}
+	else
+	{
+		perror("getcwd");
+		return (1);
+	}
 	return (0);
 }
