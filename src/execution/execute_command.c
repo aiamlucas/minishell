@@ -50,7 +50,7 @@ static int	execute_single_process(t_command *cmd, char *path, char **envp, t_env
 	return (wait_child(pid));
 }
 
-static int	execute_builtin_forked(t_command *cmd, t_env *internal_env)
+static int	execute_builtin_forked(t_command *cmd, t_env **internal_env)
 {
 	pid_t	pid;
 	int		status;
@@ -72,7 +72,7 @@ static int	execute_builtin_forked(t_command *cmd, t_env *internal_env)
 	return (1);
 }
 
-int	execute_single_command(t_command *cmd, char **envp, t_env *internal_env)
+int	execute_single_command(t_command *cmd, char **envp, t_env **internal_env)
 {
 	char	*path;
 
@@ -86,13 +86,13 @@ int	execute_single_command(t_command *cmd, char **envp, t_env *internal_env)
 			return (execute_builtin_forked(cmd, internal_env));
 		return (execute_builtin(cmd, internal_env));
 	}
-	path = find_dir(cmd->argv[0], internal_env);
+	path = find_dir(cmd->argv[0], *internal_env);
 	if (!path)
 	{
 		ft_printf("minishell: %s: command not found\n", cmd->argv[0]);
 		return (127);
 	}
-	return (execute_single_process(cmd, path, envp, internal_env));
+	return (execute_single_process(cmd, path, envp, *internal_env));
 }
 
 int	execute_command(t_data *data)
@@ -102,7 +102,7 @@ int	execute_command(t_data *data)
 	if (!data->commands)
 		return (1);
 	if (!data->commands->next)
-		exit_code = execute_single_command(data->commands, data->envp, data->internal_env);
+		exit_code = execute_single_command(data->commands, data->envp, &data->internal_env);
 	else
 		exit_code = execute_pipeline(data->commands, data->envp);
 	if (check_signal())

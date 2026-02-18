@@ -12,6 +12,9 @@
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
+# define HOME "HOME"
+# define PWD "PWD"
+# define OLDPWD "OLDPWD"
 
 # include <stdio.h>
 # include <readline/readline.h>
@@ -22,6 +25,7 @@
 # include <sys/wait.h>
 # include <fcntl.h>
 # include <limits.h>
+# include <signal.h>
 
 extern volatile	sig_atomic_t	g_signal_received;
 
@@ -104,7 +108,6 @@ void		token_clear(t_token **lst);
 t_token		*lexer(char *line);
 
 // parser
-
 t_command	*command_new(void);
 t_command	*command_last(t_command *lst);
 void		command_add_back(t_command **lst, t_command *new);
@@ -115,6 +118,8 @@ void		redir_add_back(t_redir **lst, t_redir *new);
 void		redir_clear(t_redir **lst);
 t_command	*parser(t_token *tokens);
 void		create_env_list(t_env **list, char **envp);
+t_env		*new_env_node(void *content);
+void		list_add_back(t_env **lst, t_env *new);
 
 // debug
 void		print_tokens(t_token *tokens);
@@ -123,7 +128,6 @@ void		print_commands(t_command *commands);
 void		print_env_list(t_env *list);
 
 // pipeline helpers
-
 int			count_pipeline_commands(t_command *cmd);
 void		free_pipes(int **pipes, int count);
 void		close_pipes(int **pipes, int count);
@@ -132,10 +136,10 @@ int			**create_pipes(int count);
 // execution
 bool		is_builtin(t_command *cmd);
 int			execute_single_command(t_command *cmd, char **envp,
-				t_env *internal_env);
+				t_env **internal_env);
 int			execute_command(t_data *data);
 int			execute_pipeline(t_command *cmds, char **envp);
-int			execute_builtin(t_command *cmd, t_env *internal_env);
+int			execute_builtin(t_command *cmd, t_env **internal_env);
 char		*find_dir(char *cmd, t_env *internal_env);
 void		apply_redirections(t_redir *redirections);
 void		setup_pipes(int **pipes, int i, int total);
@@ -146,13 +150,20 @@ void		execute_child_command(t_command *cmd, char **envp,
 				t_env *internal_env);
 
 // builtins
-int			builtin_cd(char **argv);
+int			builtin_cd(char **argv, t_env **internal_env);
 int			builtin_echo(char **argv);
 int			builtin_env(t_env *internal_env);
-int			builtin_export(char **argv, t_env *internal_env);
+int			builtin_export(char **argv, t_env **internal_env);
 int			builtin_pwd(void);
-int			builtin_unset(char **argv, t_env *internal_env);
+int			builtin_unset(char **argv, t_env **internal_env);
 int			builtin_exit(char **argv);
+int			update_env(char *key, char *value, t_env *internal_env);
+void		set_env(int key_exists, char *key, char *value, t_env **internal_env);
+int			error_msg(char *msg);
+int			check_key(char *key, t_env *internal_env);
+int			is_valid_key(char *name);
+int			update_env(char *key, char *value, t_env *internal_env);
+void		free_env_node(t_env *node);
 
 // signals
 void		setup_signals(void);
