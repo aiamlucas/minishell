@@ -31,10 +31,13 @@ static bool	is_numeric(char *str)
 
 int	builtin_exit(char **argv)
 {
+	int	result;
+
 	ft_printf("exit\n");
 	if (!argv[1])
 		exit(0);
-	if (!is_numeric(argv[1]))
+	if (!is_numeric(argv[1]) || (ft_safe_atoi(argv[1], &result) < 0
+		|| ft_safe_atoi(argv[1], &result) > 255))
 	{
 		ft_printf("exit: %s: numeric argument required\n", argv[1]);
 		exit(2);
