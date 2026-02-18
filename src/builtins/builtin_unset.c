@@ -6,7 +6,7 @@
 /*   By: lbueno-m <lbueno-m@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/04 20:14:37 by lbueno-m          #+#    #+#             */
-/*   Updated: 2026/02/09 15:44:36 by ssin             ###   ########.fr       */
+/*   Updated: 2026/02/17 19:34:11 by lbueno-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,27 +48,14 @@ int	search_internal_env(t_env *head, char *argv, t_env **internal_env)
 int	builtin_unset(char **argv, t_env **internal_env)
 {
 	int		index;
-	int		exit_code;
 	t_env	*head;
 
 	index = 1;
-	exit_code = 0;
 	head = *internal_env;
-	if (!argv[index])
-	{
-		ft_printf("unset: not enough arguments\n");
-		return (1);
-	}
 	while (argv[index])
 	{
-		if (!is_valid_key(argv[index]) && !exit_code)
-		{
-			ft_printf("unset: %s: invalid parameter name\n", argv[index]);
-			exit_code = 1;
-		}
-		if (!search_internal_env(head, argv[index], internal_env))
-			exit_code = 1;
+		search_internal_env(head, argv[index], internal_env);
 		index++;
 	}
-	return (exit_code);
+	return (0);
 }
