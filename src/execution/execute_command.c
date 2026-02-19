@@ -97,9 +97,8 @@ int	execute_single_command(t_data *data, int heredoc_fd)
 
 int	execute_command(t_data *data, int heredoc_fd)
 {
-	//(void)heredoc_fd;
 	int exit_code;
-	
+
 	if (!data->commands)
 		return (1);
 	if (!data->commands->next)
@@ -116,3 +115,4 @@ int	execute_command(t_data *data, int heredoc_fd)
 		return (get_signal_exit_code());
 	return (exit_code);
 }
+

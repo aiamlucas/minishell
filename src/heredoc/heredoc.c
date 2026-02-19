@@ -17,6 +17,8 @@ static int	create_heredoc(t_data *data, int *fd)
 	int		status;
 	pid_t	pid;
 
+	if (!set_fd(fd))
+		return (1);
 	status = 0;
 	pid = fork();
 	if (pid == -1)
@@ -41,25 +43,27 @@ static int	create_heredoc(t_data *data, int *fd)
 		return (WEXITSTATUS(status));
 	if (WIFSIGNALED(status))
 		return (128 + WTERMSIG(status));
-	return (1);
+	return (0);
 }
 
-int	handle_heredoc(t_data *data, int *fd)
+int	handle_heredoc(t_data *data)
 {
+	int	fd[2];
 	// Add tests
 	if (!data->commands || !data->commands->redirections)
 		return (0);
 	if (data->commands->redirections->type != TOKEN_HEREDOC)
 		return (0);
 	if (!data->commands->redirections->next)
-		create_heredoc(data, fd);
+		return (create_heredoc(data, fd));
 	else
 	{
 		while (data->commands->redirections)
 		{
 			create_heredoc(data, fd);
+			// handle create_heredoc return
 			data->commands->redirections = data->commands->redirections->next;
 		}
 	}
-	return (0);
+	return (fd[0]);
 }
