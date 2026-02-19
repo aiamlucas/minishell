@@ -6,7 +6,7 @@
 /*   By: lbueno-m <lbueno-m@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/04 21:46:37 by lbueno-m          #+#    #+#             */
-/*   Updated: 2026/02/09 15:05:55 by ssin             ###   ########.fr       */
+/*   Updated: 2026/02/19 14:40:46 by lbueno-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,21 +31,25 @@ static bool	is_numeric(char *str)
 
 int	builtin_exit(char **argv)
 {
-	int	result;
+	int	exit_code;
 
 	ft_printf("exit\n");
 	if (!argv[1])
 		exit(0);
-	if (!is_numeric(argv[1]) || (ft_safe_atoi(argv[1], &result) < 0
-		|| ft_safe_atoi(argv[1], &result) > 255))
+	if (!is_numeric(argv[1]))
 	{
-		ft_printf("exit: %s: numeric argument required\n", argv[1]);
+		ft_printf("minishell: exit: %s: numeric argument required\n", argv[1]);
+		exit(2);
+	}
+	if (!ft_safe_atoi(argv[1], &exit_code))
+	{
+		ft_printf("minishell: exit: %s: numeric argument required\n", argv[1]);
 		exit(2);
 	}
 	if (argv[2])
 	{
-		ft_printf("exit: too many arguments\n");
+		ft_printf("minishell: exit: too many arguments\n");
 		return (1);
 	}
-	exit((unsigned char)ft_atoi(argv[1]));
+	exit((unsigned char)exit_code);
 }
