@@ -6,7 +6,7 @@
 /*   By: lbueno-m <lbueno-m@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/04 20:12:33 by lbueno-m          #+#    #+#             */
-/*   Updated: 2026/01/04 20:13:07 by lbueno-m         ###   ########.fr       */
+/*   Updated: 2026/01/13 16:15:23 by ssin             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,6 @@
 
 int	builtin_env(t_env *envp)
 {
-	(void)envp;
-	ft_printf("envp: not implemented yet\n");
+	print_env_list(envp);
 	return (0);
 }

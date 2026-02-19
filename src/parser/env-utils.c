@@ -36,7 +36,7 @@ void	list_add_back(t_env **lst, t_env *new)
 	last->next = new;
 }
 
-t_env	*new_node(void *content)
+t_env	*new_env_node(void *content)
 {
 	t_env	*node;
 	char	**split;
@@ -63,7 +63,7 @@ void	create_env_list(t_env **list, char **envp)
 
 	while (*envp)
 	{
-		node = new_node(*envp);
+		node = new_env_node(*envp);
 		if (node)
 			list_add_back(list, node);
 		envp++;

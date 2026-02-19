@@ -12,6 +12,9 @@
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
+# define HOME "HOME"
+# define PWD "PWD"
+# define OLDPWD "OLDPWD"
 
 # include <stdio.h>
 # include <readline/readline.h>
@@ -121,6 +124,8 @@ void		redir_add_back(t_redir **lst, t_redir *new);
 void		redir_clear(t_redir **lst);
 t_command	*parser(t_token *tokens);
 void		create_env_list(t_env **list, char **envp);
+t_env		*new_env_node(void *content);
+void		list_add_back(t_env **lst, t_env *new);
 
 // debug
 void		print_tokens(t_token *tokens);
@@ -136,11 +141,12 @@ int			**create_pipes(int count);
 
 // execution
 bool		is_builtin(t_command *cmd);
-int			execute_single_command(t_data *data, int heredoc_fd);
+int			execute_single_command(t_command *cmd, char **envp,
+				t_env **internal_env, int heredoc_fd);
 void		execute_child_command(t_command *cmd, char **envp, t_env *internal_env, int heredoc_fd);
 int			execute_command(t_data *data, int heredoc_fd);
 int			execute_pipeline(t_command *cmds, char **envp, int heredoc_fd);
-int			execute_builtin(t_command *cmd, t_env *internal_env, int heredoc_fd);
+int			execute_builtin(t_command *cmd, t_env **internal_env, int heredoc_fd);
 char		*find_dir(char *cmd, t_env *internal_env);
 void		apply_redirections(t_redir *redirections);
 void		setup_pipes(t_child_data *data);
@@ -149,13 +155,20 @@ pid_t		fork_child(t_child_data *data);
 bool		must_run_in_parent(t_command *cmd);
 
 // builtins
-int			builtin_cd(char **argv);
+int			builtin_cd(char **argv, t_env **internal_env);
 int			builtin_echo(char **argv, int heredoc_fd);
 int			builtin_env(t_env *internal_env);
-int			builtin_export(char **argv, t_env *internal_env);
+int			builtin_export(char **argv, t_env **internal_env);
 int			builtin_pwd(void);
-int			builtin_unset(char **argv, t_env *internal_env);
+int			builtin_unset(char **argv, t_env **internal_env);
 int			builtin_exit(char **argv);
+int			update_env(char *key, char *value, t_env *internal_env);
+void		set_env(int key_exists, char *key, char *value, t_env **internal_env);
+int			error_msg(char *msg);
+int			check_key(char *key, t_env *internal_env);
+int			is_valid_key(char *name);
+int			update_env(char *key, char *value, t_env *internal_env);
+void		free_env_node(t_env *node);
 
 // signals
 void		setup_signals(void);
