@@ -42,7 +42,8 @@ static int	execute_single_process(t_command *cmd, char *path, char **envp, t_env
 	{
 		reset_signals();
 		free(path);
-		apply_redirections(cmd->redirections);
+		//if (cmd->redirections)
+			apply_redirections(cmd->redirections);
 		execute_child_command(cmd, envp, internal_env, heredoc_fd);
 		exit(126);
 	}
@@ -99,6 +100,7 @@ int	execute_command(t_data *data, int heredoc_fd)
 {
 	int exit_code;
 
+	exit_code = 0;
 	if (!data->commands)
 		return (1);
 	if (!data->commands->next)

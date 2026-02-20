@@ -41,10 +41,11 @@ static int	pre_execution(int fd, t_data *data)
 
 static int	process_input(char *input, t_data *data)
 {
-	int	fd;
+	int	fd[2];
 	int	exit_code;
 
-	fd = 0;
+	fd[0] = 0;
+	fd[1] = 0;
 	exit_code = 0;
 	data->tokens = lexer(input);
 	//printf("tokens\n");
@@ -55,9 +56,16 @@ static int	process_input(char *input, t_data *data)
 	data->commands = parser(data->tokens);
 	// print_commands(data->commands); // for debugging
 	token_clear(&data->tokens);
-	fd = handle_heredoc(data);
-	if (fd > 0)
-		exit_code = pre_execution(fd, data);
+	exit_code = handle_heredoc(data, fd);
+	if (fd[0] > 0)
+	{
+		exit_code = pre_execution(fd[0], data);
+		close(fd[0]);
+	}
+	if (exit_code > 0)
+	{
+		// handle signal error
+	}
 	else
 		exit_code = execute_command(data, 0);
 	command_clear(&data->commands);

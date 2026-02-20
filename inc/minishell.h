@@ -184,7 +184,7 @@ bool	expand_tokens(t_token *tokens, t_env *internal_env, int last_exit);
 
 // heredoc
 int		set_fd(int *fd);
-int		handle_heredoc(t_data *data);
+int		handle_heredoc(t_data *data, int *fd);
 int		read_heredoc(t_redir *redirections, int *fd, struct termios *t_settings);
 
 #endif

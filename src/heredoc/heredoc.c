@@ -18,25 +18,24 @@ static int	create_heredoc(t_data *data, int *fd)
 	pid_t	pid;
 
 	if (!set_fd(fd))
-		return (1);
+		return (-1);
 	status = 0;
 	pid = fork();
 	if (pid == -1)
 	{
 		ft_printf("heredoc error pid\n");
-		return (1);
+		return (-1);
 	}
 	if (pid == 0)
 	{
-		signal(SIGINT, SIG_DFL);
-		signal(SIGQUIT, SIG_IGN);
+		// reset signals?
 		read_heredoc(data->commands->redirections, fd, data->t_settings);
 	}
 	else
 	{
 		close(fd[1]);
 		waitpid(pid, &status, 0);
-		//close(fd[0]);
+		tcsetattr(STDIN_FILENO, TCSANOW, data->t_settings);
 	}
 	// review exit codes
 	if (WIFEXITED(status))
@@ -46,9 +45,9 @@ static int	create_heredoc(t_data *data, int *fd)
 	return (0);
 }
 
-int	handle_heredoc(t_data *data)
+int	handle_heredoc(t_data *data, int *fd)
 {
-	int	fd[2];
+	int	exit_code;
 	// Add tests
 	if (!data->commands || !data->commands->redirections)
 		return (0);
@@ -60,10 +59,9 @@ int	handle_heredoc(t_data *data)
 	{
 		while (data->commands->redirections)
 		{
-			create_heredoc(data, fd);
-			// handle create_heredoc return
+			exit_code = create_heredoc(data, fd);
 			data->commands->redirections = data->commands->redirections->next;
 		}
 	}
-	return (fd[0]);
+	return (exit_code);
 }
