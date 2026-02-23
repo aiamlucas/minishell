@@ -6,7 +6,7 @@
 /*   By: ssin <ssin@student.42berlin.de>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/18 17:31:00 by ssin              #+#    #+#             */
-/*   Updated: 2026/02/09 19:10:11 by lbueno-m         ###   ########.fr       */
+/*   Updated: 2026/02/23 19:49:39 by lbueno-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,6 +94,13 @@ typedef struct s_child_data
 	char		**envp;
 }	t_child_data;
 
+typedef struct s_expand
+{
+	char	*result;
+	size_t	*i;
+	char	*quote;
+}	t_expand;
+
 // maybe we can later have several header files for each part of the project
 // until there I make a provisory comment for each part of the project
 
@@ -180,5 +187,11 @@ bool		handle_signal_interrupt(void);
 // expansion
 bool	expand_tokens(t_token *tokens, t_env *internal_env, int last_exit);
 bool	remove_quotes(t_token *tokens);
+size_t	expanded_length(const char *str, t_env *internal_env,
+								int last_exit);
+bool	write_non_dollar(const char **ptr, t_expand *exp);
+void	write_exit_status(t_expand *exp, int last_exit);
+bool	write_dollar(const char **ptr, t_expand *exp, int last_exit);
+void	copy_var_value(const char **ptr, t_expand *exp, t_env *env);
 
 #endif
