@@ -6,7 +6,7 @@
 /*   By: ssin <ssin@student.42berlin.de>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/11 19:10:57 by ssin              #+#    #+#             */
-/*   Updated: 2026/02/11 11:32:35 by ssin             ###   ########.fr       */
+/*   Updated: 2026/02/24 15:27:32 by ssin             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,11 +32,9 @@ static int	pre_execution(int fd, t_data *data)
 	ssize_t bytes_read = read(fd, buffer, sizeof(buffer) - 1);
 	if (bytes_read > 0) {
 		buffer[bytes_read] = '\0';
-		printf("Read: %s\n", buffer);
-		return (execute_command(data, fd));
+		printf("%s", buffer);
 	}
-	else
-		return (execute_command(data, 0));
+		return (execute_command(data, fd));
 }
 
 static int	process_input(char *input, t_data *data)
@@ -57,17 +55,21 @@ static int	process_input(char *input, t_data *data)
 	// print_commands(data->commands); // for debugging
 	token_clear(&data->tokens);
 	exit_code = handle_heredoc(data, fd);
-	if (fd[0] > 0)
+	if (exit_code != 0)
 	{
-		exit_code = pre_execution(fd[0], data);
-		close(fd[0]);
-	}
-	if (exit_code > 0)
-	{
-		// handle signal error
+		// handle child/signal error
+		// exit_code can be negative (fd/fork error), 0 and positive (child error)
 	}
 	else
-		exit_code = execute_command(data, 0);
+	{
+		if (fd[0] > 0)
+		{
+			exit_code = pre_execution(fd[0], data);
+			close(fd[0]);
+		}
+		else
+			exit_code = execute_command(data, 0);
+	}
 	command_clear(&data->commands);
 	if (check_signal())
 		exit_code = get_signal_exit_code();
