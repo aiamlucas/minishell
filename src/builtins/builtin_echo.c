@@ -17,7 +17,7 @@ void	check_flag(char **argv, int *i, int *newline)
 	int	j;
 
 	j = 2;
-	while (argv)
+	while (argv && argv[*i])
 	{
 		if (argv[*i][0] == '-' && argv[*i][1] == 'n')
 		{
@@ -42,13 +42,13 @@ int	builtin_echo(char **argv)
 
 	i = 1;
 	newline = 1;
-	if (!argv[i] || (argv[i][0] == '"' && argv[i][1] == '"'
-		&& argv[i][2] == '\0'))
+	check_flag(argv, &i, &newline);
+	if (!argv[i])
 	{
-		ft_printf("\n");
+		if (newline)
+			ft_printf("\n");
 		return (0);
 	}
-	check_flag(argv, &i, &newline);
 	while (argv[i])
 	{
 		ft_printf("%s", argv[i]);
