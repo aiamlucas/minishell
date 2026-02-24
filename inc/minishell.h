@@ -6,7 +6,7 @@
 /*   By: ssin <ssin@student.42berlin.de>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/18 17:31:00 by ssin              #+#    #+#             */
-/*   Updated: 2026/02/24 00:06:16 by lbueno-m         ###   ########.fr       */
+/*   Updated: 2026/02/24 17:56:29 by lbueno-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,6 +92,7 @@ typedef struct s_child_data
 	int			cmd_index;
 	int			total;
 	char		**envp;
+	t_env		*internal_env;
 }	t_child_data;
 
 typedef enum e_expand_state
@@ -162,7 +163,7 @@ bool		is_builtin(t_command *cmd);
 int			execute_single_command(t_command *cmd, char **envp,
 				t_env **internal_env);
 int			execute_command(t_data *data);
-int			execute_pipeline(t_command *cmds, char **envp);
+int			execute_pipeline(t_command *cmds, t_data parent_data);
 int			execute_builtin(t_command *cmd, t_env **internal_env);
 char		*find_dir(char *cmd, t_env *internal_env);
 void		apply_redirections(t_redir *redirections);

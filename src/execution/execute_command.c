@@ -6,7 +6,7 @@
 /*   By: lbueno-m <lbueno-m@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/22 15:59:40 by lbueno-m          #+#    #+#             */
-/*   Updated: 2026/01/25 16:50:18 by lbueno-m         ###   ########.fr       */
+/*   Updated: 2026/02/24 17:57:54 by lbueno-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,7 +104,7 @@ int	execute_command(t_data *data)
 	if (!data->commands->next)
 		exit_code = execute_single_command(data->commands, data->envp, &data->internal_env);
 	else
-		exit_code = execute_pipeline(data->commands, data->envp);
+		exit_code = execute_pipeline(data->commands, *data);
 	if (check_signal())
 		return (get_signal_exit_code());
 	return (exit_code);
