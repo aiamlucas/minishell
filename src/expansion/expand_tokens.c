@@ -6,51 +6,49 @@
 /*   By: lbueno-m <lbueno-m@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/16 23:33:18 by lbueno-m          #+#    #+#             */
-/*   Updated: 2026/02/23 19:45:24 by lbueno-m         ###   ########.fr       */
+/*   Updated: 2026/02/24 00:08:07 by lbueno-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/minishell.h"
 
 static char	*init_expand(t_expand *exp, size_t len,
-							size_t *i, char *quote)
+							size_t *position, t_expand_state *state)
 {
 	exp->result = malloc(len + 1);
 	if (!exp->result)
 		return (NULL);
-	*i = 0;
-	*quote = '\0';
-	exp->i = i;
-	exp->quote = quote;
+	*position = 0;
+	*state = EXPAND_NORMAL;
+	exp->position = position;
+	exp->state = state;
 	return (exp->result);
 }
 
 static char	*expand_variable(const char *str, t_env *internal_env,
 								int last_exit, size_t len)
 {
-	const char	*ptr;
-	size_t		i;
-	char		quote;
-	t_expand	exp;
+	const char				*ptr;
+	size_t					position;
+	t_expand_state			state;
+	t_expand				exp;
+	t_dollar_act			action;
 
-	if (!init_expand(&exp, len, &i, &quote))
+	if (!init_expand(&exp, len, &position, &state))
 		return (NULL);
 	ptr = str;
 	while (*ptr)
 	{
-		if (write_non_dollar(&ptr, &exp))
+		if (write_char(&ptr, &exp))
 			continue ;
-		if (!write_dollar(&ptr, &exp, last_exit))
+		action = write_dollar(&ptr, &exp, last_exit);
+		if (action == D_STOP)
 			break ;
-		if (!(ft_isalpha(*ptr) || *ptr == '_'))
-		{
-			exp.result[i++] = '$';
-			ptr++;
+		if (action == D_SKIP)
 			continue ;
-		}
 		copy_var_value(&ptr, &exp, internal_env);
 	}
-	exp.result[i] = '\0';
+	exp.result[position] = '\0';
 	return (exp.result);
 }
 

@@ -6,65 +6,60 @@
 /*   By: lbueno-m <lbueno-m@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/23 19:24:52 by lbueno-m          #+#    #+#             */
-/*   Updated: 2026/02/23 19:28:45 by lbueno-m         ###   ########.fr       */
+/*   Updated: 2026/02/24 09:18:52 by lbueno-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/minishell.h"
 
-static bool	handle_non_dollar(const char **ptr, size_t *total_len, char *quote)
+static bool	handle_char(const char **ptr, size_t *len, t_expand_state *state)
 {
-	if ((**ptr == '\'' || **ptr == '\"') && !*quote)
+	if (update_state(state, **ptr) || **ptr != '$')
 	{
-		*quote = **ptr;
-		(*total_len)++;
-		(*ptr)++;
-		return (true);
-	}
-	if (**ptr == *quote)
-	{
-		*quote = '\0';
-		(*total_len)++;
-		(*ptr)++;
-		return (true);
-	}
-	if (**ptr != '$')
-	{
-		(*total_len)++;
+		(*len)++;
 		(*ptr)++;
 		return (true);
 	}
 	return (false);
 }
 
-static bool	handle_dollar(const char **ptr, size_t *total_len, char *quote,
-							int last_exit)
+static void	add_exit_len(size_t *len, int last_exit)
 {
 	char	*exit_str;
 
+	exit_str = ft_itoa(last_exit);
+	if (!exit_str)
+		return ;
+	(*len) += ft_strlen(exit_str);
+	free(exit_str);
+}
+
+static t_dollar_act	handle_dollar(const char **ptr, size_t *len,
+									t_expand_state state, int last_exit)
+{
 	(*ptr)++;
 	if (**ptr == '\0')
 	{
-		(*total_len)++;
-		return (false);
+		(*len)++;
+		return (D_STOP);
 	}
-	if (*quote == '\'')
+	if (state == EXPAND_SINGLE)
 	{
-		(*total_len)++;
-		return (true);
+		(*len)++;
+		return (D_SKIP);
 	}
 	if (**ptr == '?')
 	{
-		exit_str = ft_itoa(last_exit);
-		if (exit_str)
-		{
-			(*total_len) += ft_strlen(exit_str);
-			free(exit_str);
-		}
+		add_exit_len(len, last_exit);
 		(*ptr)++;
-		return (true);
+		return (D_SKIP);
 	}
-	return (true);
+	if (!(ft_isalpha(**ptr) || **ptr == '_'))
+	{
+		(*len)++;
+		return (D_SKIP);
+	}
+	return (D_EXPAND);
 }
 
 static size_t	find_var_len(const char **ptr, t_env *env)
@@ -92,26 +87,24 @@ static size_t	find_var_len(const char **ptr, t_env *env)
 size_t	expanded_length(const char *str, t_env *internal_env,
 								int last_exit)
 {
-	size_t		total_len;
-	const char	*ptr;
-	char		quote;
+	size_t			len;
+	const char		*ptr;
+	t_expand_state	state;
+	t_dollar_act	action;
 
 	ptr = str;
-	total_len = 0;
-	quote = '\0';
+	len = 0;
+	state = EXPAND_NORMAL;
 	while (*ptr)
 	{
-		if (handle_non_dollar(&ptr, &total_len, &quote))
+		if (handle_char(&ptr, &len, &state))
 			continue ;
-		if (!handle_dollar(&ptr, &total_len, &quote, last_exit))
+		action = handle_dollar(&ptr, &len, state, last_exit);
+		if (action == D_STOP)
 			break ;
-		if (!(ft_isalpha(*ptr) || *ptr == '_'))
-		{
-			total_len++;
-			ptr++;
+		if (action == D_SKIP)
 			continue ;
-		}
-		total_len += find_var_len(&ptr, internal_env);
+		len += find_var_len(&ptr, internal_env);
 	}
-	return (total_len);
+	return (len);
 }

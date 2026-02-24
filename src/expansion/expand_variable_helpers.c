@@ -6,35 +6,48 @@
 /*   By: lbueno-m <lbueno-m@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/23 19:46:24 by lbueno-m          #+#    #+#             */
-/*   Updated: 2026/02/23 19:47:13 by lbueno-m         ###   ########.fr       */
+/*   Updated: 2026/02/24 09:27:16 by lbueno-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/minishell.h"
 
-bool	write_non_dollar(const char **ptr, t_expand *exp)
+bool	update_state(t_expand_state *state, char c)
 {
-	if ((**ptr == '\'' || **ptr == '\"') && !*exp->quote)
+	if (*state == EXPAND_NORMAL && c == '\'')
 	{
-		*exp->quote = **ptr;
-		exp->result[(*exp->i)++] = *(*ptr)++;
+		*state = EXPAND_SINGLE;
 		return (true);
 	}
-	if (**ptr == *exp->quote)
+	if (*state == EXPAND_NORMAL && c == '\"')
 	{
-		*exp->quote = '\0';
-		exp->result[(*exp->i)++] = *(*ptr)++;
+		*state = EXPAND_DOUBLE;
 		return (true);
 	}
-	if (**ptr != '$')
+	if (*state == EXPAND_SINGLE && c == '\'')
 	{
-		exp->result[(*exp->i)++] = *(*ptr)++;
+		*state = EXPAND_NORMAL;
+		return (true);
+	}
+	if (*state == EXPAND_DOUBLE && c == '\"')
+	{
+		*state = EXPAND_NORMAL;
 		return (true);
 	}
 	return (false);
 }
 
-void	write_exit_status(t_expand *exp, int last_exit)
+bool	write_char(const char **ptr, t_expand *exp)
+{
+	if (update_state(exp->state, **ptr) || **ptr != '$')
+	{
+		exp->result[(*exp->position)++] = *(*ptr)++;
+		return (true);
+	}
+	return (false);
+}
+
+static void	write_exit_status(t_expand *exp, int last_exit)
 {
 	char	*exit_str;
 	size_t	j;
@@ -44,31 +57,36 @@ void	write_exit_status(t_expand *exp, int last_exit)
 	{
 		j = 0;
 		while (exit_str[j])
-			exp->result[(*exp->i)++] = exit_str[j++];
+			exp->result[(*exp->position)++] = exit_str[j++];
 		free(exit_str);
 	}
 }
 
-bool	write_dollar(const char **ptr, t_expand *exp, int last_exit)
+t_dollar_act	write_dollar(const char **ptr, t_expand *exp, int last_exit)
 {
 	(*ptr)++;
 	if (**ptr == '\0')
 	{
-		exp->result[(*exp->i)++] = '$';
-		return (false);
+		exp->result[(*exp->position)++] = '$';
+		return (D_STOP);
 	}
-	if (*exp->quote == '\'')
+	if (*exp->state == EXPAND_SINGLE)
 	{
-		exp->result[(*exp->i)++] = '$';
-		return (true);
+		exp->result[(*exp->position)++] = '$';
+		return (D_SKIP);
 	}
 	if (**ptr == '?')
 	{
 		write_exit_status(exp, last_exit);
 		(*ptr)++;
-		return (true);
+		return (D_SKIP);
 	}
-	return (true);
+	if (!(ft_isalpha(**ptr) || **ptr == '_'))
+	{
+		exp->result[(*exp->position)++] = '$';
+		return (D_SKIP);
+	}
+	return (D_EXPAND);
 }
 
 void	copy_var_value(const char **ptr, t_expand *exp, t_env *env)
@@ -92,7 +110,7 @@ void	copy_var_value(const char **ptr, t_expand *exp, t_env *env)
 			value = env->value;
 			while (*value)
 			{
-				exp->result[(*exp->i)++] = *value++;
+				exp->result[(*exp->position)++] = *value++;
 			}
 			break ;
 		}

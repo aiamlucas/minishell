@@ -6,7 +6,7 @@
 /*   By: ssin <ssin@student.42berlin.de>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/18 17:31:00 by ssin              #+#    #+#             */
-/*   Updated: 2026/02/23 19:49:39 by lbueno-m         ###   ########.fr       */
+/*   Updated: 2026/02/24 00:06:16 by lbueno-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,11 +94,25 @@ typedef struct s_child_data
 	char		**envp;
 }	t_child_data;
 
+typedef enum e_expand_state
+{
+	EXPAND_NORMAL,
+	EXPAND_SINGLE,
+	EXPAND_DOUBLE,
+}	t_expand_state;
+
+typedef enum e_dollar_act
+{
+	D_STOP,
+	D_SKIP,
+	D_EXPAND
+}	t_dollar_act;
+
 typedef struct s_expand
 {
-	char	*result;
-	size_t	*i;
-	char	*quote;
+	char			*result;
+	size_t			*position;
+	t_expand_state	*state;
 }	t_expand;
 
 // maybe we can later have several header files for each part of the project
@@ -185,13 +199,13 @@ int			get_signal_exit_code(void);
 bool		handle_signal_interrupt(void);
 
 // expansion
-bool	expand_tokens(t_token *tokens, t_env *internal_env, int last_exit);
-bool	remove_quotes(t_token *tokens);
 size_t	expanded_length(const char *str, t_env *internal_env,
 								int last_exit);
-bool	write_non_dollar(const char **ptr, t_expand *exp);
-void	write_exit_status(t_expand *exp, int last_exit);
-bool	write_dollar(const char **ptr, t_expand *exp, int last_exit);
+bool	expand_tokens(t_token *tokens, t_env *internal_env, int last_exit);
+bool	update_state(t_expand_state *state, char c);
+bool	write_char(const char **ptr, t_expand *exp);
+t_dollar_act	write_dollar(const char **ptr, t_expand *exp, int last_exit);
 void	copy_var_value(const char **ptr, t_expand *exp, t_env *env);
+bool	remove_quotes(t_token *tokens);
 
 #endif
