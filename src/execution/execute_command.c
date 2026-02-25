@@ -6,7 +6,7 @@
 /*   By: lbueno-m <lbueno-m@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/22 15:59:40 by lbueno-m          #+#    #+#             */
-/*   Updated: 2026/02/25 10:41:35 by lbueno-m         ###   ########.fr       */
+/*   Updated: 2026/02/25 14:12:17 by lbueno-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,8 @@ static int	wait_child(pid_t pid)
 	return (1);
 }
 
-static int	execute_single_process(t_command *cmd, char *path, char **envp, t_env *internal_env)
+static int	execute_single_process(t_command *cmd, char *path,
+									char **envp, t_env *internal_env)
 {
 	pid_t	pid;
 
@@ -62,7 +63,7 @@ static int	execute_builtin_forked(t_command *cmd, t_data *data)
 	{
 		reset_signals();
 		apply_redirections(cmd->redirections);
-		exit(execute_builtin(cmd, &data->internal_env, NULL)); // child --> NULL for the data
+		exit(execute_builtin(cmd, &data->internal_env, NULL));
 	}
 	waitpid(pid, &status, 0);
 	if (WIFEXITED(status))
@@ -97,8 +98,8 @@ int	execute_single_command(t_command *cmd, t_data *data)
 
 int	execute_command(t_data *data)
 {
-	int exit_code;
-	
+	int	exit_code;
+
 	if (!data->commands)
 		return (1);
 	if (!data->commands->next)
