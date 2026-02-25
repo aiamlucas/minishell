@@ -6,7 +6,7 @@
 /*   By: ssin <ssin@student.42berlin.de>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/18 17:31:00 by ssin              #+#    #+#             */
-/*   Updated: 2026/02/24 17:56:29 by lbueno-m         ###   ########.fr       */
+/*   Updated: 2026/02/25 10:29:27 by lbueno-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,6 +118,9 @@ typedef struct s_expand
 
 // maybe we can later have several header files for each part of the project
 // until there I make a provisory comment for each part of the project
+//
+//
+void		cleanup_data(t_data *data);
 
 // core
 void		readline_loop(t_data *data);
@@ -145,6 +148,7 @@ t_command	*parser(t_token *tokens);
 void		create_env_list(t_env **list, char **envp);
 t_env		*new_env_node(void *content);
 void		list_add_back(t_env **lst, t_env *new);
+void		free_env_list(t_env **lst);
 
 // debug
 void		print_tokens(t_token *tokens);
@@ -160,11 +164,10 @@ int			**create_pipes(int count);
 
 // execution
 bool		is_builtin(t_command *cmd);
-int			execute_single_command(t_command *cmd, char **envp,
-				t_env **internal_env);
+int			execute_single_command(t_command *cmd, t_data *data);
 int			execute_command(t_data *data);
 int			execute_pipeline(t_command *cmds, t_data parent_data);
-int			execute_builtin(t_command *cmd, t_env **internal_env);
+int			execute_builtin(t_command *cmd, t_env **internal_env, t_data *data);
 char		*find_dir(char *cmd, t_env *internal_env);
 void		apply_redirections(t_redir *redirections);
 void		setup_pipes(int **pipes, int i, int total);
@@ -181,7 +184,7 @@ int			builtin_env(t_env *internal_env);
 int			builtin_export(char **argv, t_env **internal_env);
 int			builtin_pwd(void);
 int			builtin_unset(char **argv, t_env **internal_env);
-int			builtin_exit(char **argv);
+int			builtin_exit(char **argv, t_data *data);
 int			update_env(char *key, char *value, t_env *internal_env);
 void		set_env(int key_exists, char *key, char *value, t_env **internal_env);
 int			error_msg(char *msg);
