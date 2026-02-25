@@ -6,7 +6,7 @@
 /*   By: ssin <ssin@student.42berlin.de>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/18 17:31:00 by ssin              #+#    #+#             */
-/*   Updated: 2026/02/25 10:29:27 by lbueno-m         ###   ########.fr       */
+/*   Updated: 2026/02/25 14:30:37 by lbueno-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -127,6 +127,10 @@ void			readline_loop(t_data *data);
 int				validate_input(char *input);
 bool			is_empty_input(char *input);
 bool			has_unclosed_quotes(char *input);
+
+//readline
+int				process_input(char *input, t_data *data);
+int				check_input_validation(char *input);
 
 // lexer
 t_token			*new_token(char *value, t_token_type type);
