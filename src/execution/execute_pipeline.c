@@ -6,7 +6,7 @@
 /*   By: lbueno-m <lbueno-m@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/26 14:51:10 by lbueno-m          #+#    #+#             */
-/*   Updated: 2026/02/26 11:18:18 by lbueno-m         ###   ########.fr       */
+/*   Updated: 2026/02/26 13:40:35 by lbueno-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@ static int	wait_all(pid_t last_pid, int **pipes, int count)
 {
 	int	status;
 
+	status = 0;
 	update_sigint(handle_sigint_child);
 	close_pipes(pipes, count - 1);
 	waitpid(last_pid, &status, 0);
