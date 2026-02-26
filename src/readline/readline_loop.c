@@ -6,7 +6,7 @@
 /*   By: ssin <ssin@student.42berlin.de>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/11 19:10:57 by ssin              #+#    #+#             */
-/*   Updated: 2026/02/25 14:32:07 by lbueno-m         ###   ########.fr       */
+/*   Updated: 2026/02/26 13:12:15 by lbueno-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,6 +72,13 @@ static bool	handle_input_line(char *input, t_data *data)
 	int	validation;
 	int	exit_code;
 
+	if (check_signal())
+	{
+		data->last_exit = get_signal_exit_code();
+		// if (input)
+		// 	free(input);
+		// return (true);
+	}
 	validation = check_input_validation(input);
 	if (validation == -1)
 	{

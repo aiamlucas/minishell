@@ -6,7 +6,7 @@
 /*   By: lbueno-m <lbueno-m@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/22 15:59:40 by lbueno-m          #+#    #+#             */
-/*   Updated: 2026/02/25 14:12:17 by lbueno-m         ###   ########.fr       */
+/*   Updated: 2026/02/26 11:16:52 by lbueno-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,7 @@ static int	execute_single_process(t_command *cmd, char *path,
 									char **envp, t_env *internal_env)
 {
 	pid_t	pid;
+	int		result;
 
 	pid = fork();
 	if (pid == -1)
@@ -48,7 +49,10 @@ static int	execute_single_process(t_command *cmd, char *path,
 		exit(126);
 	}
 	free(path);
-	return (wait_child(pid));
+	update_sigint(handle_sigint_child);
+	result = wait_child(pid);
+	update_sigint(handle_sigint_parent);
+	return (result);
 }
 
 static int	execute_builtin_forked(t_command *cmd, t_data *data)
@@ -65,7 +69,9 @@ static int	execute_builtin_forked(t_command *cmd, t_data *data)
 		apply_redirections(cmd->redirections);
 		exit(execute_builtin(cmd, &data->internal_env, NULL));
 	}
+	update_sigint(handle_sigint_child);
 	waitpid(pid, &status, 0);
+	update_sigint(handle_sigint_parent);
 	if (WIFEXITED(status))
 		return (WEXITSTATUS(status));
 	if (WIFSIGNALED(status))

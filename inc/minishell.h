@@ -6,7 +6,7 @@
 /*   By: ssin <ssin@student.42berlin.de>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/18 17:31:00 by ssin              #+#    #+#             */
-/*   Updated: 2026/02/25 14:30:37 by lbueno-m         ###   ########.fr       */
+/*   Updated: 2026/02/26 11:16:01 by lbueno-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -202,11 +202,12 @@ void			free_env_node(t_env *node);
 // signals
 void			setup_signals(void);
 void			reset_signals(void);
-void			handle_sigint(int sig);
 bool			check_signal(void);
 void			reset_signal(void);
 int				get_signal_exit_code(void);
-bool			handle_signal_interrupt(void);
+void			handle_sigint_child(int sig);
+void			handle_sigint_parent(int sig);
+void			update_sigint(void (*handler)(int));
 
 // expansion
 size_t			expanded_length(const char *str, t_env *internal_env,

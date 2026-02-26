@@ -6,7 +6,7 @@
 /*   By: lbueno-m <lbueno-m@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/25 14:29:01 by lbueno-m          #+#    #+#             */
-/*   Updated: 2026/02/25 20:36:21 by lbueno-m         ###   ########.fr       */
+/*   Updated: 2026/02/26 11:30:46 by lbueno-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,13 +37,6 @@ int	process_input(char *input, t_data *data)
 
 int	check_input_validation(char *input)
 {
-	if (check_signal())
-	{
-		if (input)
-			free(input);
-		reset_signal();
-		return (1);
-	}
 	if (!input)
 		return (-1);
 	if (is_empty_input(input))
