@@ -6,7 +6,7 @@
 /*   By: ssin <ssin@student.42berlin.de>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/17 13:06:26 by ssin              #+#    #+#             */
-/*   Updated: 2026/02/25 10:41:54 by lbueno-m         ###   ########.fr       */
+/*   Updated: 2026/02/26 09:41:18 by lbueno-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,11 @@ int	main(int argc, char **argv, char **envp)
 {
 	t_data	data;
 
-	(void)argc;
+	if (argc != 1)
+	{
+		ft_printf("minishell: no arguments accepted\n");
+		return (1);
+	}
 	(void)argv;
 	init_data(&data, envp);
 	setup_signals();
