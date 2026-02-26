@@ -6,7 +6,7 @@
 /*   By: ssin <ssin@student.42berlin.de>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/10 21:29:05 by ssin              #+#    #+#             */
-/*   Updated: 2026/02/17 08:40:13 by ssin             ###   ########.fr       */
+/*   Updated: 2026/02/26 15:06:44 by ssin             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,8 +28,8 @@ static int	create_heredoc(t_data *data, int *fd)
 	}
 	if (pid == 0)
 	{
-		// reset signals?
-		read_heredoc(data->commands->redirections, fd, data->t_settings);
+		reset_signals();
+		read_heredoc(data->commands->redirections, fd, data->t_settings, data);
 	}
 	else
 	{
@@ -37,7 +37,6 @@ static int	create_heredoc(t_data *data, int *fd)
 		waitpid(pid, &status, 0);
 		tcsetattr(STDIN_FILENO, TCSANOW, data->t_settings);
 	}
-	// review exit codes
 	if (WIFEXITED(status))
 		return (WEXITSTATUS(status));
 	if (WIFSIGNALED(status))
@@ -48,7 +47,6 @@ static int	create_heredoc(t_data *data, int *fd)
 int	handle_heredoc(t_data *data, int *fd)
 {
 	int	exit_code;
-	// Add tests
 	if (!data->commands || !data->commands->redirections)
 		return (0);
 	if (data->commands->redirections->type != TOKEN_HEREDOC)

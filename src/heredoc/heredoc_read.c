@@ -6,13 +6,13 @@
 /*   By: ssin <ssin@student.42berlin.de>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/10 21:29:38 by ssin              #+#    #+#             */
-/*   Updated: 2026/02/17 08:33:33 by ssin             ###   ########.fr       */
+/*   Updated: 2026/02/26 15:42:12 by ssin             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/minishell.h"
 
-int	read_heredoc(t_redir *redirections, int *fd, struct termios *t_settings)
+int	read_heredoc(t_redir *redirections, int *fd, struct termios *t_settings, t_data *data)
 {
 	char	*input_line;
 
@@ -20,10 +20,17 @@ int	read_heredoc(t_redir *redirections, int *fd, struct termios *t_settings)
 	while (1)
 	{
 		input_line = readline("> ");
-		if (!input_line || ft_strcmp(input_line, redirections->target) == 0)
+		if (ft_strchr(input_line, '$'))
+			input_line = expand_string(input_line, data->internal_env, data->last_exit);
+		if (!input_line)
 		{
-			if (input_line)
-				free(input_line);
+			close(fd[1]);
+			tcsetattr(STDIN_FILENO, TCSANOW, t_settings);
+			exit(1);
+		}
+		if (ft_strcmp(input_line, redirections->target) == 0)
+		{
+			free(input_line);
 			close(fd[1]);
 			tcsetattr(STDIN_FILENO, TCSANOW, t_settings);
 			exit(0);

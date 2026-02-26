@@ -6,13 +6,13 @@
 /*   By: lbueno-m <lbueno-m@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/16 23:33:18 by lbueno-m          #+#    #+#             */
-/*   Updated: 2026/02/04 10:57:10 by lbueno-m         ###   ########.fr       */
+/*   Updated: 2026/02/26 15:44:59 by ssin             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/minishell.h"
 
-static size_t	expanded_length(const char *str, t_env *internal_env, int last_exit)
+size_t	expanded_length(const char *str, t_env *internal_env, int last_exit)
 {
 	size_t			total_len;
 	size_t			var_len;
@@ -78,7 +78,7 @@ static size_t	expanded_length(const char *str, t_env *internal_env, int last_exi
 	return (total_len);
 }
 
-static char	*expand_variable(const char *str, t_env *internal_env, int last_exit, size_t len)
+char	*expand_variable(const char *str, t_env *internal_env, int last_exit, size_t len)
 {
 	const char	*ptr;
 	const char	*var_start;

@@ -6,7 +6,7 @@
 /*   By: ssin <ssin@student.42berlin.de>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/11 19:10:57 by ssin              #+#    #+#             */
-/*   Updated: 2026/02/24 15:27:32 by ssin             ###   ########.fr       */
+/*   Updated: 2026/02/25 19:31:01 by ssin             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,12 +55,7 @@ static int	process_input(char *input, t_data *data)
 	// print_commands(data->commands); // for debugging
 	token_clear(&data->tokens);
 	exit_code = handle_heredoc(data, fd);
-	if (exit_code != 0)
-	{
-		// handle child/signal error
-		// exit_code can be negative (fd/fork error), 0 and positive (child error)
-	}
-	else
+	if (exit_code == 0)
 	{
 		if (fd[0] > 0)
 		{
@@ -69,6 +64,13 @@ static int	process_input(char *input, t_data *data)
 		}
 		else
 			exit_code = execute_command(data, 0);
+	}
+	else
+	{
+		if (fd[0] > 0)
+			close(fd[0]);
+		if (fd[1] > 0)
+			close(fd[1]);
 	}
 	command_clear(&data->commands);
 	if (check_signal())

@@ -6,7 +6,7 @@
 /*   By: ssin <ssin@student.42berlin.de>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/18 17:31:00 by ssin              #+#    #+#             */
-/*   Updated: 2026/02/11 16:23:00 by ssin             ###   ########.fr       */
+/*   Updated: 2026/02/26 15:45:59 by ssin             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -181,10 +181,13 @@ bool		handle_signal_interrupt(void);
 
 // expansion
 bool	expand_tokens(t_token *tokens, t_env *internal_env, int last_exit);
+size_t	expanded_length(const char *str, t_env *internal_env, int last_exit);
+char	*expand_variable(const char *str, t_env *internal_env, int last_exit, size_t len);
 
 // heredoc
 int		set_fd(int *fd);
 int		handle_heredoc(t_data *data, int *fd);
-int		read_heredoc(t_redir *redirections, int *fd, struct termios *t_settings);
+int		read_heredoc(t_redir *redirections, int *fd, struct termios *t_settings, t_data *data);
+char	*expand_string(const char *str, t_env *internal_env, int last_exit);
 
 #endif
