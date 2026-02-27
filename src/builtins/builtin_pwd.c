@@ -6,7 +6,7 @@
 /*   By: lbueno-m <lbueno-m@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/04 19:22:15 by lbueno-m          #+#    #+#             */
-/*   Updated: 2026/01/04 22:03:40 by lbueno-m         ###   ########.fr       */
+/*   Updated: 2026/02/19 15:42:50 by lbueno-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ int	builtin_pwd(void)
 	}
 	else
 	{
-		perror("getcwd");
+		perror("minishell: getcwd");
 		return (1);
 	}
 	return (0);

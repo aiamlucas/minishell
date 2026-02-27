@@ -42,6 +42,8 @@ SRC				+= builtins/builtin_helpers.c
 SRC				+= signals/signal_handler.c
 SRC				+= signals/signals_utils.c
 SRC				+= expansion/expand_tokens.c
+SRC				+= expansion/expand_length.c
+SRC				+= expansion/expand_variable_helpers.c
 SRC				+= expansion/quote_removal.c
 
 TEST_DIR		= tests
