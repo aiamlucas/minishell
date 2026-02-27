@@ -6,11 +6,66 @@
 /*   By: ssin <ssin@student.42berlin.de>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/11 19:10:57 by ssin              #+#    #+#             */
-/*   Updated: 2026/02/03 19:16:50 by lbueno-m         ###   ########.fr       */
+/*   Updated: 2026/02/16 18:41:09 by lbueno-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/minishell.h"
+
+static char	*join_with_newline(char *line, char *temp)
+{
+	char	*with_newline;
+	char	*joined;
+
+	with_newline = ft_strjoin(line, "\n");
+	if (!with_newline)
+		return (NULL);
+	joined = ft_strjoin(with_newline, temp);
+	free(with_newline);
+	return (joined);
+}
+
+static char	*read_continuation_line(char *current_line)
+{
+	char	*temp;
+	char	*result;
+
+	temp = readline("> ");
+	if (!temp)
+		return (NULL);
+	if (check_signal())
+	{
+		free(temp);
+		return (NULL);
+	}
+	result = join_with_newline(current_line, temp);
+	free(temp);
+	return (result);
+}
+
+static char	*readline_with_continuation(const char *input)
+{
+	char	*line;
+	char	*new_line;
+
+	line = readline(input);
+	if (!line)
+		return (NULL);
+	while (has_unclosed_quotes(line))
+	{
+		if (check_signal())
+		{
+			free(line);
+			return (NULL);
+		}
+		new_line = read_continuation_line(line);
+		free(line);
+		if (!new_line)
+			return (NULL);
+		line = new_line;
+	}
+	return (line);
+}
 
 static int	process_input(char *input, t_data *data)
 {
@@ -21,7 +76,10 @@ static int	process_input(char *input, t_data *data)
 	print_tokens(data->tokens);
 	printf("\n after expansion: \n");
 	expand_tokens(data->tokens, data->internal_env, data->last_exit);
-	print_tokens(data->tokens); // for debugging
+	print_tokens(data->tokens);
+	printf("\n after quote removal: \n");
+	remove_quotes(data->tokens);
+	print_tokens(data->tokens);
 	data->commands = parser(data->tokens);
 	// print_commands(data->commands); // for debugging
 	token_clear(&data->tokens);
@@ -32,38 +90,38 @@ static int	process_input(char *input, t_data *data)
 	return (exit_code);
 }
 
-static bool	skip_input(char *input)
+static int	check_input_validation(char *input)
 {
-	if (!*input || !ft_strlen(input))
-		return (true);
-	return (false);
-}
-
-static void	handle_signal_cleanup(char *input)
-{
-	reset_signal();
-	free(input);
+	if (check_signal())
+	{
+		if (input)
+			free(input);
+		reset_signal();
+		return (1);
+	}
+	if (!input)
+		return (-1);
+	if (is_empty_input(input))
+	{
+		free(input);
+		return (1);
+	}
+	return (0);
 }
 
 static bool	handle_input_line(char *input, t_data *data)
 {
+	int	validation;
 	int	exit_code;
 
-	if (!input)
+	validation = check_input_validation(input);
+	if (validation == -1)
 	{
-		printf("exit\n");
+		ft_printf("exit\n");
 		return (false);
 	}
-	if (check_signal())
-	{
-		handle_signal_cleanup(input);
+	if (validation == 1)
 		return (true);
-	}
-	if (skip_input(input))
-	{
-		free(input);
-		return (true);
-	}
 	add_history(input);
 	exit_code = process_input(input, data);
 	data->last_exit = exit_code;
@@ -78,7 +136,7 @@ void	readline_loop(t_data *data)
 	while (1)
 	{
 		reset_signal();
-		input = readline("$[ 🛸 ]>");
+		input = readline_with_continuation("$[ 🛸 ]>");
 		if (!handle_input_line(input, data))
 			break ;
 	}

@@ -6,7 +6,7 @@
 /*   By: lbueno-m <lbueno-m@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/08 22:25:08 by lbueno-m          #+#    #+#             */
-/*   Updated: 2026/01/23 16:33:50 by lbueno-m         ###   ########.fr       */
+/*   Updated: 2026/02/16 18:41:55 by lbueno-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,11 +14,23 @@
 
 volatile sig_atomic_t	g_signal_received = 0;
 
+int	check_for_signal(void)
+{
+	if (g_signal_received)
+	{
+		rl_done = 1;
+		return (0);
+	}
+	return (0);
+}
+
 void	handle_sigint(int sig)
 {
 	(void)sig;
 	g_signal_received = SIGINT;
 	write(STDOUT_FILENO, "\n", 1);
+	rl_replace_line("", 0);
+	rl_on_new_line();
 }
 
 void	setup_signals(void)
@@ -30,7 +42,7 @@ void	setup_signals(void)
 	ft_memset(&sa_int, 0, sizeof(struct sigaction));
 	sigemptyset(&sa_int.sa_mask);
 	sa_int.sa_handler = handle_sigint;
-	sa_int.sa_flags = SA_RESTART;
+	sa_int.sa_flags = 0;
 	if (sigaction(SIGINT, &sa_int, NULL) == -1)
 	{
 		perror("minishell:sigaction SIGINT failed");
@@ -45,6 +57,7 @@ void	setup_signals(void)
 		perror("minishell: sigaction SIGQUIT failed");
 		exit(1);
 	}
+	rl_event_hook = check_for_signal;
 }
 
 void	reset_signals(void)

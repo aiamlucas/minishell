@@ -15,6 +15,7 @@ endif
 SRC_DIR			= src
 SRC				= main.c
 SRC				+= readline/readline_loop.c
+SRC				+= readline/validate_input.c
 SRC				+= tokenizer/tokenizer.c
 SRC				+= tokenizer/token-utils.c
 SRC				+= parser/command-utils.c
@@ -41,6 +42,7 @@ SRC				+= builtins/builtin_helpers.c
 SRC				+= signals/signal_handler.c
 SRC				+= signals/signals_utils.c
 SRC				+= expansion/expand_tokens.c
+SRC				+= expansion/quote_removal.c
 
 TEST_DIR		= tests
 TEST_SRC		= test-lexer-main.c
