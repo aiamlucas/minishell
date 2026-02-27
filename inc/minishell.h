@@ -6,7 +6,7 @@
 /*   By: ssin <ssin@student.42berlin.de>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/18 17:31:00 by ssin              #+#    #+#             */
-/*   Updated: 2026/02/26 15:45:59 by ssin             ###   ########.fr       */
+/*   Updated: 2026/02/27 14:31:58 by ssin             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -187,7 +187,7 @@ char	*expand_variable(const char *str, t_env *internal_env, int last_exit, size_
 // heredoc
 int		set_fd(int *fd);
 int		handle_heredoc(t_data *data, int *fd);
-int		read_heredoc(t_redir *redirections, int *fd, struct termios *t_settings, t_data *data);
+int   read_heredoc(t_data *data, int *fd);
 char	*expand_string(const char *str, t_env *internal_env, int last_exit);
 
 #endif

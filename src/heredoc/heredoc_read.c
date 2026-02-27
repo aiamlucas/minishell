@@ -6,13 +6,19 @@
 /*   By: ssin <ssin@student.42berlin.de>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/10 21:29:38 by ssin              #+#    #+#             */
-/*   Updated: 2026/02/26 15:42:12 by ssin             ###   ########.fr       */
+/*   Updated: 2026/02/27 16:10:32 by ssin             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/minishell.h"
 
-int	read_heredoc(t_redir *redirections, int *fd, struct termios *t_settings, t_data *data)
+void	check_input(t_data *data, int *fd)
+{
+	close(fd[1]);
+	tcsetattr(STDIN_FILENO, TCSANOW, data->t_settings);
+}
+
+int	read_heredoc(t_data *data, int *fd)
 {
 	char	*input_line;
 
@@ -21,19 +27,18 @@ int	read_heredoc(t_redir *redirections, int *fd, struct termios *t_settings, t_d
 	{
 		input_line = readline("> ");
 		if (ft_strchr(input_line, '$'))
-			input_line = expand_string(input_line, data->internal_env, data->last_exit);
+			input_line = expand_string(input_line, data->internal_env,
+					data->last_exit);
 		if (!input_line)
 		{
-			close(fd[1]);
-			tcsetattr(STDIN_FILENO, TCSANOW, t_settings);
-			exit(1);
+			check_input(data, fd);
+			exit (1);
 		}
-		if (ft_strcmp(input_line, redirections->target) == 0)
+		if (ft_strcmp(input_line, data->commands->redirections->target) == 0)
 		{
+			check_input(data, fd);
 			free(input_line);
-			close(fd[1]);
-			tcsetattr(STDIN_FILENO, TCSANOW, t_settings);
-			exit(0);
+			exit (0);
 		}
 		write(fd[1], input_line, ft_strlen(input_line));
 		write(fd[1], "\n", 1);

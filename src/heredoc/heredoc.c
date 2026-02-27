@@ -6,11 +6,17 @@
 /*   By: ssin <ssin@student.42berlin.de>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/10 21:29:05 by ssin              #+#    #+#             */
-/*   Updated: 2026/02/26 15:06:44 by ssin             ###   ########.fr       */
+/*   Updated: 2026/02/27 14:38:24 by ssin             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/minishell.h"
+
+void	execute_child(t_data *data, int *fd)
+{
+	reset_signals();
+	read_heredoc(data, fd);
+}
 
 static int	create_heredoc(t_data *data, int *fd)
 {
@@ -27,10 +33,7 @@ static int	create_heredoc(t_data *data, int *fd)
 		return (-1);
 	}
 	if (pid == 0)
-	{
-		reset_signals();
-		read_heredoc(data->commands->redirections, fd, data->t_settings, data);
-	}
+		execute_child(data, fd);
 	else
 	{
 		close(fd[1]);
@@ -47,6 +50,7 @@ static int	create_heredoc(t_data *data, int *fd)
 int	handle_heredoc(t_data *data, int *fd)
 {
 	int	exit_code;
+
 	if (!data->commands || !data->commands->redirections)
 		return (0);
 	if (data->commands->redirections->type != TOKEN_HEREDOC)
