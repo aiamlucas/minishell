@@ -6,7 +6,7 @@
 /*   By: lbueno-m <lbueno-m@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/04 20:12:11 by lbueno-m          #+#    #+#             */
-/*   Updated: 2026/02/09 15:05:19 by ssin             ###   ########.fr       */
+/*   Updated: 2026/02/19 14:24:56 by lbueno-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,11 +39,9 @@ int	builtin_echo(char **argv, int heredoc_fd)
 {
 	(void)heredoc_fd;
 	int	i;
-	int	j;
 	int	newline;
 
 	i = 1;
-	j = 2;
 	newline = 1;
 	check_flag(argv, &i, &newline);
 	while (argv[i])

@@ -6,7 +6,7 @@
 /*   By: lbueno-m <lbueno-m@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/04 20:10:10 by lbueno-m          #+#    #+#             */
-/*   Updated: 2026/02/11 11:15:44 by ssin             ###   ########.fr       */
+/*   Updated: 2026/02/19 15:37:01 by lbueno-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ int	builtin_cd(char **argv, t_env **internal_env)
 
 	pwd_env_manager(OLDPWD, NULL, internal_env);
 	if (argv[1] && argv[2])
-		return (error_msg("cd: too many arguments"));
+		return (error_msg("minishell: cd: too many arguments"));
 	dir = argv[1];
 	if (!dir)
 	{
@@ -54,9 +54,9 @@ int	builtin_cd(char **argv, t_env **internal_env)
 			return (error_msg("minishell: cd: HOME not set"));
 	}
 	if (chdir(dir) != 0)
-		return (error_msg("cd: no such file or directory"));
+		return (error_msg("minishell: cd: no such file or directory"));
 	if (getcwd(cwd, PATH_MAX) == NULL)
-		return (error_msg("cd: error retrieving current directory\n"));
+		return (error_msg("minishell: cd: error retrieving current directory\n"));
 	pwd_env_manager(PWD, cwd, internal_env);
 	return (0);
 }

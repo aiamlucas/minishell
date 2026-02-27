@@ -1,31 +1,36 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   builtin_pwd.c                                      :+:      :+:    :+:   */
+/*   validate_input.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lbueno-m <lbueno-m@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/01/04 19:22:15 by lbueno-m          #+#    #+#             */
-/*   Updated: 2026/02/19 15:42:50 by lbueno-m         ###   ########.fr       */
+/*   Created: 2026/02/04 12:38:22 by lbueno-m          #+#    #+#             */
+/*   Updated: 2026/02/04 14:54:59 by lbueno-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/minishell.h"
 
-int	builtin_pwd(void)
+bool	is_empty_input(char *input)
 {
-	char	*cwd;
+	if (!*input || !ft_strlen(input))
+		return (true);
+	return (false);
+}
 
-	cwd = getcwd(NULL, 0);
-	if (cwd)
+bool	has_unclosed_quotes(char *input)
+{
+	char	quote;
+
+	quote = '\0';
+	while (*input)
 	{
-		ft_printf("%s\n", cwd);
-		free(cwd);
+		if ((*input == '\'' || *input == '\"') && !quote)
+			quote = *input;
+		else if (*input == quote)
+			quote = '\0';
+		input++;
 	}
-	else
-	{
-		perror("minishell: getcwd");
-		return (1);
-	}
-	return (0);
+	return (quote != '\0');
 }
