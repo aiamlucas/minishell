@@ -6,15 +6,15 @@
 /*   By: lbueno-m <lbueno-m@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/23 19:24:52 by lbueno-m          #+#    #+#             */
-/*   Updated: 2026/02/28 17:34:00 by lbueno-m         ###   ########.fr       */
+/*   Updated: 2026/02/28 19:31:17 by lbueno-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/minishell.h"
 
-static bool	count_char(const char **ptr, size_t *len, t_expand_state *state)
+static bool	count_if_literal(const char **ptr, size_t *len)
 {
-	if (update_state(state, **ptr) || **ptr != '$')
+	if (**ptr != '$')
 	{
 		(*len)++;
 		(*ptr)++;
@@ -33,6 +33,13 @@ static void	count_exit_len(size_t *len, int last_exit)
 	(*len) += ft_strlen(exit_str);
 	free(exit_str);
 }
+
+/* Decides what to do with $ and counts accordingly:
+** - $ at end of string  → count $ literally, stop
+** - $ in single quotes  → count $ literally, skip (no expansion)
+** - $?                  → count digits of exit code
+** - $ + non-identifier  → count $ literally, skip (ex: "$ " "$.  " "$-")
+** - $ + identifier      → count variable value length (0 if unset) */
 
 static t_dollar_act	count_dollar(const char **ptr, size_t *len,
 									t_expand_state state, int last_exit)
@@ -92,7 +99,9 @@ size_t	expanded_length(const char *str, t_env *internal_env,
 	state = EXPAND_NORMAL;
 	while (*ptr)
 	{
-		if (count_char(&ptr, &len, &state))
+		if (*ptr == '\'' || *ptr == '\"')
+			update_state(&state, *ptr);
+		if (count_if_literal(&ptr, &len))
 			continue ;
 		action = count_dollar(&ptr, &len, state, last_exit);
 		if (action == D_STOP)

@@ -6,12 +6,20 @@
 /*   By: lbueno-m <lbueno-m@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/23 19:46:24 by lbueno-m          #+#    #+#             */
-/*   Updated: 2026/02/28 18:02:08 by lbueno-m         ###   ########.fr       */
+/*   Updated: 2026/02/28 18:30:17 by lbueno-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/minishell.h"
 
+/* Updates:
+** state=NORMAL + ' -> SINGLE  (opening single quote)
+** state=NORMAL + " -> DOUBLE  (opening double quote)
+** state=SINGLE + ' -> NORMAL  (closing single quote)
+** state=DOUBLE + " -> NORMAL  (closing double quote)
+** Returns true if char was a quote that changed state, 
+**         false otherwise.
+*/
 bool	update_state(t_expand_state *state, char c)
 {
 	if (*state == EXPAND_NORMAL && c == '\'')
