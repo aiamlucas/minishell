@@ -45,6 +45,7 @@ SRC				+= expansion/expand_tokens.c
 SRC				+= expansion/expand_length.c
 SRC				+= expansion/expand_variable_helpers.c
 SRC				+= expansion/quote_removal.c
+SRC				+= expansion/expand_copy_value.c
 
 TEST_DIR		= tests
 TEST_SRC		= test-lexer-main.c
