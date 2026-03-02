@@ -6,7 +6,7 @@
 /*   By: lbueno-m <lbueno-m@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/04 20:13:17 by lbueno-m          #+#    #+#             */
-/*   Updated: 2026/02/13 10:32:22 by ssin             ###   ########.fr       */
+/*   Updated: 2026/02/19 15:23:58 by lbueno-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,7 +94,7 @@ int	builtin_export(char **argv, t_env **intrnl_env)
 		}
 		else
 		{
-			ft_printf("export: invalid argument\n");
+			ft_printf("minishell: export: invalid argument\n");
 			exit_code = 1;
 		}
 	}

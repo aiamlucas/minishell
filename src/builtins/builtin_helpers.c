@@ -6,7 +6,7 @@
 /*   By: ssin <ssin@student.42berlin.de>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/18 14:08:38 by ssin              #+#    #+#             */
-/*   Updated: 2026/02/18 14:08:42 by ssin             ###   ########.fr       */
+/*   Updated: 2026/02/19 15:23:08 by lbueno-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ int	is_valid_key(char *name)
 	{
 		if (!(ft_isalnum(name[i]) || name[i] == '_'))
 		{
-			ft_printf("export: not valid in this context: %s\n", name);
+			ft_printf("minishell: export: not valid in this context: %s\n", name);
 			return (0);
 		}
 		i++;
