@@ -6,7 +6,7 @@
 /*   By: ssin <ssin@student.42berlin.de>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/10 21:29:05 by ssin              #+#    #+#             */
-/*   Updated: 2026/02/27 14:38:24 by ssin             ###   ########.fr       */
+/*   Updated: 2026/03/02 18:48:41 by ssin             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,6 +62,8 @@ int	handle_heredoc(t_data *data, int *fd)
 		while (data->commands->redirections)
 		{
 			exit_code = create_heredoc(data, fd);
+			if (g_signal_received)
+				break ;
 			data->commands->redirections = data->commands->redirections->next;
 		}
 	}
