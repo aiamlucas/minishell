@@ -6,7 +6,7 @@
 /*   By: lbueno-m <lbueno-m@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/23 19:24:52 by lbueno-m          #+#    #+#             */
-/*   Updated: 2026/02/28 19:31:17 by lbueno-m         ###   ########.fr       */
+/*   Updated: 2026/03/03 15:27:05 by lbueno-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,7 @@ static size_t	count_var_len(const char **ptr, t_env *env)
 	size_t		var_len;
 
 	start = *ptr;
-	var_len = read_var_name(ptr);
+	var_len = advance_and_count_name(ptr);
 	while (env)
 	{
 		if (ft_strncmp(env->key, start, var_len) == 0

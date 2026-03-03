@@ -6,7 +6,7 @@
 /*   By: lbueno-m <lbueno-m@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/28 17:55:38 by lbueno-m          #+#    #+#             */
-/*   Updated: 2026/02/28 18:01:54 by lbueno-m         ###   ########.fr       */
+/*   Updated: 2026/03/03 15:27:52 by lbueno-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ void	build_exit_code(t_expand *exp, int last_exit)
 	free(exit_str);
 }
 
-size_t	read_var_name(const char **ptr)
+size_t	advance_and_count_name(const char **ptr)
 {
 	size_t	var_len;
 
