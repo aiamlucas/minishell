@@ -6,7 +6,7 @@
 /*   By: ssin <ssin@student.42berlin.de>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/18 17:31:00 by ssin              #+#    #+#             */
-/*   Updated: 2026/03/03 15:27:07 by lbueno-m         ###   ########.fr       */
+/*   Updated: 2026/03/03 16:00:27 by lbueno-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -203,7 +203,7 @@ size_t		expanded_length(const char *str, t_env *internal_env,
 								int last_exit);
 bool	expand_tokens(t_token *tokens, t_env *internal_env, int last_exit);
 bool	update_state(t_expand_state *state, char c);
-bool	build_char(const char **ptr, t_expand *exp);
+bool	build_if_literal(const char **ptr, t_expand *exp);
 t_dollar_act	build_dollar(const char **ptr, t_expand *exp, int last_exit);
 bool	remove_quotes(t_token *tokens);
 void	build_exit_code(t_expand *exp, int last_exit);
