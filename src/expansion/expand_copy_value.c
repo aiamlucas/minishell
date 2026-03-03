@@ -6,7 +6,7 @@
 /*   By: lbueno-m <lbueno-m@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/28 17:55:38 by lbueno-m          #+#    #+#             */
-/*   Updated: 2026/03/03 15:27:52 by lbueno-m         ###   ########.fr       */
+/*   Updated: 2026/03/03 16:46:21 by lbueno-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ void	copy_var_value(const char **ptr, t_expand *exp, t_env *env)
 	size_t		var_len;
 
 	start = *ptr;
-	var_len = read_var_name(ptr);
+	var_len = advance_and_count_name(ptr);
 	while (env)
 	{
 		if (ft_strncmp(env->key, start, var_len) == 0
