@@ -6,7 +6,7 @@
 /*   By: ssin <ssin@student.42berlin.de>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/11 19:10:57 by ssin              #+#    #+#             */
-/*   Updated: 2026/02/16 18:41:09 by lbueno-m         ###   ########.fr       */
+/*   Updated: 2026/02/28 19:49:42 by lbueno-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,10 +75,18 @@ static int	process_input(char *input, t_data *data)
 	printf("tokens\n");
 	print_tokens(data->tokens);
 	printf("\n after expansion: \n");
-	expand_tokens(data->tokens, data->internal_env, data->last_exit);
+	if (!expand_tokens(data->tokens, data->internal_env, data->last_exit))
+	{
+		token_clear(&data->tokens);
+		return (1);
+	}
 	print_tokens(data->tokens);
 	printf("\n after quote removal: \n");
-	remove_quotes(data->tokens);
+	if (!remove_quotes(data->tokens))
+	{
+		token_clear(&data->tokens);
+		return (1);
+	}
 	print_tokens(data->tokens);
 	data->commands = parser(data->tokens);
 	// print_commands(data->commands); // for debugging
