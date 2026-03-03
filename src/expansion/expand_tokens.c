@@ -6,7 +6,7 @@
 /*   By: lbueno-m <lbueno-m@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/16 23:33:18 by lbueno-m          #+#    #+#             */
-/*   Updated: 2026/02/24 00:08:07 by lbueno-m         ###   ########.fr       */
+/*   Updated: 2026/02/27 19:23:08 by lbueno-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,9 +39,9 @@ static char	*expand_variable(const char *str, t_env *internal_env,
 	ptr = str;
 	while (*ptr)
 	{
-		if (write_char(&ptr, &exp))
+		if (build_char(&ptr, &exp))
 			continue ;
-		action = write_dollar(&ptr, &exp, last_exit);
+		action = build_dollar(&ptr, &exp, last_exit);
 		if (action == D_STOP)
 			break ;
 		if (action == D_SKIP)

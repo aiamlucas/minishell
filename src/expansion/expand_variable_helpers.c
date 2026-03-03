@@ -6,7 +6,7 @@
 /*   By: lbueno-m <lbueno-m@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/23 19:46:24 by lbueno-m          #+#    #+#             */
-/*   Updated: 2026/02/24 09:27:16 by lbueno-m         ###   ########.fr       */
+/*   Updated: 2026/02/27 19:24:48 by lbueno-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ bool	update_state(t_expand_state *state, char c)
 	return (false);
 }
 
-bool	write_char(const char **ptr, t_expand *exp)
+bool	build_char(const char **ptr, t_expand *exp)
 {
 	if (update_state(exp->state, **ptr) || **ptr != '$')
 	{
@@ -47,7 +47,7 @@ bool	write_char(const char **ptr, t_expand *exp)
 	return (false);
 }
 
-static void	write_exit_status(t_expand *exp, int last_exit)
+static void	build_exit_status(t_expand *exp, int last_exit)
 {
 	char	*exit_str;
 	size_t	j;
@@ -62,7 +62,7 @@ static void	write_exit_status(t_expand *exp, int last_exit)
 	}
 }
 
-t_dollar_act	write_dollar(const char **ptr, t_expand *exp, int last_exit)
+t_dollar_act	build_dollar(const char **ptr, t_expand *exp, int last_exit)
 {
 	(*ptr)++;
 	if (**ptr == '\0')
@@ -77,7 +77,7 @@ t_dollar_act	write_dollar(const char **ptr, t_expand *exp, int last_exit)
 	}
 	if (**ptr == '?')
 	{
-		write_exit_status(exp, last_exit);
+		build_exit_status(exp, last_exit);
 		(*ptr)++;
 		return (D_SKIP);
 	}
@@ -109,9 +109,7 @@ void	copy_var_value(const char **ptr, t_expand *exp, t_env *env)
 		{
 			value = env->value;
 			while (*value)
-			{
 				exp->result[(*exp->position)++] = *value++;
-			}
 			break ;
 		}
 		env = env->next;
