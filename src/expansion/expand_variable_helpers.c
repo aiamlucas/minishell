@@ -6,7 +6,7 @@
 /*   By: lbueno-m <lbueno-m@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/23 19:46:24 by lbueno-m          #+#    #+#             */
-/*   Updated: 2026/02/28 19:42:32 by lbueno-m         ###   ########.fr       */
+/*   Updated: 2026/03/03 15:46:52 by lbueno-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,8 +60,6 @@ static void	append_dollar(t_expand *exp)
 
 bool	build_char(const char **ptr, t_expand *exp)
 {
-	if (**ptr == '\'' || **ptr == '\"')
-		update_state(exp->state, **ptr);
 	if (**ptr != '$')
 	{
 		append_char(ptr, exp);
