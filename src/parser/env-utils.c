@@ -6,7 +6,7 @@
 /*   By: ssin <ssin@student.42berlin.de>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/27 18:47:55 by ssin              #+#    #+#             */
-/*   Updated: 2026/02/25 10:08:19 by lbueno-m         ###   ########.fr       */
+/*   Updated: 2026/03/03 14:34:56 by lbueno-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,6 @@ void	list_add_back(t_env **lst, t_env *new)
 	last->next = new;
 }
 
-// new env node logic without ft_split
 t_env	*new_env_node(void *content)
 {
 	t_env	*node;
@@ -57,7 +56,6 @@ t_env	*new_env_node(void *content)
 	return (node);
 }
 
-// for cleaning all the env list 
 void	free_env_list(t_env **lst)
 {
 	t_env	*temp;
