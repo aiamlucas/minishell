@@ -51,6 +51,7 @@ int	handle_heredoc(t_data *data, int *fd)
 {
 	int	exit_code;
 
+	exit_code = 0;
 	if (!data->commands || !data->commands->redirections)
 		return (0);
 	if (data->commands->redirections->type != TOKEN_HEREDOC)

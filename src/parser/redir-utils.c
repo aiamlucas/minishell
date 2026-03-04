@@ -12,7 +12,7 @@
 
 #include "../../inc/minishell.h"
 
-t_redir	*redir_new(t_token_type type, char *file)
+t_redir	*redir_new(t_token_type type, char *file, bool should_expand)
 {
 	t_redir	*node;
 
@@ -26,6 +26,7 @@ t_redir	*redir_new(t_token_type type, char *file)
 		return (NULL);
 	}
 	node->type = type;
+	node->should_expand = should_expand;
 	node->next = NULL;
 	return (node);
 }

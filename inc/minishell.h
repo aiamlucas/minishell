@@ -6,7 +6,7 @@
 /*   By: ssin <ssin@student.42berlin.de>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/18 17:31:00 by ssin              #+#    #+#             */
-/*   Updated: 2026/02/27 17:01:32 by ssin             ###   ########.fr       */
+/*   Updated: 2026/03/03 17:34:18 by ssin             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,7 @@ typedef struct s_redir
 {
 	t_token_type	type;
 	char			*target;
+	bool			should_expand;
 	struct s_redir	*next;
 }	t_redir;
 
@@ -121,7 +122,7 @@ t_command	*command_new(void);
 t_command	*command_last(t_command *lst);
 void		command_add_back(t_command **lst, t_command *new);
 void		command_clear(t_command **lst);
-t_redir		*redir_new(t_token_type type, char *file);
+t_redir		*redir_new(t_token_type type, char *file, bool should_expand);
 t_redir		*redir_last(t_redir *lst);
 void		redir_add_back(t_redir **lst, t_redir *new);
 void		redir_clear(t_redir **lst);
@@ -187,6 +188,7 @@ bool	expand_tokens(t_token *tokens, t_env *internal_env, int last_exit);
 size_t	expanded_length(const char *str, t_env *internal_env, int last_exit);
 char	*expand_variable(const char *str, t_env *internal_env, int last_exit, size_t len);
 bool	remove_quotes(t_token *tokens);
+char	*remove_quote_chars(const char *str);
 
 // heredoc
 int		set_fd(int *fd);

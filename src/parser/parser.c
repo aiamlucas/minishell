@@ -25,7 +25,9 @@ static bool	is_redirection(t_token_type type)
 static bool	handle_redirection(t_command **current_command, t_token **redir_arg)
 {
 	t_token_type	redir_type;
-	t_redir			*new_redir;	
+	t_redir			*new_redir;
+	bool			should_expand;
+	char			*delimiter;
 
 	redir_type = (*redir_arg)->type;
 	*redir_arg = (*redir_arg)->next;
@@ -36,7 +38,25 @@ static bool	handle_redirection(t_command **current_command, t_token **redir_arg)
 	}
 	if (!*current_command)
 		*current_command = command_new();
-	new_redir = redir_new(redir_type, (*redir_arg)->value);
+	should_expand = true;
+	if (redir_type == TOKEN_HEREDOC)
+	{
+		delimiter = (*redir_arg)->value;
+		while (*delimiter)
+		{
+			if (*delimiter == '\'' || *delimiter == '"')
+			{
+				should_expand = false;
+				break ;
+			}
+			delimiter++;
+		}
+		delimiter = remove_quote_chars((*redir_arg)->value);
+		new_redir = redir_new(redir_type, delimiter, should_expand);
+		free(delimiter);
+	}
+	else
+		new_redir = redir_new(redir_type, (*redir_arg)->value, should_expand);
 	redir_add_back(&(*current_command)->redirections, new_redir);
 	return (true);
 }

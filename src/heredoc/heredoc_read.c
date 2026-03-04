@@ -21,18 +21,24 @@ void	check_input(t_data *data, int *fd)
 int	read_heredoc(t_data *data, int *fd)
 {
 	char	*input_line;
+	char	*expanded;
 
 	close(fd[0]);
 	while (1)
 	{
 		input_line = readline("> ");
-		if (ft_strchr(input_line, '$'))
-			input_line = expand_string(input_line, data->internal_env,
-					data->last_exit);
 		if (!input_line)
 		{
 			check_input(data, fd);
-			exit (1);
+			exit (0);
+		}
+		if (data->commands->redirections->should_expand
+			&& ft_strchr(input_line, '$'))
+		{
+			expanded = expand_string(input_line, data->internal_env,
+					data->last_exit);
+			free(input_line);
+			input_line = expanded;
 		}
 		if (ft_strcmp(input_line, data->commands->redirections->target) == 0)
 		{
