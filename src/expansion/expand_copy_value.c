@@ -6,7 +6,7 @@
 /*   By: lbueno-m <lbueno-m@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/28 17:55:38 by lbueno-m          #+#    #+#             */
-/*   Updated: 2026/03/03 16:46:21 by lbueno-m         ###   ########.fr       */
+/*   Updated: 2026/03/06 12:31:55 by lbueno-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,17 +15,17 @@
 void	build_exit_code(t_expand *exp, int last_exit)
 {
 	char	*exit_str;
-	size_t	j;
+	size_t	i;
 
 	exit_str = ft_itoa(last_exit);
 	if (!exit_str)
 		return ;
-	j = 0;
-	while (exit_str[j])
+	i = 0;
+	while (exit_str[i])
 	{
-		exp->result[*exp->position] = exit_str[j];
+		exp->result[*exp->position] = exit_str[i];
 		(*exp->position)++;
-		j++;
+		i++;
 	}
 	free(exit_str);
 }
