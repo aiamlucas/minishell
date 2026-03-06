@@ -6,7 +6,7 @@
 /*   By: ssin <ssin@student.42berlin.de>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/17 13:06:26 by ssin              #+#    #+#             */
-/*   Updated: 2026/02/26 09:41:18 by lbueno-m         ###   ########.fr       */
+/*   Updated: 2026/03/06 12:16:41 by lbueno-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,6 @@ static void	init_data(t_data *data, char **envp)
 
 	list = NULL;
 	create_env_list(&list, envp);
-	// print_env_list(list);
 	data->envp = envp;
 	data->internal_env = list;
 	data->tokens = NULL;
