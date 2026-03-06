@@ -89,7 +89,6 @@ typedef struct s_data
 	t_token			*tokens;
 	t_command		*commands;
 	int				last_exit;
-	int				heredoc_fd;
 	struct termios	*t_settings;
 }	t_data;
 
@@ -101,7 +100,6 @@ typedef struct s_child_data
 	int			cmd_index;
 	int			total;
 	char		**envp;
-	int			heredoc_fd;
 }	t_child_data;
 
 // maybe we can later have several header files for each part of the project
@@ -149,21 +147,21 @@ int			**create_pipes(int count);
 // execution
 bool		is_builtin(t_command *cmd);
 int			execute_single_command(t_command *cmd, char **envp,
-				t_env **internal_env, int heredoc_fd);
-void		execute_child_command(t_command *cmd, char **envp, t_env *internal_env, int heredoc_fd);
-int			execute_command(t_data *data, int heredoc_fd);
-int			execute_pipeline(t_command *cmds, char **envp, int heredoc_fd);
-int			execute_builtin(t_command *cmd, t_env **internal_env, int heredoc_fd);
+				t_env **internal_env);
+void		execute_child_command(t_command *cmd, char **envp, t_env *internal_env);
+int			execute_command(t_data *data);
+int			execute_pipeline(t_command *cmds, char **envp);
+int			execute_builtin(t_command *cmd, t_env **internal_env);
 char		*find_dir(char *cmd, t_env *internal_env);
 void		apply_redirections(t_redir *redirections);
-void		setup_pipes(t_child_data *data);
+void		setup_pipes(int **pipes, int cmd_index, int total);
 void		child_process(t_child_data *data);
 pid_t		fork_child(t_child_data *data);
 bool		must_run_in_parent(t_command *cmd);
 
 // builtins
 int			builtin_cd(char **argv, t_env **internal_env);
-int			builtin_echo(char **argv, int heredoc_fd);
+int			builtin_echo(char **argv);
 int			builtin_env(t_env *internal_env);
 int			builtin_export(char **argv, t_env **internal_env);
 int			builtin_pwd(void);

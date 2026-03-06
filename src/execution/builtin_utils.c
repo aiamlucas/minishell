@@ -56,12 +56,12 @@ bool	must_run_in_parent(t_command *cmd)
 	return (false);
 }
 
-int	execute_builtin(t_command *cmd, t_env **internal_env, int heredoc_fd)
+int	execute_builtin(t_command *cmd, t_env **internal_env)
 {
 	if (ft_strcmp(cmd->argv[0], "pwd") == 0)
 		return (builtin_pwd());
 	if (ft_strcmp(cmd->argv[0], "echo") == 0)
-		return (builtin_echo(cmd->argv, heredoc_fd));
+		return (builtin_echo(cmd->argv));
 	if (ft_strcmp(cmd->argv[0], "cd") == 0)
 		return (builtin_cd(cmd->argv, internal_env));
 	if (ft_strcmp(cmd->argv[0], "export") == 0)

@@ -85,7 +85,7 @@ static int	process_input(char *input, t_data *data)
 	{
 		exit_code = process_all_heredocs(data);
 		if (exit_code == 0 && !g_signal_received)
-			exit_code = execute_command(data, 0);
+			exit_code = execute_command(data);
 	}
 	command_clear(&data->commands);
 	if (check_signal())

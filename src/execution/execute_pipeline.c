@@ -34,23 +34,21 @@ static int	wait_all(pid_t last_pid, int **pipes, int count)
 }
 
 static void	init_child_data(t_child_data *data, int **pipes,
-							int count, char **envp, int heredoc_fd)
+							int count, char **envp)
 {
 	data->pipes = pipes;
 	data->total = count;
 	data->envp = envp;
-	data->heredoc_fd = heredoc_fd;
 }
 
-static pid_t	fork_one_child(t_child_data *data, t_command *cmd, int index, int heredoc_fd)
+static pid_t	fork_one_child(t_child_data *data, t_command *cmd, int index)
 {
 	data->cmd = cmd;
 	data->cmd_index = index;
-	data->heredoc_fd = heredoc_fd;
 	return (fork_child(data));
 }
 
-int	execute_pipeline(t_command *cmds, char **envp, int heredoc_fd)
+int	execute_pipeline(t_command *cmds, char **envp)
 {
 	int				count;
 	int				**pipes;
@@ -63,11 +61,11 @@ int	execute_pipeline(t_command *cmds, char **envp, int heredoc_fd)
 	pipes = create_pipes(count - 1);
 	if (!pipes)
 		return (1);
-	init_child_data(&data, pipes, count, envp, heredoc_fd);
+	init_child_data(&data, pipes, count, envp);
 	i = 0;
 	while (cmds && i < count)
 	{
-		last_pid = fork_one_child(&data, cmds, i, heredoc_fd);
+		last_pid = fork_one_child(&data, cmds, i);
 		if (last_pid == -1)
 			return (cleanup_on_error(pipes, count));
 		cmds = cmds->next;

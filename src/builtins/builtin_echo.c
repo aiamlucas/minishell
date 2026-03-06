@@ -35,9 +35,8 @@ void	check_flag(char **argv, int *i, int *newline)
 	}
 }
 
-int	builtin_echo(char **argv, int heredoc_fd)
+int	builtin_echo(char **argv)
 {
-	(void)heredoc_fd;
 	int	i;
 	int	newline;
 
