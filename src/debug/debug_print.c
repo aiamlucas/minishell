@@ -6,90 +6,95 @@
 /*   By: lbueno-m <lbueno-m@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/15 00:24:00 by lbueno-m          #+#    #+#             */
-/*   Updated: 2025/12/15 12:28:48 by lbueno-m         ###   ########.fr       */
+/*   Updated: 2026/02/25 20:35:28 by lbueno-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/minishell.h"
 
-void print_tokens(t_token *tokens)
+void	print_tokens(t_token *tokens)
 {
-	t_token	*current = tokens;
+	t_token	*current;
 
+	current = tokens;
 	while (current)
 	{
-		printf("[%s]", current->value);
+		ft_printf("[%s]", current->value);
 		if (current->next)
-			printf("->");
+			ft_printf("->");
 		current = current->next;
 	}
-	printf("->NULL\n");
+	ft_printf("->NULL\n");
 }
 
 void	print_redirections(t_redir *redirections)
 {
-	t_redir	*current = redirections;
+	t_redir	*current;
 
+	current = redirections;
 	if (!redirections)
 	{
-		printf("NULL");
+		ft_printf("NULL");
 		return ;
 	}
-	printf("[");
+	ft_printf("[");
 	while (current)
 	{
 		if (current->type == TOKEN_REDIR_IN)
-			printf("< %s", current->file);
+			ft_printf("< %s", current->file);
 		else if (current->type == TOKEN_REDIR_OUT)
-			printf("> %s", current->file);
+			ft_printf("> %s", current->file);
 		else if (current->type == TOKEN_REDIR_APPEND)
-			printf(">> %s", current->file);
+			ft_printf(">> %s", current->file);
 		else if (current->type == TOKEN_HEREDOC)
-			printf("<< %s", current->file);
+			ft_printf("<< %s", current->file);
 		if (current->next)
-			printf(", ");
+			ft_printf(", ");
 		current = current->next;
 	}
-	printf("]");
+	ft_printf("]");
+}
+
+static void	print_argv(char *argv[])
+{
+	int	i;
+
+	i = 0;
+	if (!argv)
+		return ;
+	while (argv[i])
+	{
+		ft_printf("\"%s\"", argv[i]);
+		if (argv[i + 1])
+			ft_printf(", ");
+		i++;
+	}
 }
 
 void	print_commands(t_command *commands)
 {
-	t_command	*current = commands;
+	t_command	*current;
 	int			command_num;
-	int			i;
-
-	command_num = 1;
-	i = 0;
 
 	if (!commands)
 	{
-		printf("no commands\n");
+		ft_printf("no commands\n");
 		return ;
 	}
+	current = commands;
+	command_num = 1;
 	while (current)
 	{
-		printf("cmd%d->argv = [", command_num);
-
-		if (current->argv)
-		{
-			i = 0;
-			while (current->argv[i])
-			{
-				printf("\"%s\"", current->argv[i]);
-				if (current->argv[i + 1])
-					printf(", ");
-				i++;
-			}
-		}
-		printf(", NULL]\n");
-		printf("cmd%d->redirections = ", command_num);
+		ft_printf("cmd%d->argv = [", command_num);
+		print_argv(current->argv);
+		ft_printf(", NULL]\n");
+		ft_printf("cmd%d->redirections = ", command_num);
 		print_redirections(current->redirections);
-		printf("\n");
+		ft_printf("\n");
 		current = current->next;
 		command_num++;
 	}
-	printf("\n");
+	ft_printf("\n");
 }
 
 void	print_env_list(t_env *list)
@@ -97,9 +102,9 @@ void	print_env_list(t_env *list)
 	while (list)
 	{
 		if (list->value)
-			printf("%s=%s\n", list->key, list->value);
+			ft_printf("%s=%s\n", list->key, list->value);
 		else
-			printf("%s=\n", list->key);
+			ft_printf("%s=\n", list->key);
 		list = list->next;
 	}
 }

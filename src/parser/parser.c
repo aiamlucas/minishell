@@ -6,7 +6,7 @@
 /*   By: lbueno-m <lbueno-m@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/12 17:48:28 by lbueno-m          #+#    #+#             */
-/*   Updated: 2025/12/17 16:16:28 by lbueno-m         ###   ########.fr       */
+/*   Updated: 2026/02/25 13:48:51 by lbueno-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,38 +54,44 @@ static void	add_to_argv(t_command *cmd, char *word)
 	cmd->argv[size + 1] = NULL;
 }
 
+static bool	process_token(t_token **token, t_command **command_list,
+							t_command **current_command)
+{
+	if ((*token)->type == TOKEN_WORD)
+	{
+		if (!*current_command)
+			*current_command = command_new();
+		add_to_argv(*current_command, (*token)->value);
+	}
+	else if ((*token)->type == TOKEN_PIPE)
+	{
+		command_add_back(command_list, *current_command);
+		*current_command = NULL;
+	}
+	else if (is_redirection((*token)->type))
+	{
+		if (!handle_redirection(current_command, token))
+		{
+			command_clear(command_list);
+			command_clear(current_command);
+			return (false);
+		}
+	}
+	return (true);
+}
+
 t_command	*parser(t_token *tokens)
 {
 	t_command	*command_list;
 	t_command	*current_command;
-	t_token		*current_token;
 
 	command_list = NULL;
 	current_command = NULL;
-	current_token = tokens;
-	while (current_token)
+	while (tokens)
 	{
-		if (current_token->type == TOKEN_WORD)
-		{
-			if (!current_command)
-				current_command = command_new();
-			add_to_argv(current_command, current_token->value);
-		}
-		else if (current_token->type == TOKEN_PIPE)
-		{
-			command_add_back(&command_list, current_command);
-			current_command = NULL;
-		}
-		else if (is_redirection(current_token->type))
-		{
-			if (!handle_redirection(&current_command, &current_token))
-			{
-				command_clear(&command_list);
-				command_clear(&current_command);
-				return (NULL);
-			}
-		}
-		current_token = current_token->next;
+		if (!process_token(&tokens, &command_list, &current_command))
+			return (NULL);
+		tokens = tokens->next;
 	}
 	if (current_command)
 		command_add_back(&command_list, current_command);

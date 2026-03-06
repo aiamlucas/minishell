@@ -6,7 +6,7 @@
 /*   By: lbueno-m <lbueno-m@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/09 18:05:13 by lbueno-m          #+#    #+#             */
-/*   Updated: 2026/02/10 12:06:06 by lbueno-m         ###   ########.fr       */
+/*   Updated: 2026/02/25 23:00:04 by lbueno-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,6 @@ static char	*remove_quote_chars(const char *str)
 	result = malloc(len + 1);
 	if (!result)
 		return (NULL);
-	i = 0;
 	while (*str)
 	{
 		if ((*str == '\'' || *str == '\"') && !quote)
