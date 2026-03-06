@@ -6,23 +6,11 @@
 /*   By: ssin <ssin@student.42berlin.de>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/10 21:29:05 by ssin              #+#    #+#             */
-/*   Updated: 2026/03/06 14:55:55 by ssin             ###   ########.fr       */
+/*   Updated: 2026/03/06 16:47:30 by ssin             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/minishell.h"
-
-int	set_fd(int *fd)
-{
-	fd[0] = 0;
-	fd[1] = 0;
-	if (pipe(fd) == -1)
-	{
-		ft_printf("heredoc error pipe\n");
-		return (0);
-	}
-	return (1);
-}
 
 void	execute_child(t_data *data, int *fd)
 {
@@ -30,7 +18,8 @@ void	execute_child(t_data *data, int *fd)
 	read_heredoc(data, fd);
 }
 
-static int	wait_child(pid_t pid, int status, t_data *data, t_redir *saved_redir)
+static int	wait_child(pid_t pid, int status, t_data *data,
+					t_redir *saved_redir)
 {
 	waitpid(pid, &status, 0);
 	tcsetattr(STDIN_FILENO, TCSANOW, data->t_settings);
@@ -64,17 +53,6 @@ static int	create_child(t_data *data, t_redir *redir, int *fd)
 		execute_child(data, fd);
 	close(fd[1]);
 	return (wait_child(pid, status, data, saved_redir));
-}
-
-int	handle_heredoc_error(int exit_code, int *fd)
-{
-	if (exit_code != 0 || g_signal_received)
-	{
-		if (fd[0] > 0)
-			close(fd[0]);
-		return (1);
-	}
-	return (0);
 }
 
 int	process_all_heredocs(t_data *data)

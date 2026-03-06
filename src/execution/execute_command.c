@@ -42,8 +42,7 @@ static int	execute_single_process(t_command *cmd, char *path, char **envp, t_env
 	{
 		reset_signals();
 		free(path);
-		//if (cmd->redirections)
-			apply_redirections(cmd->redirections);
+		apply_redirections(cmd->redirections);
 		execute_child_command(cmd, envp, internal_env);
 		exit(126);
 	}

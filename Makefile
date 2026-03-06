@@ -46,6 +46,7 @@ SRC				+= expansion/quote_removal.c
 SRC				+= heredoc/heredoc.c
 SRC				+= heredoc/heredoc_read.c
 SRC				+= heredoc/heredoc_expand.c
+SRC				+= heredoc/heredoc_utils.c
 
 TEST_DIR		= tests
 TEST_SRC		= test-lexer-main.c

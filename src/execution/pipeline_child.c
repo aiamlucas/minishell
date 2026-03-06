@@ -23,7 +23,7 @@ void	setup_pipes(int **pipes, int cmd_index, int total)
 void	child_process(t_child_data *data)
 {
 	reset_signals();
-	setup_pipes(data);
+	setup_pipes(data->pipes, data->cmd_index, data->total);
 	close_pipes(data->pipes, data->total - 1);
 	apply_redirections(data->cmd->redirections);
 	execute_child_command(data->cmd, data->envp, NULL);
