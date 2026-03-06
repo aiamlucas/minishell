@@ -6,7 +6,7 @@
 /*   By: lbueno-m <lbueno-m@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/25 14:29:01 by lbueno-m          #+#    #+#             */
-/*   Updated: 2026/02/26 11:30:46 by lbueno-m         ###   ########.fr       */
+/*   Updated: 2026/03/06 12:14:02 by lbueno-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,13 +20,21 @@ int	process_input(char *input, t_data *data)
 	printf("tokens\n");
 	print_tokens(data->tokens);
 	printf("\n after expansion: \n");
-	expand_tokens(data->tokens, data->internal_env, data->last_exit);
+	if (!expand_tokens(data->tokens, data->internal_env, data->last_exit))
+	{
+		token_clear(&data->tokens);
+		return (1);
+	}
 	print_tokens(data->tokens);
 	printf("\n after quote removal: \n");
-	remove_quotes(data->tokens);
+	if (!remove_quotes(data->tokens))
+	{
+		token_clear(&data->tokens);
+		return (1);
+	}
 	print_tokens(data->tokens);
 	data->commands = parser(data->tokens);
-	print_commands(data->commands); // for debugging
+	// print_commands(data->commands); // for debugging
 	token_clear(&data->tokens);
 	exit_code = execute_command(data);
 	command_clear(&data->commands);
