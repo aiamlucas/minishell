@@ -6,7 +6,7 @@
 /*   By: ssin <ssin@student.42berlin.de>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/11 19:10:57 by ssin              #+#    #+#             */
-/*   Updated: 2026/02/16 18:41:09 by lbueno-m         ###   ########.fr       */
+/*   Updated: 2026/03/03 14:34:34 by lbueno-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,53 +67,13 @@ static char	*readline_with_continuation(const char *input)
 	return (line);
 }
 
-static int	process_input(char *input, t_data *data)
-{
-	int			exit_code;
-
-	data->tokens = lexer(input);
-	printf("tokens\n");
-	print_tokens(data->tokens);
-	printf("\n after expansion: \n");
-	expand_tokens(data->tokens, data->internal_env, data->last_exit);
-	print_tokens(data->tokens);
-	printf("\n after quote removal: \n");
-	remove_quotes(data->tokens);
-	print_tokens(data->tokens);
-	data->commands = parser(data->tokens);
-	// print_commands(data->commands); // for debugging
-	token_clear(&data->tokens);
-	exit_code = execute_command(data);
-	command_clear(&data->commands);
-	if (check_signal())
-		exit_code = get_signal_exit_code();
-	return (exit_code);
-}
-
-static int	check_input_validation(char *input)
-{
-	if (check_signal())
-	{
-		if (input)
-			free(input);
-		reset_signal();
-		return (1);
-	}
-	if (!input)
-		return (-1);
-	if (is_empty_input(input))
-	{
-		free(input);
-		return (1);
-	}
-	return (0);
-}
-
 static bool	handle_input_line(char *input, t_data *data)
 {
 	int	validation;
 	int	exit_code;
 
+	if (check_signal())
+		data->last_exit = get_signal_exit_code();
 	validation = check_input_validation(input);
 	if (validation == -1)
 	{
