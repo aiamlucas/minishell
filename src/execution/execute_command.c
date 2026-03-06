@@ -6,7 +6,7 @@
 /*   By: lbueno-m <lbueno-m@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/22 15:59:40 by lbueno-m          #+#    #+#             */
-/*   Updated: 2026/01/25 16:50:18 by lbueno-m         ###   ########.fr       */
+/*   Updated: 2026/03/06 14:32:53 by ssin             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,12 +33,12 @@ static int	execute_single_process(t_command *cmd, char *path, char **envp, t_env
 	pid_t	pid;
 
 	pid = fork();
-	if (pid == -1)
+	if (pid == ERROR)
 	{
 		free(path);
 		return (1);
 	}
-	if (pid == 0)
+	if (pid == CHILD)
 	{
 		reset_signals();
 		free(path);
@@ -57,9 +57,9 @@ static int	execute_builtin_forked(t_command *cmd, t_env **internal_env, int here
 	int		status;
 
 	pid = fork();
-	if (pid == -1)
+	if (pid == ERROR)
 		return (1);
-	if (pid == 0)
+	if (pid == CHILD)
 	{
 		reset_signals();
 		apply_redirections(cmd->redirections);

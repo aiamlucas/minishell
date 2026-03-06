@@ -6,36 +6,11 @@
 /*   By: ssin <ssin@student.42berlin.de>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/11 19:10:57 by ssin              #+#    #+#             */
-/*   Updated: 2026/03/04 15:05:13 by ssin             ###   ########.fr       */
+/*   Updated: 2026/03/05 17:38:27 by ssin             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/minishell.h"
-
-int	set_fd(int *fd)
-{
-	fd[0] = 0;
-	fd[1] = 0;
-
-	if (pipe(fd) == -1)
-	{
-		ft_printf("heredoc error pipe\n");
-		return (0);
-	}
-	return (1);
-}
-
-static int	pre_execution(int fd, t_data *data)
-{
-	char		buffer[1024];
-
-	ssize_t bytes_read = read(fd, buffer, sizeof(buffer) - 1);
-	if (bytes_read > 0) {
-		buffer[bytes_read] = '\0';
-		printf("%s", buffer);
-	}
-	return (execute_command(data, fd));
-}
 
 static char	*join_with_newline(char *line, char *temp)
 {
@@ -94,11 +69,8 @@ static char	*readline_with_continuation(const char *input)
 
 static int	process_input(char *input, t_data *data)
 {
-	int	fd[2];
 	int	exit_code;
 
-	fd[0] = 0;
-	fd[1] = 0;
 	exit_code = 0;
 	data->tokens = lexer(input);
 	//printf("tokens\n");
@@ -108,25 +80,12 @@ static int	process_input(char *input, t_data *data)
 	// print_tokens(data->tokens);
 	data->commands = parser(data->tokens);
 	remove_quotes(data->tokens);
-	// print_commands(data->commands); // for debugging
 	token_clear(&data->tokens);
-	exit_code = handle_heredoc(data, fd);
-	if (exit_code == 0)
+	if (data->commands)
 	{
-		if (fd[0] > 0)
-		{
-			exit_code = pre_execution(fd[0], data);
-			close(fd[0]);
-		}
-		else
+		exit_code = process_all_heredocs(data);
+		if (exit_code == 0 && !g_signal_received)
 			exit_code = execute_command(data, 0);
-	}
-	else
-	{
-		if (fd[0] > 0)
-			close(fd[0]);
-		if (fd[1] > 0)
-			close(fd[1]);
 	}
 	command_clear(&data->commands);
 	if (check_signal())

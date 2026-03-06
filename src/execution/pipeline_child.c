@@ -6,7 +6,7 @@
 /*   By: lbueno-m <lbueno-m@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/04 17:27:12 by lbueno-m          #+#    #+#             */
-/*   Updated: 2026/01/14 15:19:36 by lbueno-m         ###   ########.fr       */
+/*   Updated: 2026/03/06 14:32:38 by ssin             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,9 +44,9 @@ pid_t	fork_child(t_child_data *data)
 	pid_t			pid;
 
 	pid = fork();
-	if (pid == -1)
-		return (-1);
-	if (pid == 0)
+	if (pid == ERROR)
+		return (ERROR);
+	if (pid == CHILD)
 		child_process(data);
 	return (pid);
 }

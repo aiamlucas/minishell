@@ -27,6 +27,7 @@ t_redir	*redir_new(t_token_type type, char *file, bool should_expand)
 	}
 	node->type = type;
 	node->should_expand = should_expand;
+	node->fd = -1;
 	node->next = NULL;
 	return (node);
 }
@@ -64,6 +65,8 @@ void	redir_clear(t_redir **lst)
 	while (*lst)
 	{
 		tmp = (*lst)->next;
+		if ((*lst)->type == TOKEN_HEREDOC && (*lst)->fd != -1)
+			close((*lst)->fd);
 		free((*lst)->target);
 		free(*lst);
 		*lst = tmp;

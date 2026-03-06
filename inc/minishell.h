@@ -6,7 +6,7 @@
 /*   By: ssin <ssin@student.42berlin.de>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/18 17:31:00 by ssin              #+#    #+#             */
-/*   Updated: 2026/03/03 17:34:18 by ssin             ###   ########.fr       */
+/*   Updated: 2026/03/06 14:32:17 by ssin             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,8 @@
 # define HOME "HOME"
 # define PWD "PWD"
 # define OLDPWD "OLDPWD"
+# define CHILD 0
+# define ERROR -1
 
 # include <stdio.h>
 # include <readline/readline.h>
@@ -61,6 +63,7 @@ typedef struct s_redir
 	t_token_type	type;
 	char			*target;
 	bool			should_expand;
+	int				fd;
 	struct s_redir	*next;
 }	t_redir;
 
@@ -192,8 +195,8 @@ char	*remove_quote_chars(const char *str);
 
 // heredoc
 int		set_fd(int *fd);
-int		handle_heredoc(t_data *data, int *fd);
-int   read_heredoc(t_data *data, int *fd);
+int		process_all_heredocs(t_data *data);
+int		read_heredoc(t_data *data, int *fd);
 char	*expand_string(const char *str, t_env *internal_env, int last_exit);
 
 #endif
