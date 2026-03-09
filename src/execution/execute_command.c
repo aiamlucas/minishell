@@ -6,7 +6,7 @@
 /*   By: lbueno-m <lbueno-m@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/22 15:59:40 by lbueno-m          #+#    #+#             */
-/*   Updated: 2026/03/09 17:49:58 by ssin             ###   ########.fr       */
+/*   Updated: 2026/03/09 18:27:01 by ssin             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,12 +29,13 @@ static int	wait_child(pid_t pid)
 	return (1);
 }
 
-static int	execute_single_process(t_command *cmd, char *path,
-									char **envp, t_env *internal_env, t_redir *redirections)
+static int	execute_single_process(char *path, t_data *data)
 {
 	pid_t	pid;
 	int		result;
+	t_redir	*redirections;
 
+	redirections = data->commands->redirections;
 	pid = fork();
 	if (pid == ERROR)
 	{
@@ -45,8 +46,8 @@ static int	execute_single_process(t_command *cmd, char *path,
 	{
 		reset_signals();
 		free(path);
-		apply_redirections(cmd->redirections);
-		execute_child_command(cmd, envp, internal_env);
+		apply_redirections(data->commands->redirections);
+		execute_child_command(data->commands, data->envp, data->internal_env);
 		exit(126);
 	}
 	free(path);
@@ -101,12 +102,12 @@ int	execute_single_command(t_command *cmd, t_data *data)
 		ft_printf("minishell: %s: command not found\n", cmd->argv[0]);
 		return (127);
 	}
-	return (execute_single_process(cmd, path, data->envp, data->internal_env, data->commands->redirections));
+	return (execute_single_process(path, data));
 }
 
 int	execute_command(t_data *data)
 {
-	int exit_code;
+	int	exit_code;
 
 	exit_code = 0;
 	if (!data->commands)
@@ -119,4 +120,3 @@ int	execute_command(t_data *data)
 		return (get_signal_exit_code());
 	return (exit_code);
 }
-
