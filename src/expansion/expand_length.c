@@ -6,7 +6,7 @@
 /*   By: lbueno-m <lbueno-m@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/23 19:24:52 by lbueno-m          #+#    #+#             */
-/*   Updated: 2026/03/03 15:27:05 by lbueno-m         ###   ########.fr       */
+/*   Updated: 2026/03/09 20:57:53 by lbueno-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 static bool	count_if_literal(const char **ptr, size_t *len)
 {
-	if (**ptr != '$')
+	if (**ptr != C_EXP)
 	{
 		(*len)++;
 		(*ptr)++;
@@ -55,7 +55,7 @@ static t_dollar_act	count_dollar(const char **ptr, size_t *len,
 		(*len)++;
 		return (D_SKIP);
 	}
-	if (**ptr == '?')
+	if (**ptr == C_QUESTION)
 	{
 		count_exit_len(len, last_exit);
 		(*ptr)++;
@@ -99,7 +99,7 @@ size_t	expanded_length(const char *str, t_env *internal_env,
 	state = EXPAND_NORMAL;
 	while (*ptr)
 	{
-		if (*ptr == '\'' || *ptr == '\"')
+		if (*ptr == C_S_QUOTE || *ptr == C_D_QUOTE)
 			update_state(&state, *ptr);
 		if (count_if_literal(&ptr, &len))
 			continue ;

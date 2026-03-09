@@ -6,7 +6,7 @@
 /*   By: lbueno-m <lbueno-m@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/23 19:46:24 by lbueno-m          #+#    #+#             */
-/*   Updated: 2026/03/04 12:54:13 by lbueno-m         ###   ########.fr       */
+/*   Updated: 2026/03/09 20:09:42 by lbueno-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,22 +22,22 @@
 */
 bool	update_state(t_expand_state *state, char c)
 {
-	if (*state == EXPAND_NORMAL && c == '\'')
+	if (*state == EXPAND_NORMAL && c == C_S_QUOTE)
 	{
 		*state = EXPAND_SINGLE;
 		return (true);
 	}
-	if (*state == EXPAND_NORMAL && c == '\"')
+	if (*state == EXPAND_NORMAL && c == C_D_QUOTE)
 	{
 		*state = EXPAND_DOUBLE;
 		return (true);
 	}
-	if (*state == EXPAND_SINGLE && c == '\'')
+	if (*state == EXPAND_SINGLE && c == C_S_QUOTE)
 	{
 		*state = EXPAND_NORMAL;
 		return (true);
 	}
-	if (*state == EXPAND_DOUBLE && c == '\"')
+	if (*state == EXPAND_DOUBLE && c == C_D_QUOTE)
 	{
 		*state = EXPAND_NORMAL;
 		return (true);
@@ -54,13 +54,13 @@ static void	append_char(const char **ptr, t_expand *exp)
 
 static void	append_dollar(t_expand *exp)
 {
-	exp->result[*exp->position] = '$';
+	exp->result[*exp->position] = C_EXP;
 	(*exp->position)++;
 }
 
 bool	build_if_literal(const char **ptr, t_expand *exp)
 {
-	if (**ptr != '$')
+	if (**ptr != C_EXP)
 	{
 		append_char(ptr, exp);
 		return (true);
@@ -81,7 +81,7 @@ t_dollar_act	build_dollar(const char **ptr, t_expand *exp, int last_exit)
 		append_dollar(exp);
 		return (D_SKIP);
 	}
-	if (**ptr == '?')
+	if (**ptr == C_QUESTION)
 	{
 		build_exit_code(exp, last_exit);
 		(*ptr)++;

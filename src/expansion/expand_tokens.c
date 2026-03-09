@@ -6,7 +6,7 @@
 /*   By: lbueno-m <lbueno-m@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/16 23:33:18 by lbueno-m          #+#    #+#             */
-/*   Updated: 2026/03/03 16:05:23 by lbueno-m         ###   ########.fr       */
+/*   Updated: 2026/03/09 20:13:32 by lbueno-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ static char	*expand_variable(const char *str, t_env *internal_env,
 	ptr = str;
 	while (*ptr)
 	{
-		if (*ptr == '\'' || *ptr == '\"')
+		if (*ptr == C_S_QUOTE || *ptr == C_D_QUOTE)
 			update_state(exp.state, *ptr);
 		if (build_if_literal(&ptr, &exp))
 			continue ;
