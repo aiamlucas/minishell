@@ -6,7 +6,7 @@
 /*   By: lbueno-m <lbueno-m@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/04 17:27:12 by lbueno-m          #+#    #+#             */
-/*   Updated: 2026/03/06 14:32:38 by ssin             ###   ########.fr       */
+/*   Updated: 2026/03/09 16:47:00 by sarasin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ void	child_process(t_child_data *data)
 	setup_pipes(data->pipes, data->cmd_index, data->total);
 	close_pipes(data->pipes, data->total - 1);
 	apply_redirections(data->cmd->redirections);
-	execute_child_command(data->cmd, data->envp, NULL);
+	execute_child_command(data->cmd, data->envp, data->internal_env);
 }
 
 pid_t	fork_child(t_child_data *data)

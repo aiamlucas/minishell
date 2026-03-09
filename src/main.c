@@ -6,7 +6,7 @@
 /*   By: ssin <ssin@student.42berlin.de>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/17 13:06:26 by ssin              #+#    #+#             */
-/*   Updated: 2026/02/16 18:32:30 by lbueno-m         ###   ########.fr       */
+/*   Updated: 2026/02/26 09:41:18 by lbueno-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,16 +28,28 @@ static void	init_data(t_data *data, char **envp,
 	data->t_settings = t_settings;
 }
 
+void	cleanup_data(t_data *data)
+{
+	command_clear(&data->commands);
+	token_clear(&data->tokens);
+	free_env_list(&data->internal_env);
+}
+
 int	main(int argc, char **argv, char **envp)
 {
 	t_data			data;
 	struct termios	t_settings;
 
-	(void)argc;
+	if (argc != 1)
+	{
+		ft_printf("minishell: no arguments accepted\n");
+		return (1);
+	}
 	(void)argv;
 	tcgetattr(STDIN_FILENO, &t_settings);
 	init_data(&data, envp, &t_settings);
 	setup_signals();
 	readline_loop(&data);
+	cleanup_data(&data);
 	return (0);
 }

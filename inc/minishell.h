@@ -6,7 +6,7 @@
 /*   By: ssin <ssin@student.42berlin.de>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/18 17:31:00 by ssin              #+#    #+#             */
-/*   Updated: 2026/03/06 16:49:19 by ssin             ###   ########.fr       */
+/*   Updated: 2026/03/09 17:29:49 by ssin             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@
 # include "../libft/libft.h"
 # include "minishell_macros.h"
 
-extern volatile	sig_atomic_t	g_signal_received;
+extern volatile sig_atomic_t	g_signal_received;
 
 typedef enum e_token_type
 {
@@ -95,28 +95,56 @@ typedef struct s_data
 typedef struct s_child_data
 {
 	t_command	*cmd;
-	t_env		*internal_env;
 	int			**pipes;
 	int			cmd_index;
 	int			total;
 	char		**envp;
+	t_env		*internal_env;
 }	t_child_data;
+
+typedef enum e_expand_state
+{
+	EXPAND_NORMAL,
+	EXPAND_SINGLE,
+	EXPAND_DOUBLE,
+}	t_expand_state;
+
+typedef enum e_dollar_act
+{
+	D_STOP,
+	D_SKIP,
+	D_EXPAND
+}	t_dollar_act;
+
+typedef struct s_expand
+{
+	char			*result;
+	size_t			*position;
+	t_expand_state	*state;
+}	t_expand;
 
 // maybe we can later have several header files for each part of the project
 // until there I make a provisory comment for each part of the project
+//
+//
+void			cleanup_data(t_data *data);
 
 // core
-void		readline_loop(t_data *data);
-int			validate_input(char *input);
-bool		is_empty_input(char *input);
-bool		has_unclosed_quotes(char *input);
+void			readline_loop(t_data *data);
+int				validate_input(char *input);
+bool			is_empty_input(char *input);
+bool			has_unclosed_quotes(char *input);
+
+//readline
+int				process_input(char *input, t_data *data);
+int				check_input_validation(char *input);
 
 // lexer
-t_token		*new_token(char *value, t_token_type type);
-t_token		*token_last(t_token *lst);
-void		token_add_back(t_token **lst, t_token *new);
-void		token_clear(t_token **lst);
-t_token		*lexer(char *line);
+t_token			*new_token(char *value, t_token_type type);
+t_token			*token_last(t_token *lst);
+void			token_add_back(t_token **lst, t_token *new);
+void			token_clear(t_token **lst);
+t_token			*lexer(char *line);
 
 // parser
 t_command	*command_new(void);
@@ -131,63 +159,70 @@ t_command	*parser(t_token *tokens);
 void		create_env_list(t_env **list, char **envp);
 t_env		*new_env_node(void *content);
 void		list_add_back(t_env **lst, t_env *new);
+void			free_env_list(t_env **lst);
 
 // debug
-void		print_tokens(t_token *tokens);
-void		print_redirections(t_redir *redirections);
-void		print_commands(t_command *commands);
-void		print_env_list(t_env *list);
+void			print_tokens(t_token *tokens);
+void			print_redirections(t_redir *redirections);
+void			print_commands(t_command *commands);
+void			print_env_list(t_env *list);
 
 // pipeline helpers
-int			count_pipeline_commands(t_command *cmd);
-void		free_pipes(int **pipes, int count);
-void		close_pipes(int **pipes, int count);
-int			**create_pipes(int count);
+int				count_pipeline_commands(t_command *cmd);
+void			free_pipes(int **pipes, int count);
+void			close_pipes(int **pipes, int count);
+int				**create_pipes(int count);
 
 // execution
 bool		is_builtin(t_command *cmd);
-int			execute_single_command(t_command *cmd, char **envp,
-				t_env **internal_env);
+int			execute_single_command(t_command *cmd, t_data *data);
 void		execute_child_command(t_command *cmd, char **envp, t_env *internal_env);
 int			execute_command(t_data *data);
-int			execute_pipeline(t_command *cmds, char **envp);
-int			execute_builtin(t_command *cmd, t_env **internal_env);
+int			execute_pipeline(t_command *cmds, t_data parent_data);
+int			execute_builtin(t_command *cmd, t_env **internal_env,
+					t_data *data);
 char		*find_dir(char *cmd, t_env *internal_env);
 void		apply_redirections(t_redir *redirections);
-void		setup_pipes(int **pipes, int cmd_index, int total);
+void		setup_pipes(int **pipes, int i, int total);
 void		child_process(t_child_data *data);
 pid_t		fork_child(t_child_data *data);
 bool		must_run_in_parent(t_command *cmd);
 
 // builtins
-int			builtin_cd(char **argv, t_env **internal_env);
-int			builtin_echo(char **argv);
-int			builtin_env(t_env *internal_env);
-int			builtin_export(char **argv, t_env **internal_env);
-int			builtin_pwd(void);
-int			builtin_unset(char **argv, t_env **internal_env);
-int			builtin_exit(char **argv);
-int			update_env(char *key, char *value, t_env *internal_env);
-void		set_env(int key_exists, char *key, char *value, t_env **internal_env);
-int			error_msg(char *msg);
-int			check_key(char *key, t_env *internal_env);
-int			is_valid_key(char *name);
-int			update_env(char *key, char *value, t_env *internal_env);
-void		free_env_node(t_env *node);
+int				builtin_cd(char **argv, t_env **internal_env);
+int				builtin_echo(char **argv);
+int				builtin_env(t_env *internal_env);
+int				builtin_export(char **argv, t_env **internal_env);
+int				builtin_pwd(void);
+int				builtin_unset(char **argv, t_env **internal_env);
+int				builtin_exit(char **argv, t_data *data);
+int				update_env(char *key, char *value, t_env *internal_env);
+void			set_env(int key_exists, char *key, char *value,
+					t_env **internal_env);
+int				error_msg(char *msg);
+int				check_key(char *key, t_env *internal_env);
+int				is_valid_key(char *name);
+int				update_env(char *key, char *value, t_env *internal_env);
+void			free_env_node(t_env *node);
 
 // signals
-void		setup_signals(void);
-void		reset_signals(void);
-void		handle_sigint(int sig);
-bool		check_signal(void);
-void		reset_signal(void);
-int			get_signal_exit_code(void);
-bool		handle_signal_interrupt(void);
+void			setup_signals(void);
+void			reset_signals(void);
+bool			check_signal(void);
+void			reset_signal(void);
+int				get_signal_exit_code(void);
+void			handle_sigint_child(int sig);
+void			handle_sigint_parent(int sig);
+void			update_sigint(void (*handler)(int));
 
 // expansion
 bool	expand_tokens(t_token *tokens, t_env *internal_env, int last_exit);
 size_t	expanded_length(const char *str, t_env *internal_env, int last_exit);
 char	*expand_variable(const char *str, t_env *internal_env, int last_exit, size_t len);
+bool			update_state(t_expand_state *state, char c);
+bool	build_char(const char **ptr, t_expand *exp);
+t_dollar_act	build_dollar(const char **ptr, t_expand *exp, int last_exit);
+void	copy_var_value(const char **ptr, t_expand *exp, t_env *env);
 bool	remove_quotes(t_token *tokens);
 char	*remove_quote_chars(const char *str);
 

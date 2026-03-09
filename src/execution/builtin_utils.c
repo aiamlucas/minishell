@@ -6,7 +6,7 @@
 /*   By: lbueno-m <lbueno-m@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/26 14:51:00 by lbueno-m          #+#    #+#             */
-/*   Updated: 2026/01/18 19:58:22 by lbueno-m         ###   ########.fr       */
+/*   Updated: 2026/02/25 10:17:53 by lbueno-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ bool	must_run_in_parent(t_command *cmd)
 	return (false);
 }
 
-int	execute_builtin(t_command *cmd, t_env **internal_env)
+int	execute_builtin(t_command *cmd, t_env **internal_env, t_data *data)
 {
 	if (ft_strcmp(cmd->argv[0], "pwd") == 0)
 		return (builtin_pwd());
@@ -71,6 +71,6 @@ int	execute_builtin(t_command *cmd, t_env **internal_env)
 	if (ft_strcmp(cmd->argv[0], "unset") == 0)
 		return (builtin_unset(cmd->argv, internal_env));
 	if (ft_strcmp(cmd->argv[0], "exit") == 0)
-		return (builtin_exit(cmd->argv));
+		return (builtin_exit(cmd->argv, data));
 	return (1);
 }
