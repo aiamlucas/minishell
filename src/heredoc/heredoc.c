@@ -6,7 +6,7 @@
 /*   By: ssin <ssin@student.42berlin.de>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/10 21:29:05 by ssin              #+#    #+#             */
-/*   Updated: 2026/03/06 16:47:30 by ssin             ###   ########.fr       */
+/*   Updated: 2026/03/10 18:58:15 by lbueno-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@ static int	create_child(t_data *data, t_redir *redir, int *fd)
 	int		status;
 	pid_t	pid;
 	t_redir	*saved_redir;
+	int		result; // added
 
 	if (!set_fd(fd))
 		return (-1);
@@ -52,7 +53,12 @@ static int	create_child(t_data *data, t_redir *redir, int *fd)
 	if (pid == CHILD)
 		execute_child(data, fd);
 	close(fd[1]);
-	return (wait_child(pid, status, data, saved_redir));
+	update_sigint(handle_sigint_child);
+	result = wait_child(pid, status, data, saved_redir);
+	if (result != 0 || g_signal_received)
+		close(fd[0]);
+	update_sigint(handle_sigint_parent);
+	return (result);
 }
 
 int	process_all_heredocs(t_data *data)
@@ -70,6 +76,8 @@ int	process_all_heredocs(t_data *data)
 		{
 			if (redir->type == TOKEN_HEREDOC)
 			{
+				if (redir->fd != -1)
+					close(redir->fd);
 				exit_code = create_child(data, redir, fd);
 				if (handle_heredoc_error(exit_code, fd))
 					return (exit_code);

@@ -6,7 +6,7 @@
 /*   By: lbueno-m <lbueno-m@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/22 15:59:40 by lbueno-m          #+#    #+#             */
-/*   Updated: 2026/03/09 18:27:01 by ssin             ###   ########.fr       */
+/*   Updated: 2026/03/10 16:55:52 by lbueno-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,9 +33,7 @@ static int	execute_single_process(char *path, t_data *data)
 {
 	pid_t	pid;
 	int		result;
-	t_redir	*redirections;
 
-	redirections = data->commands->redirections;
 	pid = fork();
 	if (pid == ERROR)
 	{
@@ -53,8 +51,7 @@ static int	execute_single_process(char *path, t_data *data)
 	free(path);
 	update_sigint(handle_sigint_child);
 	result = wait_child(pid);
-	if (redirections && redirections->should_expand == false)
-		update_sigint(handle_sigint_parent);
+	update_sigint(handle_sigint_parent);
 	return (result);
 }
 

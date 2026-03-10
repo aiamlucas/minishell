@@ -6,7 +6,7 @@
 /*   By: ssin <ssin@student.42berlin.de>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/06 16:47:02 by ssin              #+#    #+#             */
-/*   Updated: 2026/03/06 16:47:34 by ssin             ###   ########.fr       */
+/*   Updated: 2026/03/10 18:58:34 by lbueno-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,11 +26,8 @@ int	set_fd(int *fd)
 
 int	handle_heredoc_error(int exit_code, int *fd)
 {
+	(void)fd; // added 
 	if (exit_code != 0 || g_signal_received)
-	{
-		if (fd[0] > 0)
-			close(fd[0]);
 		return (1);
-	}
 	return (0);
 }
