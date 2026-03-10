@@ -6,7 +6,7 @@
 /*   By: ssin <ssin@student.42berlin.de>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/10 21:29:05 by ssin              #+#    #+#             */
-/*   Updated: 2026/03/10 18:58:15 by lbueno-m         ###   ########.fr       */
+/*   Updated: 2026/03/10 19:16:10 by lbueno-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ static int	create_child(t_data *data, t_redir *redir, int *fd)
 	int		status;
 	pid_t	pid;
 	t_redir	*saved_redir;
-	int		result; // added
+	int		result;
 
 	if (!set_fd(fd))
 		return (-1);
