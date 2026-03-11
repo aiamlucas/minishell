@@ -6,7 +6,7 @@
 /*   By: ssin <ssin@student.42berlin.de>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/18 17:31:00 by ssin              #+#    #+#             */
-/*   Updated: 2026/03/09 17:29:49 by ssin             ###   ########.fr       */
+/*   Updated: 2026/03/11 15:13:04 by ssin             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -228,7 +228,7 @@ char	*remove_quote_chars(const char *str);
 
 // heredoc
 int		set_fd(int *fd);
-int   handle_heredoc_error(int exit_code, int *fd);
+int   handle_heredoc_error(int exit_code);
 int		process_all_heredocs(t_data *data);
 int		read_heredoc(t_data *data, int *fd);
 char	*expand_string(const char *str, t_env *internal_env, int last_exit);
