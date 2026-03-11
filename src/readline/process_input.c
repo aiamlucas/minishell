@@ -6,7 +6,7 @@
 /*   By: lbueno-m <lbueno-m@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/25 14:29:01 by lbueno-m          #+#    #+#             */
-/*   Updated: 2026/03/09 16:52:38 by ssin             ###   ########.fr       */
+/*   Updated: 2026/03/11 15:53:34 by ssin             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,16 +17,24 @@ int	process_input(char *input, t_data *data)
 	int			exit_code;
 
 	data->tokens = lexer(input);
-	//printf("tokens\n");
-	//print_tokens(data->tokens);
-	//printf("\n after expansion: \n");
-	expand_tokens(data->tokens, data->internal_env, data->last_exit);
-	//print_tokens(data->tokens);
-	//printf("\n after quote removal: \n");
+	printf("tokens\n");
+	print_tokens(data->tokens);
+	printf("\n after expansion: \n");
+	if (!expand_tokens(data->tokens, data->internal_env, data->last_exit))
+	{
+		token_clear(&data->tokens);
+		return (1);
+	}
+	print_tokens(data->tokens);
+	printf("\n after quote removal: \n");
+	if (!remove_quotes(data->tokens))
+	{
+		token_clear(&data->tokens);
+		return (1);
+	}
+	print_tokens(data->tokens);
 	data->commands = parser(data->tokens);
-	remove_quotes(data->tokens);
-	//print_tokens(data->tokens);
-	//print_commands(data->commands); // for debugging
+	// print_commands(data->commands); // for debugging
 	token_clear(&data->tokens);
 	if (data->commands)
 	{

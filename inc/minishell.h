@@ -6,7 +6,7 @@
 /*   By: ssin <ssin@student.42berlin.de>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/18 17:31:00 by ssin              #+#    #+#             */
-/*   Updated: 2026/03/11 15:13:04 by ssin             ###   ########.fr       */
+/*   Updated: 2026/03/11 15:40:34 by ssin             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -216,15 +216,20 @@ void			handle_sigint_parent(int sig);
 void			update_sigint(void (*handler)(int));
 
 // expansion
+size_t		expanded_length(const char *str, t_env *internal_env,
+								int last_exit);
 bool	expand_tokens(t_token *tokens, t_env *internal_env, int last_exit);
-size_t	expanded_length(const char *str, t_env *internal_env, int last_exit);
 char	*expand_variable(const char *str, t_env *internal_env, int last_exit, size_t len);
-bool			update_state(t_expand_state *state, char c);
+bool	update_state(t_expand_state *state, char c);
+bool	build_if_literal(const char **ptr, t_expand *exp);
 bool	build_char(const char **ptr, t_expand *exp);
 t_dollar_act	build_dollar(const char **ptr, t_expand *exp, int last_exit);
-void	copy_var_value(const char **ptr, t_expand *exp, t_env *env);
 bool	remove_quotes(t_token *tokens);
 char	*remove_quote_chars(const char *str);
+void	build_exit_code(t_expand *exp, int last_exit);
+size_t	advance_and_count_name(const char **ptr);
+void	append_var_value(t_expand *exp, const char *value);
+void	copy_var_value(const char **ptr, t_expand *exp, t_env *env);
 
 // heredoc
 int		set_fd(int *fd);

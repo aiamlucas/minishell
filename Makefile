@@ -46,6 +46,7 @@ SRC				+= expansion/expand_tokens.c
 SRC				+= expansion/expand_length.c
 SRC				+= expansion/expand_variable_helpers.c
 SRC				+= expansion/quote_removal.c
+SRC				+= expansion/expand_copy_value.c
 SRC				+= heredoc/heredoc.c
 SRC				+= heredoc/heredoc_read.c
 SRC				+= heredoc/heredoc_expand.c
