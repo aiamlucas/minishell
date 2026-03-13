@@ -6,7 +6,7 @@
 /*   By: lbueno-m <lbueno-m@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/26 14:51:28 by lbueno-m          #+#    #+#             */
-/*   Updated: 2026/01/04 18:06:14 by lbueno-m         ###   ########.fr       */
+/*   Updated: 2026/03/06 14:04:19 by ssin             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,11 +17,11 @@ static int	open_file(t_redir *redirections)
 	int	fd;
 
 	if (redirections->type == TOKEN_REDIR_IN)
-		fd = open(redirections->file, O_RDONLY);
+		fd = open(redirections->target, O_RDONLY);
 	else if (redirections->type == TOKEN_REDIR_OUT)
-		fd = open(redirections->file, O_CREAT | O_WRONLY | O_TRUNC, 0644);
+		fd = open(redirections->target, O_CREAT | O_WRONLY | O_TRUNC, 0644);
 	else if (redirections->type == TOKEN_REDIR_APPEND)
-		fd = open(redirections->file, O_CREAT | O_WRONLY | O_APPEND, 0644);
+		fd = open(redirections->target, O_CREAT | O_WRONLY | O_APPEND, 0644);
 	else
 		fd = -1;
 	return (fd);
@@ -29,7 +29,7 @@ static int	open_file(t_redir *redirections)
 
 static void	redirect_fd(int fd, t_token_type type)
 {
-	if (type == TOKEN_REDIR_IN)
+	if (type == TOKEN_REDIR_IN || type == TOKEN_HEREDOC)
 		dup2(fd, STDIN_FILENO);
 	else
 		dup2(fd, STDOUT_FILENO);
@@ -42,14 +42,21 @@ void	apply_redirections(t_redir *redirections)
 
 	while (redirections)
 	{
-		fd = open_file(redirections);
-		if (fd == -1 && redirections->type != TOKEN_HEREDOC)
+		if (redirections->type == TOKEN_HEREDOC)
 		{
-			perror(redirections->file);
-			exit(1);
+			if (redirections->fd != -1)
+				redirect_fd(redirections->fd, redirections->type);
 		}
-		if (fd != -1)
+		else
+		{
+			fd = open_file(redirections);
+			if (fd == -1)
+			{
+				perror(redirections->target);
+				exit(1);
+			}
 			redirect_fd(fd, redirections->type);
+		}
 		redirections = redirections->next;
 	}
 }

@@ -47,6 +47,10 @@ SRC				+= expansion/expand_length.c
 SRC				+= expansion/expand_variable_helpers.c
 SRC				+= expansion/quote_removal.c
 SRC				+= expansion/expand_copy_value.c
+SRC				+= heredoc/heredoc.c
+SRC				+= heredoc/heredoc_read.c
+SRC				+= heredoc/heredoc_expand.c
+SRC				+= heredoc/heredoc_utils.c
 
 TEST_DIR		= tests
 TEST_SRC		= test-lexer-main.c
@@ -69,7 +73,7 @@ $(NAME): $(OBJ) $(LIBFT)
 vpath %.c $(SRC_DIR) $(SRC_DIR)/tokenizer $(SRC_DIR)/parser \
           $(SRC_DIR)/builtins $(SRC_DIR)/execution \
           $(SRC_DIR)/readline $(SRC_DIR)/debug $(SRC_DIR)/signals \
-		  $(SRC_DIR)/expansion $(SRC_DIR)/builtins
+		  $(SRC_DIR)/expansion $(SRC_DIR)/builtins $(SRC_DIR)/heredoc
 
 $(OBJ_DIR)/%.o: %.c | $(OBJ_DIR)
 	$(CC) $(CFLAGS) -Iinc -I$(LIBFT_DIR) -c $< -o $@

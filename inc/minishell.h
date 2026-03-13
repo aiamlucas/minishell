@@ -6,7 +6,7 @@
 /*   By: ssin <ssin@student.42berlin.de>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/18 17:31:00 by ssin              #+#    #+#             */
-/*   Updated: 2026/03/03 16:00:27 by lbueno-m         ###   ########.fr       */
+/*   Updated: 2026/03/11 15:40:34 by ssin             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,17 +15,22 @@
 # define HOME "HOME"
 # define PWD "PWD"
 # define OLDPWD "OLDPWD"
+# define CHILD 0
+# define ERROR -1
 
 # include <stdio.h>
 # include <readline/readline.h>
 # include <readline/history.h>
-# include "../libft/libft.h"
-# include "minishell_macros.h"
 # include <stdbool.h>
 # include <sys/wait.h>
+# include <sys/types.h>
 # include <fcntl.h>
 # include <limits.h>
 # include <signal.h>
+# include <termios.h>
+
+# include "../libft/libft.h"
+# include "minishell_macros.h"
 
 extern volatile sig_atomic_t	g_signal_received;
 
@@ -53,11 +58,12 @@ typedef struct s_env
 	struct s_env	*next;
 }	t_env;
 
-// Redirecion struct to be placed inside the commands list
 typedef struct s_redir
 {
 	t_token_type	type;
-	char			*file;
+	char			*target;
+	bool			should_expand;
+	int				fd;
 	struct s_redir	*next;
 }	t_redir;
 
@@ -78,11 +84,12 @@ typedef struct s_command
 
 typedef struct s_data
 {
-	char		**envp;
-	t_env		*internal_env;
-	t_token		*tokens;
-	t_command	*commands;
-	int			last_exit;
+	char			**envp;
+	t_env			*internal_env;
+	t_token			*tokens;
+	t_command		*commands;
+	int				last_exit;
+	struct termios	*t_settings;
 }	t_data;
 
 typedef struct s_child_data
@@ -140,18 +147,18 @@ void			token_clear(t_token **lst);
 t_token			*lexer(char *line);
 
 // parser
-t_command		*command_new(void);
-t_command		*command_last(t_command *lst);
-void			command_add_back(t_command **lst, t_command *new);
-void			command_clear(t_command **lst);
-t_redir			*redir_new(t_token_type type, char *file);
-t_redir			*redir_last(t_redir *lst);
-void			redir_add_back(t_redir **lst, t_redir *new);
-void			redir_clear(t_redir **lst);
-t_command		*parser(t_token *tokens);
-void			create_env_list(t_env **list, char **envp);
-t_env			*new_env_node(void *content);
-void			list_add_back(t_env **lst, t_env *new);
+t_command	*command_new(void);
+t_command	*command_last(t_command *lst);
+void		command_add_back(t_command **lst, t_command *new);
+void		command_clear(t_command **lst);
+t_redir		*redir_new(t_token_type type, char *file, bool should_expand);
+t_redir		*redir_last(t_redir *lst);
+void		redir_add_back(t_redir **lst, t_redir *new);
+void		redir_clear(t_redir **lst);
+t_command	*parser(t_token *tokens);
+void		create_env_list(t_env **list, char **envp);
+t_env		*new_env_node(void *content);
+void		list_add_back(t_env **lst, t_env *new);
 void			free_env_list(t_env **lst);
 
 // debug
@@ -167,20 +174,19 @@ void			close_pipes(int **pipes, int count);
 int				**create_pipes(int count);
 
 // execution
-bool			is_builtin(t_command *cmd);
-int				execute_single_command(t_command *cmd, t_data *data);
-int				execute_command(t_data *data);
-int				execute_pipeline(t_command *cmds, t_data parent_data);
-int				execute_builtin(t_command *cmd, t_env **internal_env,
+bool		is_builtin(t_command *cmd);
+int			execute_single_command(t_command *cmd, t_data *data);
+void		execute_child_command(t_command *cmd, char **envp, t_env *internal_env);
+int			execute_command(t_data *data);
+int			execute_pipeline(t_command *cmds, t_data parent_data);
+int			execute_builtin(t_command *cmd, t_env **internal_env,
 					t_data *data);
-char			*find_dir(char *cmd, t_env *internal_env);
-void			apply_redirections(t_redir *redirections);
-void			setup_pipes(int **pipes, int i, int total);
-void			child_process(t_child_data *data);
-pid_t			fork_child(t_child_data *data);
-bool			must_run_in_parent(t_command *cmd);
-void			execute_child_command(t_command *cmd, char **envp,
-					t_env *internal_env);
+char		*find_dir(char *cmd, t_env *internal_env);
+void		apply_redirections(t_redir *redirections);
+void		setup_pipes(int **pipes, int i, int total);
+void		child_process(t_child_data *data);
+pid_t		fork_child(t_child_data *data);
+bool		must_run_in_parent(t_command *cmd);
 
 // builtins
 int				builtin_cd(char **argv, t_env **internal_env);
@@ -213,13 +219,23 @@ void			update_sigint(void (*handler)(int));
 size_t		expanded_length(const char *str, t_env *internal_env,
 								int last_exit);
 bool	expand_tokens(t_token *tokens, t_env *internal_env, int last_exit);
+char	*expand_variable(const char *str, t_env *internal_env, int last_exit, size_t len);
 bool	update_state(t_expand_state *state, char c);
 bool	build_if_literal(const char **ptr, t_expand *exp);
+bool	build_char(const char **ptr, t_expand *exp);
 t_dollar_act	build_dollar(const char **ptr, t_expand *exp, int last_exit);
 bool	remove_quotes(t_token *tokens);
+char	*remove_quote_chars(const char *str);
 void	build_exit_code(t_expand *exp, int last_exit);
 size_t	advance_and_count_name(const char **ptr);
 void	append_var_value(t_expand *exp, const char *value);
 void	copy_var_value(const char **ptr, t_expand *exp, t_env *env);
+
+// heredoc
+int		set_fd(int *fd);
+int   handle_heredoc_error(int exit_code);
+int		process_all_heredocs(t_data *data);
+int		read_heredoc(t_data *data, int *fd);
+char	*expand_string(const char *str, t_env *internal_env, int last_exit);
 
 #endif

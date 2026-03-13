@@ -6,7 +6,7 @@
 /*   By: lbueno-m <lbueno-m@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/22 15:59:40 by lbueno-m          #+#    #+#             */
-/*   Updated: 2026/02/26 13:40:01 by lbueno-m         ###   ########.fr       */
+/*   Updated: 2026/03/09 18:27:01 by ssin             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,30 +29,32 @@ static int	wait_child(pid_t pid)
 	return (1);
 }
 
-static int	execute_single_process(t_command *cmd, char *path,
-									char **envp, t_env *internal_env)
+static int	execute_single_process(char *path, t_data *data)
 {
 	pid_t	pid;
 	int		result;
+	t_redir	*redirections;
 
+	redirections = data->commands->redirections;
 	pid = fork();
-	if (pid == -1)
+	if (pid == ERROR)
 	{
 		free(path);
 		return (1);
 	}
-	if (pid == 0)
+	if (pid == CHILD)
 	{
 		reset_signals();
 		free(path);
-		apply_redirections(cmd->redirections);
-		execute_child_command(cmd, envp, internal_env);
+		apply_redirections(data->commands->redirections);
+		execute_child_command(data->commands, data->envp, data->internal_env);
 		exit(126);
 	}
 	free(path);
 	update_sigint(handle_sigint_child);
 	result = wait_child(pid);
-	update_sigint(handle_sigint_parent);
+	if (redirections && redirections->should_expand == false)
+		update_sigint(handle_sigint_parent);
 	return (result);
 }
 
@@ -62,9 +64,9 @@ static int	execute_builtin_forked(t_command *cmd, t_data *data)
 	int		status;
 
 	pid = fork();
-	if (pid == -1)
+	if (pid == ERROR)
 		return (1);
-	if (pid == 0)
+	if (pid == CHILD)
 	{
 		reset_signals();
 		apply_redirections(cmd->redirections);
@@ -100,13 +102,14 @@ int	execute_single_command(t_command *cmd, t_data *data)
 		ft_printf("minishell: %s: command not found\n", cmd->argv[0]);
 		return (127);
 	}
-	return (execute_single_process(cmd, path, data->envp, data->internal_env));
+	return (execute_single_process(path, data));
 }
 
 int	execute_command(t_data *data)
 {
 	int	exit_code;
 
+	exit_code = 0;
 	if (!data->commands)
 		return (1);
 	if (!data->commands->next)

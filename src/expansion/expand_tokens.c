@@ -6,7 +6,7 @@
 /*   By: lbueno-m <lbueno-m@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/16 23:33:18 by lbueno-m          #+#    #+#             */
-/*   Updated: 2026/03/09 20:13:32 by lbueno-m         ###   ########.fr       */
+/*   Updated: 2026/03/11 15:44:21 by ssin             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,8 +25,8 @@ static char	*init_expand(t_expand *exp, size_t len,
 	return (exp->result);
 }
 
-static char	*expand_variable(const char *str, t_env *internal_env,
-								int last_exit, size_t len)
+char	*expand_variable(const char *str, t_env *internal_env, int last_exit,
+				size_t len)
 {
 	const char				*ptr;
 	size_t					position;

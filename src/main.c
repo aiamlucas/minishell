@@ -12,7 +12,8 @@
 
 #include "../inc/minishell.h"
 
-static void	init_data(t_data *data, char **envp)
+static void	init_data(t_data *data, char **envp,
+		struct termios *t_settings)
 {
 	t_env	*list;
 
@@ -23,6 +24,7 @@ static void	init_data(t_data *data, char **envp)
 	data->tokens = NULL;
 	data->commands = NULL;
 	data->last_exit = 0;
+	data->t_settings = t_settings;
 }
 
 void	cleanup_data(t_data *data)
@@ -34,7 +36,8 @@ void	cleanup_data(t_data *data)
 
 int	main(int argc, char **argv, char **envp)
 {
-	t_data	data;
+	t_data			data;
+	struct termios	t_settings;
 
 	if (argc != 1)
 	{
@@ -42,7 +45,8 @@ int	main(int argc, char **argv, char **envp)
 		return (1);
 	}
 	(void)argv;
-	init_data(&data, envp);
+	tcgetattr(STDIN_FILENO, &t_settings);
+	init_data(&data, envp, &t_settings);
 	setup_signals();
 	readline_loop(&data);
 	cleanup_data(&data);

@@ -6,7 +6,7 @@
 /*   By: lbueno-m <lbueno-m@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/09 18:05:13 by lbueno-m          #+#    #+#             */
-/*   Updated: 2026/03/09 20:01:27 by lbueno-m         ###   ########.fr       */
+/*   Updated: 2026/03/11 15:56:20 by ssin             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ static size_t	calculate_length_without_quotes(const char *str)
 	return (len);
 }
 
-static char	*remove_quote_chars(const char *str)
+char	*remove_quote_chars(const char *str)
 {
 	char	quote;
 	size_t	i;

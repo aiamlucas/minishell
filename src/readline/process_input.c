@@ -6,7 +6,7 @@
 /*   By: lbueno-m <lbueno-m@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/25 14:29:01 by lbueno-m          #+#    #+#             */
-/*   Updated: 2026/03/06 12:14:02 by lbueno-m         ###   ########.fr       */
+/*   Updated: 2026/03/11 15:53:34 by ssin             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,13 @@ int	process_input(char *input, t_data *data)
 	data->commands = parser(data->tokens);
 	// print_commands(data->commands); // for debugging
 	token_clear(&data->tokens);
-	exit_code = execute_command(data);
+	if (data->commands)
+	{
+		exit_code = process_all_heredocs(data);
+		if (exit_code == 0 && !g_signal_received)
+			exit_code = execute_command(data);
+	}
+	//exit_code = execute_command(data);
 	command_clear(&data->commands);
 	if (check_signal())
 		exit_code = get_signal_exit_code();

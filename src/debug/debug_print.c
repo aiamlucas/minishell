@@ -6,7 +6,7 @@
 /*   By: lbueno-m <lbueno-m@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/15 00:24:00 by lbueno-m          #+#    #+#             */
-/*   Updated: 2026/02/25 20:35:28 by lbueno-m         ###   ########.fr       */
+/*   Updated: 2026/03/09 16:44:36 by ssin             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,13 +41,13 @@ void	print_redirections(t_redir *redirections)
 	while (current)
 	{
 		if (current->type == TOKEN_REDIR_IN)
-			ft_printf("< %s", current->file);
+			printf("< %s", current->target);
 		else if (current->type == TOKEN_REDIR_OUT)
-			ft_printf("> %s", current->file);
+			printf("> %s", current->target);
 		else if (current->type == TOKEN_REDIR_APPEND)
-			ft_printf(">> %s", current->file);
+			printf(">> %s", current->target);
 		else if (current->type == TOKEN_HEREDOC)
-			ft_printf("<< %s", current->file);
+			printf("<< %s", current->target);
 		if (current->next)
 			ft_printf(", ");
 		current = current->next;
