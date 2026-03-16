@@ -6,7 +6,7 @@
 /*   By: lbueno-m <lbueno-m@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/12 17:52:20 by lbueno-m          #+#    #+#             */
-/*   Updated: 2026/03/16 10:44:40 by lbueno-m         ###   ########.fr       */
+/*   Updated: 2026/03/16 10:48:01 by lbueno-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,6 +71,7 @@ void	command_clear(t_command **lst)
 			free((*lst)->argv);
 		}
 		redir_clear(&(*lst)->redirections);
+		free((*lst)->quote_type);
 		free(*lst);
 		*lst = tmp;
 	}
