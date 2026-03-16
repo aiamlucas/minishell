@@ -6,7 +6,7 @@
 /*   By: lbueno-m <lbueno-m@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/12 17:52:20 by lbueno-m          #+#    #+#             */
-/*   Updated: 2025/12/15 00:34:31 by lbueno-m         ###   ########.fr       */
+/*   Updated: 2026/03/16 10:44:40 by lbueno-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@ t_command	*command_new(void)
 	if (!node)
 		return (NULL);
 	node->argv = NULL;
+	node->quote_type = NULL;
 	node->redirections = NULL;
 	node->next = NULL;
 	return (node);
