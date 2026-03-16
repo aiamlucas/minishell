@@ -6,7 +6,7 @@
 /*   By: lbueno-m <lbueno-m@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/12 17:48:28 by lbueno-m          #+#    #+#             */
-/*   Updated: 2026/02/25 13:48:51 by lbueno-m         ###   ########.fr       */
+/*   Updated: 2026/03/16 18:00:29 by lbueno-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ static bool	handle_redirection(t_command **current_command, t_token **redir_arg)
 		delimiter = (*redir_arg)->value;
 		while (*delimiter)
 		{
-			if (*delimiter == '\'' || *delimiter == '"')
+			if (*delimiter == C_S_QUOTE || *delimiter == C_D_QUOTE)
 			{
 				should_expand = false;
 				break ;
