@@ -6,7 +6,7 @@
 /*   By: lbueno-m <lbueno-m@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/12 17:48:28 by lbueno-m          #+#    #+#             */
-/*   Updated: 2026/03/17 10:25:28 by lbueno-m         ###   ########.fr       */
+/*   Updated: 2026/03/17 10:42:33 by lbueno-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,9 @@ static bool	handle_redirection(t_command **current_command, t_token **redir_arg)
 {
 	t_token_type	redir_type;
 	t_redir			*new_redir;
+	bool			should_expand;
 
+	should_expand = true;
 	redir_type = (*redir_arg)->type;
 	*redir_arg = (*redir_arg)->next;
 	if (!*redir_arg || (*redir_arg)->type != TOKEN_WORD)
@@ -39,7 +41,7 @@ static bool	handle_redirection(t_command **current_command, t_token **redir_arg)
 	if (redir_type == TOKEN_HEREDOC)
 		new_redir = create_heredoc_redir(*redir_arg);
 	else
-		new_redir = redir_new(redir_type, (*redir_arg)->value, true);
+		new_redir = redir_new(redir_type, (*redir_arg)->value, should_expand);
 	redir_add_back(&(*current_command)->redirections, new_redir);
 	return (true);
 }
