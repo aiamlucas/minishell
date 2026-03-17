@@ -6,7 +6,7 @@
 /*   By: ssin <ssin@student.42berlin.de>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/18 17:31:00 by ssin              #+#    #+#             */
-/*   Updated: 2026/03/11 15:40:34 by ssin             ###   ########.fr       */
+/*   Updated: 2026/03/17 10:24:19 by lbueno-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -160,6 +160,7 @@ void		create_env_list(t_env **list, char **envp);
 t_env		*new_env_node(void *content);
 void		list_add_back(t_env **lst, t_env *new);
 void			free_env_list(t_env **lst);
+t_redir		*create_heredoc_redir(t_token *target);
 
 // debug
 void			print_tokens(t_token *tokens);
