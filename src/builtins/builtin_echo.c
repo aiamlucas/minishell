@@ -6,7 +6,7 @@
 /*   By: lbueno-m <lbueno-m@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/04 20:12:11 by lbueno-m          #+#    #+#             */
-/*   Updated: 2026/02/19 14:24:56 by lbueno-m         ###   ########.fr       */
+/*   Updated: 2026/03/17 11:40:11 by lbueno-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ void	check_flag(char **argv, int *i, int *newline)
 	int	j;
 
 	j = 2;
-	while (argv)
+	while (argv[*i])
 	{
 		if (argv[*i][0] == '-' && argv[*i][1] == 'n')
 		{
