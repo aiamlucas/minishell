@@ -6,7 +6,7 @@
 /*   By: lbueno-m <lbueno-m@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/04 20:13:17 by lbueno-m          #+#    #+#             */
-/*   Updated: 2026/02/19 15:23:58 by lbueno-m         ###   ########.fr       */
+/*   Updated: 2026/03/18 20:22:51 by lbueno-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,26 +34,6 @@ void	set_env(int key_exists, char *key, char *value, t_env **internal_env)
 		create_env(key, value, internal_env);
 }
 
-static void	clear_data(char **key, char **value)
-{
-	if (*key)
-		free(*key);
-	*key = NULL;
-	*value = NULL;
-}
-
-static void	get_key_value(char **argv, char **key, char **value, int index)
-{
-	char	*equals_pos;
-
-	equals_pos = ft_strchr(argv[index], '=');
-	if (equals_pos)
-	{
-		*key = ft_substr(argv[index], 0, equals_pos - argv[index]);
-		*value = equals_pos + 1;
-	}
-}
-
 int	print_env(t_env *internal_env)
 {
 	t_env	*tmp;
@@ -72,31 +52,14 @@ int	print_env(t_env *internal_env)
 
 int	builtin_export(char **argv, t_env **intrnl_env)
 {
-	char	*key;
-	char	*value;
-	int		index;
-	int		exit_code;
+	int	index;
+	int	exit_code;
 
-	key = NULL;
-	value = NULL;
 	index = 0;
 	exit_code = 0;
 	if (!argv[1])
 		return (print_env(*intrnl_env));
 	while (argv[++index])
-	{
-		if (is_valid_key(argv[index]))
-		{
-			get_key_value(argv, &key, &value, index);
-			if (key)
-				set_env(check_key(key, *intrnl_env), key, value, intrnl_env);
-			clear_data(&key, &value);
-		}
-		else
-		{
-			ft_printf("minishell: export: invalid argument\n");
-			exit_code = 1;
-		}
-	}
+		process_export_arg(argv, index, intrnl_env, &exit_code);
 	return (exit_code);
 }
