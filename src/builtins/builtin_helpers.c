@@ -6,7 +6,7 @@
 /*   By: ssin <ssin@student.42berlin.de>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/18 14:08:38 by ssin              #+#    #+#             */
-/*   Updated: 2026/02/19 15:23:08 by lbueno-m         ###   ########.fr       */
+/*   Updated: 2026/03/18 20:36:37 by lbueno-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,12 +40,17 @@ int	is_valid_key(char *name)
 		return (0);
 	i = 0;
 	if (!(ft_isalpha(name[0]) || name[0] == '_'))
+	{
+		ft_printf("minishell: export: `%s': not a valid identifier\n",
+			name);
 		return (0);
+	}
 	while (i < ft_strlen(name) && name[i] != '=')
 	{
 		if (!(ft_isalnum(name[i]) || name[i] == '_'))
 		{
-			ft_printf("minishell: export: not valid in this context: %s\n", name);
+			ft_printf("minishell: export: `%s': not a valid identifier\n",
+				name);
 			return (0);
 		}
 		i++;
