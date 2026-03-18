@@ -6,7 +6,7 @@
 /*   By: ssin <ssin@student.42berlin.de>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/10 21:29:05 by ssin              #+#    #+#             */
-/*   Updated: 2026/03/11 15:33:24 by ssin             ###   ########.fr       */
+/*   Updated: 2026/03/18 20:55:26 by lbueno-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,10 +31,24 @@ static int	wait_child(pid_t pid, int status, t_data *data,
 	return (0);
 }
 
+static int	wait_heredoc_child(pid_t pid, t_data *data,
+						t_redir *saved_redir, int *fd)
+{
+	int	status;
+	int	result;
+
+	status = 0;
+	close(fd[1]);
+	update_sigint(handle_sigint_child);
+	result = wait_child(pid, status, data, saved_redir);
+	if (result != 0 || g_signal_received)
+		close(fd[0]);
+	update_sigint(handle_sigint_parent);
+	return (result);
+}
+
 static int	create_child(t_data *data, t_redir *redir, int *fd)
 {
-	int		status;
-	int		result;
 	pid_t	pid;
 	t_redir	*saved_redir;
 
@@ -42,7 +56,6 @@ static int	create_child(t_data *data, t_redir *redir, int *fd)
 		return (-1);
 	saved_redir = data->commands->redirections;
 	data->commands->redirections = redir;
-	status = 0;
 	pid = fork();
 	if (pid == ERROR)
 	{
@@ -52,13 +65,7 @@ static int	create_child(t_data *data, t_redir *redir, int *fd)
 	}
 	if (pid == CHILD)
 		execute_child(data, fd);
-	close(fd[1]);
-	update_sigint(handle_sigint_child);
-	result = wait_child(pid, status, data, saved_redir);
-	if (result != 0 || g_signal_received)
-		close(fd[0]);
-	update_sigint(handle_sigint_parent);
-	return (result);
+	return (wait_heredoc_child(pid, data, saved_redir, fd));
 }
 
 int	process_all_heredocs(t_data *data)
