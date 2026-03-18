@@ -5,8 +5,6 @@ LIBFT_DIR		= libft
 LIBFT			= $(LIBFT_DIR)/libft.a
 OBJ_DIR			= obj
 
-TEST_LEXER_BIN		= test-lexer.bin
-
 ifeq ($(DEBUG),1)
 CFLAGS += -g -O0
 $(info Adding debug flags: -g -O0)
@@ -53,13 +51,8 @@ SRC				+= heredoc/heredoc_read.c
 SRC				+= heredoc/heredoc_expand.c
 SRC				+= heredoc/heredoc_utils.c
 
-TEST_DIR		= tests
-TEST_SRC		= test-lexer-main.c
-TEST_SRC		+= test-utils.c
-TEST_SRC		+= test-lexer.c
 
 OBJ = $(addprefix $(OBJ_DIR)/, $(notdir $(SRC:.c=.o)))
-TEST_OBJ = $(addprefix $(TEST_DIR)/, $(TEST_SRC:.c=.o))
 
 all: $(LIBFT) $(NAME)
 
@@ -70,7 +63,6 @@ $(NAME): $(OBJ) $(LIBFT)
 	$(CC) $(CFLAGS) $(OBJ) -L$(LIBFT_DIR) -lft -lreadline -o $(NAME)
 	@echo "minishell compiled successfully"
 
-# so that make can find the source files
 vpath %.c $(SRC_DIR) $(SRC_DIR)/tokenizer $(SRC_DIR)/parser \
           $(SRC_DIR)/builtins $(SRC_DIR)/execution \
           $(SRC_DIR)/readline $(SRC_DIR)/debug $(SRC_DIR)/signals \
@@ -82,45 +74,14 @@ $(OBJ_DIR)/%.o: %.c | $(OBJ_DIR)
 $(OBJ_DIR):
 	mkdir -p $(OBJ_DIR)
 
-
-########################
-# Tests rules
-$(TEST_DIR):
-	@mkdir -p $(TEST_DIR)
-
-$(TEST_DIR)/%.o: $(TEST_DIR)/%.c
-	@$(CC) $(CFLAGS) -I$(TEST_DIR) -Iinc -I$(LIBFT_DIR) -c $< -o $@
-
-
-$(TEST_LEXER_BIN): $(TEST_OBJ) $(OBJ_DIR)/tokenizer.o \
-                   $(OBJ_DIR)/token-utils.o $(LIBFT)
-	$(CC) $(CFLAGS) $(TEST_OBJ) $(OBJ_DIR)/tokenizer.o \
-		$(OBJ_DIR)/token-utils.o -L$(LIBFT_DIR) -lft -o $(TEST_LEXER_BIN)
-	@echo "test-lexer compiled successfully"
-
-test-lexer: $(TEST_LEXER_BIN)
-
-run-test-lexer: test-lexer
-	@./$(TEST_LEXER_BIN)
-
-run-test-lexer-valgrind: test-lexer
-	@valgrind --leak-check=full --show-leak-kinds=all \
-		--track-origins=yes --suppressions=readline.supp \
-		./$(TEST_LEXER_BIN)
-
-test-clean:
-	@rm -f $(TEST_OBJ)
-	@rm -f $(TEST_LEXER_BIN)
-########################
-
 clean:
 	@$(MAKE) -C $(LIBFT_DIR) clean
 	rm -rf $(OBJ_DIR)
 
-fclean: clean test-clean
+fclean: clean
 	@$(MAKE) -C $(LIBFT_DIR) fclean
 	rm -f $(NAME)
 
 re: fclean all
 
-.PHONY: all clean fclean re run-test-lexer run-test-lexer-valgrind test-clean
+.PHONY: all clean fclean re
