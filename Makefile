@@ -36,6 +36,7 @@ SRC				+= builtins/builtin_cd.c
 SRC				+= builtins/builtin_echo.c
 SRC				+= builtins/builtin_env.c
 SRC				+= builtins/builtin_export.c
+SRC				+= builtins/builtin_export_utils.c
 SRC				+= builtins/builtin_pwd.c
 SRC				+= builtins/builtin_unset.c
 SRC				+= builtins/builtin_exit.c
