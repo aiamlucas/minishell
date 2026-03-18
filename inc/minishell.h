@@ -6,7 +6,7 @@
 /*   By: ssin <ssin@student.42berlin.de>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/18 17:31:00 by ssin              #+#    #+#             */
-/*   Updated: 2026/03/17 10:24:19 by lbueno-m         ###   ########.fr       */
+/*   Updated: 2026/03/18 11:56:37 by lbueno-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,10 +24,13 @@
 # include <stdbool.h>
 # include <sys/wait.h>
 # include <sys/types.h>
+# include <sys/stat.h>
 # include <fcntl.h>
 # include <limits.h>
 # include <signal.h>
 # include <termios.h>
+# include <errno.h>
+# include <string.h>
 
 # include "../libft/libft.h"
 # include "minishell_macros.h"

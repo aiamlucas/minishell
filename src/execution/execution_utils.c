@@ -6,7 +6,7 @@
 /*   By: lbueno-m <lbueno-m@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/13 15:03:19 by lbueno-m          #+#    #+#             */
-/*   Updated: 2026/02/25 10:19:17 by lbueno-m         ###   ########.fr       */
+/*   Updated: 2026/03/18 11:55:25 by lbueno-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,8 @@
 
 void	execute_child_command(t_command *cmd, char **envp, t_env *internal_env)
 {
-	char	*path;
+	char		*path;
+	struct stat	st;
 
 	if (is_builtin(cmd))
 		exit(execute_builtin(cmd, &internal_env, NULL));
@@ -24,7 +25,14 @@ void	execute_child_command(t_command *cmd, char **envp, t_env *internal_env)
 		ft_printf("minishell: %s: command not found\n", cmd->argv[0]);
 		exit(127);
 	}
+	if (stat(path, &st) == 0 && S_ISDIR(st.st_mode))
+	{
+		ft_printf("minishell: %s: Is a directory\n", cmd->argv[0]);
+		free(path);
+		exit(126);
+	}
 	execve(path, cmd->argv, envp);
-	perror("minishell");
+	free(path);
+	ft_printf("minishell: %s: %s\n", cmd->argv[0], strerror(errno));
 	exit(126);
 }
