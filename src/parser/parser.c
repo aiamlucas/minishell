@@ -6,7 +6,7 @@
 /*   By: lbueno-m <lbueno-m@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/12 17:48:28 by lbueno-m          #+#    #+#             */
-/*   Updated: 2026/03/17 10:42:33 by lbueno-m         ###   ########.fr       */
+/*   Updated: 2026/03/19 10:48:53 by lbueno-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ static bool	handle_redirection(t_command **current_command, t_token **redir_arg)
 	*redir_arg = (*redir_arg)->next;
 	if (!*redir_arg || (*redir_arg)->type != TOKEN_WORD)
 	{
-		ft_printf("error --> redirection?\n");
+		ft_printf("minishell: syntax error near unexpected token `newline'\n");
 		return (false);
 	}
 	if (!*current_command)
