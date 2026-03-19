@@ -6,7 +6,7 @@
 /*   By: ssin <ssin@student.42berlin.de>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/17 13:06:26 by ssin              #+#    #+#             */
-/*   Updated: 2026/03/06 12:16:41 by lbueno-m         ###   ########.fr       */
+/*   Updated: 2026/03/19 11:55:34 by lbueno-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ int	main(int argc, char **argv, char **envp)
 
 	if (argc != 1)
 	{
-		ft_printf("minishell: no arguments accepted\n");
+		printf("minishell: no arguments accepted\n");
 		return (1);
 	}
 	(void)argv;

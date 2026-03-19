@@ -6,7 +6,7 @@
 /*   By: lbueno-m <lbueno-m@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/04 19:22:15 by lbueno-m          #+#    #+#             */
-/*   Updated: 2026/02/19 15:42:50 by lbueno-m         ###   ########.fr       */
+/*   Updated: 2026/03/19 12:20:37 by lbueno-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ int	builtin_pwd(void)
 	cwd = getcwd(NULL, 0);
 	if (cwd)
 	{
-		ft_printf("%s\n", cwd);
+		printf("%s\n", cwd);
 		free(cwd);
 	}
 	else

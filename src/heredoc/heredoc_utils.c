@@ -6,7 +6,7 @@
 /*   By: ssin <ssin@student.42berlin.de>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/06 16:47:02 by ssin              #+#    #+#             */
-/*   Updated: 2026/03/11 15:12:35 by ssin             ###   ########.fr       */
+/*   Updated: 2026/03/19 11:56:26 by lbueno-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ int	set_fd(int *fd)
 	fd[1] = 0;
 	if (pipe(fd) == -1)
 	{
-		ft_printf("heredoc error pipe\n");
+		printf("heredoc error pipe\n");
 		return (0);
 	}
 	return (1);

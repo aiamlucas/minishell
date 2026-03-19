@@ -6,7 +6,7 @@
 /*   By: lbueno-m <lbueno-m@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/09 18:05:13 by lbueno-m          #+#    #+#             */
-/*   Updated: 2026/03/17 21:31:34 by lbueno-m         ###   ########.fr       */
+/*   Updated: 2026/03/19 12:40:53 by lbueno-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,6 +70,8 @@ bool	remove_quotes(t_token *tokens)
 		if (current->type == TOKEN_HEREDOC)
 		{
 			current = current->next;
+			if (!current)
+				break ;
 			current = current->next;
 			continue ;
 		}

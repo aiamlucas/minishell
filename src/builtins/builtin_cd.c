@@ -6,7 +6,7 @@
 /*   By: lbueno-m <lbueno-m@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/04 20:10:10 by lbueno-m          #+#    #+#             */
-/*   Updated: 2026/02/19 15:37:01 by lbueno-m         ###   ########.fr       */
+/*   Updated: 2026/03/18 20:07:02 by lbueno-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,10 @@ int	builtin_cd(char **argv, t_env **internal_env)
 	if (chdir(dir) != 0)
 		return (error_msg("minishell: cd: no such file or directory"));
 	if (getcwd(cwd, PATH_MAX) == NULL)
-		return (error_msg("minishell: cd: error retrieving current directory\n"));
+	{
+		error_msg("minishell: cd: error retrieving current directory");
+		return (1);
+	}
 	pwd_env_manager(PWD, cwd, internal_env);
 	return (0);
 }

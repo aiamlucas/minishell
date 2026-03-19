@@ -6,7 +6,7 @@
 /*   By: ssin <ssin@student.42berlin.de>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/10 21:29:05 by ssin              #+#    #+#             */
-/*   Updated: 2026/03/11 15:33:24 by ssin             ###   ########.fr       */
+/*   Updated: 2026/03/19 11:55:49 by lbueno-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,27 +31,13 @@ static int	wait_child(pid_t pid, int status, t_data *data,
 	return (0);
 }
 
-static int	create_child(t_data *data, t_redir *redir, int *fd)
+static int	wait_heredoc_child(pid_t pid, t_data *data,
+						t_redir *saved_redir, int *fd)
 {
-	int		status;
-	int		result;
-	pid_t	pid;
-	t_redir	*saved_redir;
+	int	status;
+	int	result;
 
-	if (!set_fd(fd))
-		return (-1);
-	saved_redir = data->commands->redirections;
-	data->commands->redirections = redir;
 	status = 0;
-	pid = fork();
-	if (pid == ERROR)
-	{
-		ft_printf("heredoc error pid\n");
-		data->commands->redirections = saved_redir;
-		return (-1);
-	}
-	if (pid == CHILD)
-		execute_child(data, fd);
 	close(fd[1]);
 	update_sigint(handle_sigint_child);
 	result = wait_child(pid, status, data, saved_redir);
@@ -59,6 +45,27 @@ static int	create_child(t_data *data, t_redir *redir, int *fd)
 		close(fd[0]);
 	update_sigint(handle_sigint_parent);
 	return (result);
+}
+
+static int	create_child(t_data *data, t_redir *redir, int *fd)
+{
+	pid_t	pid;
+	t_redir	*saved_redir;
+
+	if (!set_fd(fd))
+		return (-1);
+	saved_redir = data->commands->redirections;
+	data->commands->redirections = redir;
+	pid = fork();
+	if (pid == ERROR)
+	{
+		printf("heredoc error pid\n");
+		data->commands->redirections = saved_redir;
+		return (-1);
+	}
+	if (pid == CHILD)
+		execute_child(data, fd);
+	return (wait_heredoc_child(pid, data, saved_redir, fd));
 }
 
 int	process_all_heredocs(t_data *data)

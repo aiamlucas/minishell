@@ -6,7 +6,7 @@
 /*   By: ssin <ssin@student.42berlin.de>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/18 17:31:00 by ssin              #+#    #+#             */
-/*   Updated: 2026/03/17 10:24:19 by lbueno-m         ###   ########.fr       */
+/*   Updated: 2026/03/18 20:22:14 by lbueno-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,10 +24,13 @@
 # include <stdbool.h>
 # include <sys/wait.h>
 # include <sys/types.h>
+# include <sys/stat.h>
 # include <fcntl.h>
 # include <limits.h>
 # include <signal.h>
 # include <termios.h>
+# include <errno.h>
+# include <string.h>
 
 # include "../libft/libft.h"
 # include "minishell_macros.h"
@@ -84,12 +87,12 @@ typedef struct s_command
 
 typedef struct s_data
 {
-	char			**envp;
-	t_env			*internal_env;
-	t_token			*tokens;
-	t_command		*commands;
-	int				last_exit;
-	struct termios	*t_settings;
+	char				**envp;
+	t_env				*internal_env;
+	t_token				*tokens;
+	t_command			*commands;
+	int					last_exit;
+	struct termios		*t_settings;
 }	t_data;
 
 typedef struct s_child_data
@@ -123,19 +126,14 @@ typedef struct s_expand
 	t_expand_state	*state;
 }	t_expand;
 
-// maybe we can later have several header files for each part of the project
-// until there I make a provisory comment for each part of the project
-//
-//
-void			cleanup_data(t_data *data);
-
 // core
+void			cleanup_data(t_data *data);
 void			readline_loop(t_data *data);
 int				validate_input(char *input);
 bool			is_empty_input(char *input);
 bool			has_unclosed_quotes(char *input);
 
-//readline
+// readline
 int				process_input(char *input, t_data *data);
 int				check_input_validation(char *input);
 
@@ -147,20 +145,20 @@ void			token_clear(t_token **lst);
 t_token			*lexer(char *line);
 
 // parser
-t_command	*command_new(void);
-t_command	*command_last(t_command *lst);
-void		command_add_back(t_command **lst, t_command *new);
-void		command_clear(t_command **lst);
-t_redir		*redir_new(t_token_type type, char *file, bool should_expand);
-t_redir		*redir_last(t_redir *lst);
-void		redir_add_back(t_redir **lst, t_redir *new);
-void		redir_clear(t_redir **lst);
-t_command	*parser(t_token *tokens);
-void		create_env_list(t_env **list, char **envp);
-t_env		*new_env_node(void *content);
-void		list_add_back(t_env **lst, t_env *new);
+t_command		*command_new(void);
+t_command		*command_last(t_command *lst);
+void			command_add_back(t_command **lst, t_command *new);
+void			command_clear(t_command **lst);
+t_redir			*redir_new(t_token_type type, char *file, bool should_expand);
+t_redir			*redir_last(t_redir *lst);
+void			redir_add_back(t_redir **lst, t_redir *new);
+void			redir_clear(t_redir **lst);
+t_command		*parser(t_token *tokens);
+void			create_env_list(t_env **list, char **envp);
+t_env			*new_env_node(void *content);
+void			list_add_back(t_env **lst, t_env *new);
 void			free_env_list(t_env **lst);
-t_redir		*create_heredoc_redir(t_token *target);
+t_redir			*create_heredoc_redir(t_token *target);
 
 // debug
 void			print_tokens(t_token *tokens);
@@ -175,19 +173,20 @@ void			close_pipes(int **pipes, int count);
 int				**create_pipes(int count);
 
 // execution
-bool		is_builtin(t_command *cmd);
-int			execute_single_command(t_command *cmd, t_data *data);
-void		execute_child_command(t_command *cmd, char **envp, t_env *internal_env);
-int			execute_command(t_data *data);
-int			execute_pipeline(t_command *cmds, t_data parent_data);
-int			execute_builtin(t_command *cmd, t_env **internal_env,
+bool			is_builtin(t_command *cmd);
+int				execute_single_command(t_command *cmd, t_data *data);
+void			execute_child_command(t_command *cmd, char **envp,
+					t_env *internal_env);
+int				execute_command(t_data *data);
+int				execute_pipeline(t_command *cmds, t_data parent_data);
+int				execute_builtin(t_command *cmd, t_env **internal_env,
 					t_data *data);
-char		*find_dir(char *cmd, t_env *internal_env);
-void		apply_redirections(t_redir *redirections);
-void		setup_pipes(int **pipes, int i, int total);
-void		child_process(t_child_data *data);
-pid_t		fork_child(t_child_data *data);
-bool		must_run_in_parent(t_command *cmd);
+char			*find_dir(char *cmd, t_env *internal_env);
+void			apply_redirections(t_redir *redirections);
+void			setup_pipes(int **pipes, int i, int total);
+void			child_process(t_child_data *data);
+pid_t			fork_child(t_child_data *data);
+bool			must_run_in_parent(t_command *cmd);
 
 // builtins
 int				builtin_cd(char **argv, t_env **internal_env);
@@ -205,7 +204,8 @@ int				check_key(char *key, t_env *internal_env);
 int				is_valid_key(char *name);
 int				update_env(char *key, char *value, t_env *internal_env);
 void			free_env_node(t_env *node);
-
+void			process_export_arg(char **argv, int index,
+					t_env **intrnl_env, int *exit_code);
 // signals
 void			setup_signals(void);
 void			reset_signals(void);
@@ -217,26 +217,29 @@ void			handle_sigint_parent(int sig);
 void			update_sigint(void (*handler)(int));
 
 // expansion
-size_t		expanded_length(const char *str, t_env *internal_env,
-								int last_exit);
-bool	expand_tokens(t_token *tokens, t_env *internal_env, int last_exit);
-char	*expand_variable(const char *str, t_env *internal_env, int last_exit, size_t len);
-bool	update_state(t_expand_state *state, char c);
-bool	build_if_literal(const char **ptr, t_expand *exp);
-bool	build_char(const char **ptr, t_expand *exp);
+size_t			expanded_length(const char *str,
+					t_env *internal_env, int last_exit);
+bool			expand_tokens(t_token *tokens,
+					t_env *internal_env, int last_exit);
+char			*expand_variable(const char *str,
+					t_env *internal_env, int last_exit, size_t len);
+bool			update_state(t_expand_state *state, char c);
+bool			build_if_literal(const char **ptr, t_expand *exp);
+bool			build_char(const char **ptr, t_expand *exp);
 t_dollar_act	build_dollar(const char **ptr, t_expand *exp, int last_exit);
-bool	remove_quotes(t_token *tokens);
-char	*remove_quote_chars(const char *str);
-void	build_exit_code(t_expand *exp, int last_exit);
-size_t	advance_and_count_name(const char **ptr);
-void	append_var_value(t_expand *exp, const char *value);
-void	copy_var_value(const char **ptr, t_expand *exp, t_env *env);
+bool			remove_quotes(t_token *tokens);
+char			*remove_quote_chars(const char *str);
+void			build_exit_code(t_expand *exp, int last_exit);
+size_t			advance_and_count_name(const char **ptr);
+void			append_var_value(t_expand *exp, const char *value);
+void			copy_var_value(const char **ptr, t_expand *exp, t_env *env);
 
 // heredoc
-int		set_fd(int *fd);
-int   handle_heredoc_error(int exit_code);
-int		process_all_heredocs(t_data *data);
-int		read_heredoc(t_data *data, int *fd);
-char	*expand_string(const char *str, t_env *internal_env, int last_exit);
+int				set_fd(int *fd);
+int				handle_heredoc_error(int exit_code);
+int				process_all_heredocs(t_data *data);
+int				read_heredoc(t_data *data, int *fd);
+char			*expand_string(const char *str,
+					t_env *internal_env, int last_exit);
 
 #endif
