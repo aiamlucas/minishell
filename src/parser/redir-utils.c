@@ -6,7 +6,7 @@
 /*   By: lbueno-m <lbueno-m@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/14 19:52:02 by lbueno-m          #+#    #+#             */
-/*   Updated: 2026/02/11 10:58:53 by ssin             ###   ########.fr       */
+/*   Updated: 2026/03/17 10:23:27 by lbueno-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,4 +71,27 @@ void	redir_clear(t_redir **lst)
 		free(*lst);
 		*lst = tmp;
 	}
+}
+
+t_redir	*create_heredoc_redir(t_token *target)
+{
+	bool	should_expand;
+	char	*delimiter;
+	t_redir	*redir;
+
+	should_expand = true;
+	delimiter = target->value;
+	while (*delimiter)
+	{
+		if (*delimiter == C_S_QUOTE || *delimiter == C_D_QUOTE)
+		{
+			should_expand = false;
+			break ;
+		}
+		delimiter++;
+	}
+	delimiter = remove_quote_chars(target->value);
+	redir = redir_new(TOKEN_HEREDOC, delimiter, should_expand);
+	free(delimiter);
+	return (redir);
 }

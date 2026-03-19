@@ -6,7 +6,7 @@
 /*   By: lbueno-m <lbueno-m@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/09 18:05:13 by lbueno-m          #+#    #+#             */
-/*   Updated: 2026/03/11 15:56:20 by ssin             ###   ########.fr       */
+/*   Updated: 2026/03/17 21:31:34 by lbueno-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,6 +67,12 @@ bool	remove_quotes(t_token *tokens)
 	current = tokens;
 	while (current)
 	{
+		if (current->type == TOKEN_HEREDOC)
+		{
+			current = current->next;
+			current = current->next;
+			continue ;
+		}
 		if (current->type == TOKEN_WORD)
 		{
 			new_value = remove_quote_chars(current->value);
