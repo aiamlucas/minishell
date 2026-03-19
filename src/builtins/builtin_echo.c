@@ -6,7 +6,7 @@
 /*   By: lbueno-m <lbueno-m@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/04 20:12:11 by lbueno-m          #+#    #+#             */
-/*   Updated: 2026/03/17 11:40:11 by lbueno-m         ###   ########.fr       */
+/*   Updated: 2026/03/19 11:58:59 by lbueno-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,12 +45,12 @@ int	builtin_echo(char **argv)
 	check_flag(argv, &i, &newline);
 	while (argv[i])
 	{
-		ft_printf("%s", argv[i]);
+		printf("%s", argv[i]);
 		if (argv[i + 1])
-			ft_printf(" ");
+			printf(" ");
 		i++;
 	}
 	if (newline)
-		ft_printf("\n");
+		printf("\n");
 	return (0);
 }

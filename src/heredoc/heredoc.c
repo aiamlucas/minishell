@@ -6,7 +6,7 @@
 /*   By: ssin <ssin@student.42berlin.de>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/10 21:29:05 by ssin              #+#    #+#             */
-/*   Updated: 2026/03/18 20:55:26 by lbueno-m         ###   ########.fr       */
+/*   Updated: 2026/03/19 11:55:49 by lbueno-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ static int	create_child(t_data *data, t_redir *redir, int *fd)
 	pid = fork();
 	if (pid == ERROR)
 	{
-		ft_printf("heredoc error pid\n");
+		printf("heredoc error pid\n");
 		data->commands->redirections = saved_redir;
 		return (-1);
 	}

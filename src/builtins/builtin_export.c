@@ -6,7 +6,7 @@
 /*   By: lbueno-m <lbueno-m@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/04 20:13:17 by lbueno-m          #+#    #+#             */
-/*   Updated: 2026/03/18 20:22:51 by lbueno-m         ###   ########.fr       */
+/*   Updated: 2026/03/19 11:58:43 by lbueno-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,9 +42,9 @@ int	print_env(t_env *internal_env)
 	while (tmp)
 	{
 		if (tmp->value)
-			ft_printf("declare -x %s=\"%s\"\n", tmp->key, tmp->value);
+			printf("declare -x %s=\"%s\"\n", tmp->key, tmp->value);
 		else
-			ft_printf("declare -x %s=\"\"\n", tmp->key);
+			printf("declare -x %s=\"\"\n", tmp->key);
 		tmp = tmp->next;
 	}
 	return (0);

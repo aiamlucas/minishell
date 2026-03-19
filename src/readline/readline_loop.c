@@ -6,7 +6,7 @@
 /*   By: ssin <ssin@student.42berlin.de>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/11 19:10:57 by ssin              #+#    #+#             */
-/*   Updated: 2026/03/11 15:55:20 by ssin             ###   ########.fr       */
+/*   Updated: 2026/03/19 11:58:21 by lbueno-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,7 @@ static bool	handle_input_line(char *input, t_data *data)
 	validation = check_input_validation(input);
 	if (validation == -1)
 	{
-		ft_printf("exit\n");
+		printf("exit\n");
 		return (false);
 	}
 	if (validation == 1)

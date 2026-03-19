@@ -6,7 +6,7 @@
 /*   By: lbueno-m <lbueno-m@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/22 15:59:40 by lbueno-m          #+#    #+#             */
-/*   Updated: 2026/03/16 10:40:46 by lbueno-m         ###   ########.fr       */
+/*   Updated: 2026/03/19 11:58:08 by lbueno-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ static int	wait_child(pid_t pid)
 	if (WIFSIGNALED(status))
 	{
 		if (WTERMSIG(status) == SIGQUIT)
-			ft_printf("Quit (core dumped)\n");
+			printf("Quit (core dumped)\n");
 		return (128 + WTERMSIG(status));
 	}
 	return (1);
@@ -96,7 +96,7 @@ int	execute_single_command(t_command *cmd, t_data *data)
 	path = find_dir(cmd->argv[0], data->internal_env);
 	if (!path)
 	{
-		ft_printf("minishell: %s: command not found\n", cmd->argv[0]);
+		printf("minishell: %s: command not found\n", cmd->argv[0]);
 		return (127);
 	}
 	return (execute_single_process(path, data));
